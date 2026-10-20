@@ -1,6 +1,7 @@
 package dev.optimuslink.core;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +28,20 @@ public final class ControlOutputScopeTest {
             check(first.get(10,TimeUnit.SECONDS));check(second.get(10,TimeUnit.SECONDS));
         }
         check(!ControlOutputScope.current(a));check(!ControlOutputScope.current(b));
+        var delivered=new AtomicInteger();var actor=new ControlOutputScope.Lifetime(a);
+        check(actor.isOpen());
+        actor.run(()-> { check(ControlOutputScope.current(a));delivered.incrementAndGet(); });
+        check(actor.write(()-> { check(ControlOutputScope.current(a));delivered.incrementAndGet();return true; }));
+        check(delivered.get()==2);check(!ControlOutputScope.current(a));
+        actor.retire();actor.retire();check(!actor.isOpen());
+        actor.run(()-> { throw new AssertionError("late actor write after release"); });
+        check(!actor.write(()-> { throw new AssertionError("late actor packet after release"); }));
+        check(delivered.get()==2);
+        var next=new ControlOutputScope.Lifetime(b);
+        next.run(()-> { check(ControlOutputScope.current(b));delivered.incrementAndGet(); });
+        check(delivered.get()==3);check(next.isOpen());
+        ControlOutputScope.run(b,()->new ControlOutputScope.Lifetime(null).run(()->check(!ControlOutputScope.current(b))));
+        check(!ControlOutputScope.current(b));
         System.out.println("Control output isolation: "+assertions+" assertions passed");
     }
     private static boolean concurrent(CyclicBarrier barrier,UUID own,UUID other) {

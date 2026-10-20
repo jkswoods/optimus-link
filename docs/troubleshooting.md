@@ -12,6 +12,8 @@ Aim at nearby ground with enough standing space for the robot. Stay within 5 blo
 
 It must be yours, loaded and within 5 blocks. A robot already linked to another remote must first be unlinked using that remote or [recovered by its owner](inventory.md). A remote belonging to another operator or another world will refuse use.
 
+Copied robot identities are unsupported. If duplicate copies of one bound remote are in your inventory, keep only one before using that remote; the mod refuses use and does not delete either item.
+
 ## Assume control is unavailable or fails
 
 Move your body within 32 blocks of the loaded robot and release any existing session. Hold the same remote used to open the page. Reopen the roster if you changed held items or its contents changed.

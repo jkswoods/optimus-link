@@ -1,6 +1,7 @@
 package dev.optimuslink.core;
 
 import java.util.UUID;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /** Identifies the control session producing a synchronous native outbound write. */
@@ -14,4 +15,15 @@ public final class ControlOutputScope {
     }
     public static void run(UUID token,Runnable action) { call(token,()-> { action.run();return null; }); }
     private static void set(UUID token) { if(token==null)CURRENT.remove();else CURRENT.set(token); }
+
+    /** Retirement is final: delayed native callbacks cannot write into the returned body's connection. */
+    public static final class Lifetime {
+        private final UUID token;
+        private boolean open=true;
+        public Lifetime(UUID token) { this.token=token; }
+        public synchronized boolean isOpen() { return open; }
+        public synchronized void retire() { open=false; }
+        public synchronized void run(Runnable action) { if(open)ControlOutputScope.run(token,action); }
+        public synchronized boolean write(BooleanSupplier action) { return open&&ControlOutputScope.call(token,action::getAsBoolean); }
+    }
 }

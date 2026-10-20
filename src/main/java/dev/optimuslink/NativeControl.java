@@ -131,7 +131,7 @@ final class NativeControl {
         var actor=new Player();actor.init(robotUuid,actorRef);actor.loadIntoWorld(store.getExternalData().getWorld());actor.setReference(robot);
         RobotInventory.attach(actor,inventory);
         var token=fleet.begin(operator.getUuid(),remote,robotId,store.getExternalData().getWorld().getWorldConfig().getUuid());
-        handler.sourceToken=token.token();
+        handler.output=new ControlOutputScope.Lifetime(token.token());
         var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,viewer,previousViewer,new Feedback());
         try {
             var bodyInput=store.getComponent(body,PlayerInput.getComponentType());if(bodyInput!=null)bodyInput.getMovementUpdateQueue().clear();
@@ -208,6 +208,7 @@ final class NativeControl {
     }
     private static void end(UUID operator,Control c,FleetRegistry.Exit reason) {
         if(!ACTIVE.remove(operator,c))return;
+        c.handler().output.retire();
         c.fleet().end(operator,c.token().token(),reason);c.handler().getInteractionPacketQueue().clear();
         if(c.robot().isValid()) {
             var store=c.robot().getStore();var managerType=InteractionModule.get().getInteractionManagerComponent();
@@ -265,20 +266,34 @@ final class NativeControl {
     /** Independent native action context; outgoing transport remains the actual authenticated connection. */
     private static final class ActorHandler extends GamePacketHandler {
         private final GamePacketHandler transport;
-        private UUID sourceToken;
+        private ControlOutputScope.Lifetime output=new ControlOutputScope.Lifetime(null);
         ActorHandler(GamePacketHandler transport) { super(transport.getChannel(),transport.getProtocolVersion(),transport.getAuth());this.transport=transport; }
-        @Override public void write(ToClientPacket packet) { ControlOutputScope.run(sourceToken,()->transport.write(packet)); }
-        @Override public void write(ToClientPacket... packets) { ControlOutputScope.run(sourceToken,()->transport.write(packets)); }
-        @Override public void write(ToClientPacket[] packets,ToClientPacket extra) { ControlOutputScope.run(sourceToken,()->transport.write(packets,extra)); }
-        @Override public void writeNoCache(ToClientPacket packet) { ControlOutputScope.run(sourceToken,()->transport.writeNoCache(packet)); }
-        @Override public boolean writePacket(ToClientPacket packet,boolean cache) { return ControlOutputScope.call(sourceToken,()->transport.writePacket(packet,cache)); }
-        @Override public void disconnect(FormattedMessage message) { transport.disconnect(message); }
-        @Override public void disconnect(Message message) { transport.disconnect(message); }
+        @Override public boolean stillActive() { return output.isOpen()&&transport.stillActive(); }
+        @Override public void write(ToClientPacket packet) { output.run(()->transport.write(packet)); }
+        @Override public void write(ToClientPacket... packets) { output.run(()->transport.write(packets)); }
+        @Override public void write(ToClientPacket[] packets,ToClientPacket extra) { output.run(()->transport.write(packets,extra)); }
+        @Override public void writeNoCache(ToClientPacket packet) { output.run(()->transport.writeNoCache(packet)); }
+        @Override public boolean writePacket(ToClientPacket packet,boolean cache) { return output.write(()->transport.writePacket(packet,cache)); }
+        @Override public void disconnect(FormattedMessage message) { output.run(()->transport.disconnect(message)); }
+        @Override public void disconnect(Message message) { output.run(()->transport.disconnect(message)); }
     }
     private static final class RobotPlayerRef extends PlayerRef {
         private final PlayerRef operator;
         RobotPlayerRef(PlayerRef operator,UUID robot,GamePacketHandler handler) {
             super(EntityStore.REGISTRY.newHolder(),robot,"Optimus",operator.getLanguage(),handler,operator.getChunkTracker());this.operator=operator;
+        }
+        @Override public com.hypixel.hytale.component.Holder<EntityStore> removeFromStore() {
+            // This is an action context attached to an NPC, never a transferable Universe player.
+            // Pinned TeleportSystems calls this before World.addPlayer; the retired actor transport
+            // makes addPlayer return before reading a holder or moving any entity/inventory.
+            var c=ACTIVE.get(operator.getUuid());
+            if(c!=null&&c.handler().getPlayerRef()==this) {
+                end(operator.getUuid(),c,FleetRegistry.Exit.WORLD_CHANGE);
+                operator.sendMessage(Message.raw("Optimus stayed in its world. You returned to your body before world transfer."));
+            }
+            ((ActorHandler)getPacketHandler()).output.retire();
+            addedToStore(null); // Detach only this temporary PlayerRef; do not unload the NPC.
+            return null;
         }
         @Override public boolean hasPermission(String permission) { return operator.hasPermission(permission); }
         @Override public boolean hasPermission(String permission,boolean defaultValue) { return operator.hasPermission(permission,defaultValue); }

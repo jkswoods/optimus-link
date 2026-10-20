@@ -29,4 +29,6 @@ Mining, placement, interactions and inventory use are intended to pass the game'
 
 Manual release clears the active control session and restores the operator view. The implementation also ends control when a participant becomes unavailable, dies, changes world, leaves range or disconnects. Those lifecycle cases require native verification before relying on this build in a valued world.
 
+Robots remain in their original world. The candidate handles a world-transfer request from a controlled robot by releasing control and returning you to your body. This transfer guard still awaits native verification. Delayed output from a released robot is discarded so it cannot replace the returned body's inventory view.
+
 There is one active robot per operator. Release the current robot before selecting another. No control session is restored after a server restart.
