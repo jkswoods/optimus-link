@@ -10,6 +10,12 @@ Robots belong to the player who deployed them. A remote binds to its first user 
 
 Use **Unlink** in the original remote's roster to free a parked robot for another remote. Unlinking keeps its ownership, equipment and storage. Active control must end first.
 
+![Fleet Remote showing one linked Optimus robot, its parked status and the Assume control and Unlink buttons](assets/native/fleet-roster.jpg)
+
+The native Fleet Remote roster in 0.2.0-dev, with one robot linked. Control and the complete gameplay loop remain under verification.
+
+[Open the roster image at full size](assets/native/fleet-roster.jpg).
+
 ## Assume control
 
 Choose **Assume control** beside a loaded robot within 32 blocks of your body. Your body stays in place under normal damage rules. The robot uses the operator's existing permissions and game mode; it does not grant extra permissions.
