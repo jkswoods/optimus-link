@@ -1,0 +1,32 @@
+site_name: Optimus Link
+site_description: Craft robots, link a fleet and take control.
+repo_url: https://github.com/jkswoods/optimus-link
+repo_name: Private source repository
+edit_uri: ""
+theme:
+  name: readthedocs
+  logo: assets/brand/logo.png
+  highlightjs: true
+plugins:
+  - search
+extra_css:
+  - assets/guide.css
+markdown_extensions:
+  - tables
+  - fenced_code
+validation:
+  links:
+    not_found: warn
+    anchors: warn
+nav:
+  - Overview: index.md
+  - Installation: installation.md
+  - First session: getting-started.md
+  - Crafting: recipes.md
+  - Fleet and controls: fleet.md
+  - Inventory and recovery: inventory.md
+  - Configuration: configuration.md
+  - Compatibility and backups: compatibility.md
+  - Troubleshooting: troubleshooting.md
+  - Screenshots: gallery.md
+  - Changelog: changelog.md

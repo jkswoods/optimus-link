@@ -1,0 +1,18 @@
+# Configuration
+
+Version 0.2.0-dev has no player configuration file or configurable power system. Its current limits are:
+
+| Setting | Current behavior |
+| --- | --- |
+| Deployment and linking reach | 5 blocks |
+| Lost-link recovery reach | 5 blocks |
+| Control range | 32 blocks from the operator body |
+| Active control | One robot per operator |
+| Roster page | Three robots; additional robots use pagination |
+| Ownership | Deploying player; no ownership-transfer feature |
+| Remote world | Bound on first use; original world only |
+| Operator body | Remains exposed under normal world rules |
+
+Use the game's sound volume controls for mod cues. Generated deployment sounds play at the robot after successful deployment; remote feedback is private to the operator. Repeated feedback is limited. Human listening and real multiplayer sound checks remain pending.
+
+The Assembly Dock performs crafting. It does not charge robots, consume fuel or schedule autonomous tasks.

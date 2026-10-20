@@ -50,6 +50,13 @@ public final class FleetRegistryTest {
         denied(DUPLICATE_ID,()->f.deploy(id(),owner,world,known.entity()));check(f.snapshot().equals(before));
         check(restored.unlink(owner,remote,robot));check(restored.roster(owner,remote).size()==1);
         check(restored.link(owner,otherRemote,robot));check(restored.roster(owner,otherRemote).size()==1);
+        denied(WRONG_OWNER,()->restored.recover(stranger,robot));
+        check(restored.ownedRobot(owner,robot.toString().substring(0,8)).id().equals(robot));
+        var recoverySession=restored.begin(owner,otherRemote,robot,world);
+        denied(ROBOT_BUSY,()->restored.recover(owner,robot));
+        restored.end(owner,recoverySession.token(),FleetRegistry.Exit.MANUAL);
+        check(restored.recover(owner,robot));check(!restored.recover(owner,robot));check(restored.roster(owner,otherRemote).isEmpty());
+        check(restored.link(owner,otherRemote,robot));
         restored.remove(owner,robot);check(restored.roster(owner,otherRemote).isEmpty());
         System.out.println("Fleet authority: "+assertions+" assertions passed");
     }

@@ -1,0 +1,48 @@
+$C = "../../Common.ui";
+$C.@PageOverlay {
+ $C.@DecoratedContainer {
+  Anchor: (Width: 860, Height: 620);
+  #Title { $C.@Title { @Text = "OPTIMUS / FLEET REMOTE"; @Alignment = Start; } }
+  #Content { Padding: (Full: 24, Top: 14);
+   Label #Summary { Anchor: (Height: 34); Style: (FontSize: 18, TextColor: #b8e3de, RenderBold: true); }
+   Label #Message { Anchor: (Height: 80); Style: (FontSize: 16, TextColor: #c5ccd6, Wrap: true); }
+   Group #Row0 { Anchor: (Height: 100); LayoutMode: Left; Padding: (Full: 12); Background: #182330;
+    Group { FlexWeight: 1; LayoutMode: Top;
+     Label #Name0 { Anchor: (Height: 32); Style: (FontSize: 20, TextColor: #e9f1f0, RenderBold: true); }
+     Label #Status0 { Anchor: (Height: 28); Style: (FontSize: 14, TextColor: #a8b7c7); }
+    }
+    $C.@TextButton #Assume0 { Anchor: (Width: 155, Height: 48); Text: "Assume control"; }
+    Group { Anchor: (Width: 10); }
+    $C.@SmallSecondaryTextButton #Unlink0 { Anchor: (Width: 95, Height: 48); Text: "Unlink"; }
+   }
+   Group { Anchor: (Height: 10); }
+   Group #Row1 { Anchor: (Height: 100); LayoutMode: Left; Padding: (Full: 12); Background: #182330;
+    Group { FlexWeight: 1; LayoutMode: Top;
+     Label #Name1 { Anchor: (Height: 32); Style: (FontSize: 20, TextColor: #e9f1f0, RenderBold: true); }
+     Label #Status1 { Anchor: (Height: 28); Style: (FontSize: 14, TextColor: #a8b7c7); }
+    }
+    $C.@TextButton #Assume1 { Anchor: (Width: 155, Height: 48); Text: "Assume control"; }
+    Group { Anchor: (Width: 10); }
+    $C.@SmallSecondaryTextButton #Unlink1 { Anchor: (Width: 95, Height: 48); Text: "Unlink"; }
+   }
+   Group { Anchor: (Height: 10); }
+   Group #Row2 { Anchor: (Height: 100); LayoutMode: Left; Padding: (Full: 12); Background: #182330;
+    Group { FlexWeight: 1; LayoutMode: Top;
+     Label #Name2 { Anchor: (Height: 32); Style: (FontSize: 20, TextColor: #e9f1f0, RenderBold: true); }
+     Label #Status2 { Anchor: (Height: 28); Style: (FontSize: 14, TextColor: #a8b7c7); }
+    }
+    $C.@TextButton #Assume2 { Anchor: (Width: 155, Height: 48); Text: "Assume control"; }
+    Group { Anchor: (Width: 10); }
+    $C.@SmallSecondaryTextButton #Unlink2 { Anchor: (Width: 95, Height: 48); Text: "Unlink"; }
+   }
+   Group { Anchor: (Height: 10); }
+   Group { Anchor: (Height: 48); LayoutMode: Left;
+    $C.@SmallSecondaryTextButton #Previous { Anchor: (Width: 130, Height: 40); Text: "Previous"; }
+    Label #Page { FlexWeight: 1; Style: (FontSize: 16, TextColor: #a8b7c7, HorizontalAlignment: Center, VerticalAlignment: Center); }
+    $C.@SmallSecondaryTextButton #Next { Anchor: (Width: 130, Height: 40); Text: "Next"; }
+    Group { Anchor: (Width: 16); }
+    $C.@TextButton #Close { Anchor: (Width: 110, Height: 40); Text: "Close"; }
+   }
+  }
+ }
+}

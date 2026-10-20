@@ -1,0 +1,20 @@
+# Inventory and recovery
+
+Every robot uses its own native inventory components. Taking control attaches the controls to those existing containers; it does not copy the operator's inventory. Native inventory behavior and normal reload remain under verification in 0.2.0-dev.
+
+The implementation supplies 36 storage slots, a 9 slot hotbar and the native equipment containers. Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory.
+
+## Replace a lost remote
+
+1. Use `/optimus-list` in the robot's world. It lists only robots owned by you, with their IDs and link status.
+2. Stand within 5 blocks of the loaded, parked robot.
+3. Use `/optimus-recover ROBOT_ID`. At least the first8characters are required; use more if the prefix is ambiguous.
+4. Hold your replacement remote and use it on that robot to link it.
+
+Recovery revokes the old remote's link. It does not refund a deployment unit, create another robot, transfer ownership or alter inventory. A currently controlled robot must be released first. This recovery path still needs a native check.
+
+## Keep your fleet safe
+
+Keep the world and player data together when making backups. Bound remotes work in their original world. Moving items between worlds does not migrate a robot or its links.
+
+Do not clone bound remotes or robot entities with editor or administrative tools. Physical clone handling, destruction drops and removal are not yet verified. There is no packing or robot-refund feature in this candidate.

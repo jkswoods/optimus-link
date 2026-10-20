@@ -2,12 +2,14 @@
 
 Hytale humanoid robot fleets controlled through a craftable handheld remote.
 
-This repository is an in-progress private development mod for Hytale 0.7.2 and Java 25. The current source contains the fleet authority foundation; deployment and possession are being implemented. It is not yet a playable release.
+This private development mod targets Hytale 0.7.2 and Java 25. Version 0.2.0-dev includes craftable equipment, deployment, fleet linking, a native control adapter, release and nearby lost-link recovery. It passes focused authority/persistence tests and isolated asset loading; ordinary gameplay, inventories and normal reload are awaiting native verification. Use a disposable world. There is no public release download.
 
 Each robot may link to one remote. A remote can hold a roster of multiple robots; an operator controls one at a time. Robot equipment and inventory remain separate from the operator's. The operator's body remains exposed while controlling a robot.
 
 Build with `python3 tools/build.py --server PATH_TO_HYTALE_SERVER_JAR --jdk PATH_TO_JDK_25`. The server dependency must match the fingerprint in `target.json`; it is not redistributed. Run the focused authority tests with the same command and `--test`.
 
-Original cuboid models, animation and connected ElevenLabs audio are reused from the authoring stage. Native integration, safe lifecycle exits, real acquisition/control, a player guide and the tested package remain required before the development delivery is complete.
+Original cuboid models, animation and connected ElevenLabs audio are reused from the authoring stage. The [player guide](docs/index.md) documents recipes, installation, controls and current limits. Build its local site with `python -m pip install -r requirements-docs.txt` then `python -m mkdocs build --strict`. Native gameplay/screenshots, safe lifecycle exits, actual save/reload and the tested package remain required before the development delivery is complete.
 
 No distribution license has been selected. This fan mod is not affiliated with Tesla or Hytale.
+
+After building the JAR and guide, `python3 tools/package.py --jar build/OptimusLink-0.2.0-dev.jar` creates a reproducible local candidate ZIP with checksums. It does not install, upload or certify the build for gameplay.

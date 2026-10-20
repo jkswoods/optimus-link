@@ -1,0 +1,15 @@
+{
+  "Type": "Generic",
+  "Appearance": "OP_Optimus",
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": 5
+    }
+  ],
+  "MaxHealth": 100,
+  "Instructions": [
+    {}
+  ],
+  "NameTranslationKey": "server.npcRoles.OP_Optimus_Robot.name"
+}

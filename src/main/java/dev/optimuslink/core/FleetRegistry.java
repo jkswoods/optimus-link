@@ -16,7 +16,18 @@ public final class FleetRegistry {
     public static final class Denied extends IllegalStateException {
         private static final long serialVersionUID = 1L;
         private final Refusal reason;
-        public Denied(Refusal reason) { super(reason.name()); this.reason=reason; }
+        public Denied(Refusal reason) { super(switch(reason) {
+            case UNKNOWN_REMOTE -> "This remote is not registered in this world.";
+            case UNKNOWN_ROBOT -> "This robot is not registered in this world.";
+            case WRONG_OWNER -> "This equipment belongs to another operator.";
+            case ALREADY_LINKED -> "This robot is linked to another remote. Unlink it first, or recover its link if the old remote is lost.";
+            case NOT_LINKED -> "This robot is not linked to the held remote.";
+            case OPERATOR_BUSY -> "Release your current robot first with /optimus-release.";
+            case ROBOT_BUSY -> "Release this robot before changing its link or removing it.";
+            case WRONG_WORLD -> "Return to the robot's world before controlling it.";
+            case DUPLICATE_ID -> "This robot or remote identity already exists.";
+            case CORRUPT_STATE -> "Saved fleet data is invalid. Restore a paired world and player backup.";
+        }); this.reason=reason; }
         public Refusal reason() { return reason; }
     }
     public record Remote(UUID id, UUID owner) {
@@ -59,6 +70,22 @@ public final class FleetRegistry {
         if(byRobot.containsKey(robot.id()))throw new Denied(Refusal.ROBOT_BUSY);
         robots.put(robot.id(),robot.linkedTo(null));revision++;return true;
     }
+    /** Explicit owner recovery for a lost remote; never changes ownership or inventory. */
+    public synchronized boolean recover(UUID operator,UUID robotId) {
+        var robot=ownedRobot(operator,robotId);
+        if(byRobot.containsKey(robot.id()))throw new Denied(Refusal.ROBOT_BUSY);
+        if(robot.remote()==null)return false;
+        robots.put(robot.id(),robot.linkedTo(null));revision++;return true;
+    }
+    public synchronized Robot ownedRobot(UUID operator,String prefix) {
+        if(prefix==null||!prefix.matches("[0-9a-fA-F-]{8,36}"))throw new IllegalArgumentException("Use at least 8 characters from the robot ID shown by your remote.");
+        var matches=robots.values().stream().filter(r->r.owner().equals(operator)&&r.id().toString().startsWith(prefix.toLowerCase(java.util.Locale.ROOT))).toList();
+        if(matches.size()!=1)throw new IllegalArgumentException("Robot ID is missing or ambiguous. Use more characters from its ID.");
+        return matches.getFirst();
+    }
+    public synchronized List<Robot> ownedRobots(UUID operator) {
+        return robots.values().stream().filter(r->r.owner().equals(operator)).sorted(Comparator.comparing(r->r.id().toString())).toList();
+    }
     public synchronized Session begin(UUID operator,UUID remoteId,UUID robotId,UUID world) {
         ownedRemote(operator,remoteId);var robot=ownedRobot(operator,robotId);
         if(!remoteId.equals(robot.remote()))throw new Denied(Refusal.NOT_LINKED);
@@ -77,6 +104,7 @@ public final class FleetRegistry {
     public synchronized Optional<Session> session(UUID operator) { return Optional.ofNullable(byOperator.get(operator)); }
     public synchronized Optional<Session> controlling(UUID robot) { return Optional.ofNullable(byRobot.get(robot)); }
     public synchronized Robot robot(UUID id) { var r=robots.get(id);if(r==null)throw new Denied(Refusal.UNKNOWN_ROBOT);return r; }
+    public synchronized Remote remote(UUID operator,UUID id) { return ownedRemote(operator,id); }
     public synchronized List<Robot> roster(UUID operator,UUID remote) {
         ownedRemote(operator,remote);
         return robots.values().stream().filter(r->remote.equals(r.remote())).sorted(Comparator.comparing(r->r.id().toString())).toList();

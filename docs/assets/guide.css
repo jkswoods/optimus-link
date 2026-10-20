@@ -1,0 +1,12 @@
+:root { --op-red: #c74843; --op-ink: #20252b; }
+.wy-side-nav-search, .wy-nav-top { background: var(--op-ink); }
+.wy-side-nav-search > a img.logo { max-height: 110px; width: auto; margin: 0 auto 8px; }
+.wy-nav-content { max-width: 1020px; }
+.rst-content a { color: #a33130; }
+.rst-content a:hover { color: #761f21; }
+.rst-content h1, .rst-content h2, .rst-content h3 { color: var(--op-ink); }
+.rst-content img { border-radius: 5px; }
+.rst-content blockquote { border-left: 3px solid var(--op-red); padding: 12px 16px; margin: 22px 0; background: #f4f5f6; }
+.rst-content blockquote p:last-child { margin-bottom: 0; }
+.rst-content table.docutils td, .rst-content table.docutils th { white-space: normal; }
+@media (max-width: 768px) { .wy-nav-content { padding: 24px 20px; } .rst-content table.docutils { display: block; overflow-x: auto; } }

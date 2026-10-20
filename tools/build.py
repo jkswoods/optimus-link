@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pinned local build; never installs, launches or downloads Hytale."""
 from pathlib import Path
-import argparse,hashlib,json,shutil,subprocess
+import argparse,hashlib,json,os,shutil,subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -16,9 +16,13 @@ def main():
     src=sorted((ROOT/'src/main/java').rglob('*.java'))
     subprocess.run([str(javac),'--release',str(pin['java_release']),'-Xlint:all','-cp',str(args.server),'-d',str(classes),*map(str,src)],check=True)
     if args.test:
-        tests.mkdir(parents=True,exist_ok=True)
-        subprocess.run([str(javac),'--release',str(pin['java_release']),'-Xlint:all','-cp',str(classes),'-d',str(tests),*map(str,(ROOT/'src/test/java').rglob('*.java'))],check=True)
-        subprocess.run([str(java),'-ea','-cp',str(classes)+':'+str(tests),'dev.optimuslink.core.FleetRegistryTest'],check=True)
+        if tests.exists():shutil.rmtree(tests)
+        tests.mkdir(parents=True)
+        compile_cp=os.pathsep.join(map(str,[classes,args.server]))
+        subprocess.run([str(javac),'--release',str(pin['java_release']),'-Xlint:all','-cp',compile_cp,'-d',str(tests),*map(str,sorted((ROOT/'src/test/java').rglob('*.java')))],check=True)
+        runtime_cp=os.pathsep.join(map(str,[classes,tests,args.server]))
+        for suite in ('FleetRegistryTest','FleetStateCodecTest'):
+            subprocess.run([str(java),'-ea','-cp',runtime_cp,'dev.optimuslink.core.'+suite],check=True)
     artifact=out/('OptimusLink-'+pin['version']+'.jar')
     subprocess.run([str(jar),'--create','--date='+pin['archive_date'],'--file',str(artifact),'-C',str(classes),'.'],check=True)
     (out/'SHA256SUMS.txt').write_text(digest(artifact)+'  '+artifact.name+'\n')

@@ -1,0 +1,8 @@
+items.OP_Remote.name=Fleet Remote
+items.OP_Remote.description=Link your Optimus robots and choose one to control. Each robot links to one remote.
+items.OP_DeploymentUnit.name=Optimus Deployment Unit
+items.OP_DeploymentUnit.description=Deploy one Optimus robot on clear ground. Its inventory is separate from yours.
+items.OP_StandbyDock.name=Optimus Assembly Dock
+items.OP_StandbyDock.description=Craft fleet remotes and Optimus deployment units. Requires no fuel or power.
+benchCategories.OP_Robotics=Robotics
+npcRoles.OP_Optimus_Robot.name=Optimus Robot

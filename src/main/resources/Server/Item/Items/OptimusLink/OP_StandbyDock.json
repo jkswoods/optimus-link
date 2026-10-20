@@ -1,0 +1,90 @@
+{
+  "MaxStack": 1,
+  "Quality": "Common",
+  "ItemSoundSetId": "OP_Equipment",
+  "PlayerAnimationsId": "Block",
+  "DropOnDeath": true,
+  "TranslationProperties": {
+    "Name": "server.items.OP_StandbyDock.name",
+    "Description": "server.items.OP_StandbyDock.description"
+  },
+  "Icon": "Icons/ItemsGenerated/OptimusLink_OP_StandbyDock.png",
+  "Categories": [
+    "Furniture.Benches"
+  ],
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 4
+      },
+      {
+        "ItemId": "Ingredient_Bar_Copper",
+        "Quantity": 2
+      },
+      {
+        "ResourceTypeId": "Wood_Trunk",
+        "Quantity": 6
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Id": "Workbench",
+        "Categories": [
+          "Workbench_Crafting"
+        ]
+      }
+    ],
+    "TimeSeconds": 3,
+    "OutputQuantity": 1
+  },
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/OptimusLink/OP_StandbyDock.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/OptimusLink/OP_StandbyDock.png",
+        "Weight": 1
+      }
+    ],
+    "HitboxType": "OP_StandbyDock",
+    "VariantRotation": "NESW",
+    "Bench": {
+      "Type": "Crafting",
+      "Id": "OP_AssemblyDock",
+      "Categories": [
+        {
+          "Id": "OP_Robotics",
+          "Name": "server.benchCategories.OP_Robotics",
+          "Icon": "Icons/CraftingCategories/OptimusLink/Robotics.png"
+        }
+      ],
+      "LocalOpenSoundEventId": "OP_Equipment_Handle_Inventory",
+      "LocalCloseSoundEventId": "OP_Equipment_Handle_Inventory",
+      "CompletedSoundEventId": "OP_Equipment_Handle_World",
+      "FailedSoundEventId": "OP_Equipment_Handle_World"
+    },
+    "BlockEntity": {
+      "Components": {
+        "BenchBlock": {}
+      }
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Benches"
+      }
+    },
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "PhysicalMaterialId": "Metal",
+    "BlockSoundSetId": "Metal"
+  }
+}
