@@ -128,7 +128,7 @@ final class NativeControl {
         var handler=new ActorHandler((GamePacketHandler)operator.getPacketHandler());
         var robotUuid=store.getComponent(robot,UUIDComponent.getComponentType()).getUuid();
         var actorRef=new RobotPlayerRef(operator,robotUuid,handler);actorRef.addedToStore(robot);handler.setPlayerRef(actorRef);
-        var actor=new Player();actor.init(robotUuid,actorRef);actor.loadIntoWorld(store.getExternalData().getWorld());actor.setReference(robot);
+        var actor=new ControlledRobotPlayer();actor.init(robotUuid,actorRef);actor.loadIntoWorld(store.getExternalData().getWorld());actor.setReference(robot);
         RobotInventory.attach(actor,inventory);
         var token=fleet.begin(operator.getUuid(),remote,robotId,store.getExternalData().getWorld().getWorldConfig().getUuid());
         handler.output=new ControlOutputScope.Lifetime(token.token());

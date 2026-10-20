@@ -5,13 +5,44 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.Holder;
+import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.dependency.Dependency;
+import com.hypixel.hytale.component.dependency.RootDependency;
 import com.hypixel.hytale.component.query.Query;
+import com.hypixel.hytale.component.system.HolderSystem;
 import com.hypixel.hytale.component.system.RefSystem;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.modules.entity.player.PlayerInput;
+import com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems.EntityViewer;
+import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
+import com.hypixel.hytale.server.core.entity.entities.player.CameraManager;
+import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
+import com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import java.util.Set;
 
 /** Actual removals revoke the roster entry; ordinary chunk unload preserves it. */
 final class RobotLifecycle extends RefSystem<EntityStore> {
+    /** Sanitize saved holders before native Player RefSystems can observe a stale action facade. */
+    static final class Load extends HolderSystem<EntityStore> {
+        @Override public Query<EntityStore> getQuery() { return OptimusLinkPlugin.robotType; }
+        @Override public Set<Dependency<EntityStore>> getDependencies() { return RootDependency.firstSet(); }
+        @Override public void onEntityAdd(Holder<EntityStore> holder,AddReason reason,Store<EntityStore> store) {
+            if(holder.getComponent(Player.getComponentType())==null)return;
+            remove(holder,Player.getComponentType());remove(holder,PlayerRef.getComponentType());
+            remove(holder,PlayerInput.getComponentType());remove(holder,EntityViewer.getComponentType());
+            remove(holder,InteractionModule.get().getInteractionManagerComponent());
+            remove(holder,CameraManager.getComponentType());remove(holder,MovementManager.getComponentType());
+            remove(holder,PlayerSettings.getComponentType());
+        }
+        @Override public void onEntityRemoved(Holder<EntityStore> holder,RemoveReason reason,Store<EntityStore> store) {}
+        private static <T extends com.hypixel.hytale.component.Component<EntityStore>> void remove(Holder<EntityStore> holder,ComponentType<EntityStore,T> type) {
+            if(holder.getComponent(type)!=null)holder.removeComponent(type);
+        }
+    }
     @Override public Query<EntityStore> getQuery() { return OptimusLinkPlugin.robotType; }
     @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer) {}
     @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer) {
