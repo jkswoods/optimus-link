@@ -6,7 +6,8 @@
 - Added robot deployment, owner-bound remotes, exclusive links and a paginated fleet page.
 - Added the native control adapter, release, owner robot listing and nearby lost-link recovery.
 - Added persistent fleet records and robot-owned native inventory bindings.
-- Reused original robot/equipment models,14 animation clips and generated audio.
+- Reused original robot/equipment models, 14 animation clips and generated audio.
+- Connected original servo feedback and tool/use motion to native robot actions.
 - Added the player guide and original Optimus Link branding.
 
 Gameplay, safe exits, ordinary reload and current-build screenshots remain under verification. This is not a public release.

@@ -24,10 +24,14 @@ public final class OptimusLinkPlugin extends JavaPlugin {
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent.class,event->NativeControl.disconnected(event.getPlayerRef()));
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent.class,event->NativeControl.worldLeaving(event.getWorld()));
         getEntityStoreRegistry().registerSystem(new NativeControl.Tick());
+        getEntityStoreRegistry().registerSystem(new RobotActionFeedback.Break());
+        getEntityStoreRegistry().registerSystem(new RobotActionFeedback.Place());
+        getEntityStoreRegistry().registerSystem(new RobotActionFeedback.Use());
         getCommandRegistry().registerCommand(new ReleaseCommand());
         getCommandRegistry().registerCommand(new RecoverCommand());
         getCommandRegistry().registerCommand(new ListCommand());
+        NativeControl.installOutputFilter();
     }
-    @Override protected void shutdown() { NativeControl.stopAll(); }
+    @Override protected void shutdown() { NativeControl.stopAll();NativeControl.removeOutputFilter(); }
     static FleetWorldState state(Store<EntityStore> store) { return store.getResource(stateType); }
 }

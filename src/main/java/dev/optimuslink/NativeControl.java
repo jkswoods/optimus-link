@@ -10,11 +10,14 @@ import com.hypixel.hytale.protocol.packets.player.ClientMovement;
 import com.hypixel.hytale.protocol.packets.player.SetClientId;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.InteractionManager;
+import com.hypixel.hytale.server.core.entity.AnimationUtils;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.CameraManager;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
 import com.hypixel.hytale.server.core.io.handlers.game.GamePacketHandler;
+import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
+import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerInput;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings;
@@ -32,6 +35,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import dev.optimuslink.core.FleetRegistry;
+import dev.optimuslink.core.ControlOutputScope;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,6 +43,13 @@ import java.util.concurrent.ConcurrentHashMap;
 final class NativeControl {
     private static final Map<UUID,Control> ACTIVE=new ConcurrentHashMap<>();
     private static final Map<UUID,Router> ROUTERS=new ConcurrentHashMap<>();
+    private static final PacketFilter BODY_OUTPUT=(handler,packet)-> {
+        if(!(packet instanceof com.hypixel.hytale.protocol.packets.inventory.UpdatePlayerInventory)&&!(packet instanceof com.hypixel.hytale.protocol.packets.world.PlaySoundEvent3D))return false;
+        for(var c:ACTIVE.values())if(c.operator().getPacketHandler()==handler)return !ControlOutputScope.current(c.token().token());
+        return false;
+    };
+    static void installOutputFilter() { PacketAdapters.registerOutbound(BODY_OUTPUT); }
+    static void removeOutputFilter() { PacketAdapters.deregisterOutbound(BODY_OUTPUT); }
     private static final int RANGE_SQUARED=32*32;
     private static final List<Class<? extends ToServerPacket>> ROUTED=List.of(
         ClientMovement.class,SyncInteractionChains.class,
@@ -61,9 +72,10 @@ final class NativeControl {
         com.hypixel.hytale.protocol.packets.interface_.ExecuteServersidePageCommand.class,
         com.hypixel.hytale.protocol.packets.interface_.ExecuteServersideHudCommand.class);
     private record Router(PlayerRef operator,GamePacketHandler transport,ActorHandler fallback) {}
+    private static final class Feedback { Long lastServo; }
     private record Control(FleetRegistry.Session token,FleetRegistry fleet,PlayerRef operator,Ref<EntityStore> body,
         Ref<EntityStore> robot,Player actor,ActorHandler handler,InteractionManager previousInteractions,PlayerInput previousInput,
-        EntityViewer viewer,EntityViewer previousRobotViewer) {}
+        EntityViewer viewer,EntityViewer previousRobotViewer,Feedback feedback) {}
 
     /** Native handler table also covers ChannelConnection paths which bypass inbound packet adapters. */
     static void install(PlayerRef operator) {
@@ -119,7 +131,8 @@ final class NativeControl {
         var actor=new Player();actor.init(robotUuid,actorRef);actor.loadIntoWorld(store.getExternalData().getWorld());actor.setReference(robot);
         RobotInventory.attach(actor,inventory);
         var token=fleet.begin(operator.getUuid(),remote,robotId,store.getExternalData().getWorld().getWorldConfig().getUuid());
-        var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,viewer,previousViewer);
+        handler.sourceToken=token.token();
+        var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,viewer,previousViewer,new Feedback());
         try {
             var bodyInput=store.getComponent(body,PlayerInput.getComponentType());if(bodyInput!=null)bodyInput.getMovementUpdateQueue().clear();
             var bodyVelocity=store.getComponent(body,Velocity.getComponentType());if(bodyVelocity!=null)bodyVelocity.setZero();
@@ -148,6 +161,24 @@ final class NativeControl {
     }
     private static boolean valid(Control c) {
         return invalidReason(c)==null;
+    }
+    static UUID feedbackToken(Ref<EntityStore> robot) {
+        for(var c:ACTIVE.values())if(c.robot()==robot&&valid(c))return c.token().token();
+        return null;
+    }
+    static boolean soundAudience(Ref<EntityStore> audience) {
+        for(var c:ACTIVE.values())if(c.body()==audience)return false;
+        return true;
+    }
+    static void actionFeedback(Ref<EntityStore> robot,UUID token,String animation) {
+        for(var c:ACTIVE.values())if(c.robot()==robot&&c.token().token().equals(token)&&valid(c)) {
+            long now=System.nanoTime();var previous=c.feedback().lastServo;
+            if(previous!=null&&now-previous<800_000_000L)return;
+            c.feedback().lastServo=now;
+            AnimationUtils.playAnimation(robot,AnimationSlot.ServerAction,animation,true,robot.getStore());
+            NativeFleet.soundWorld(robot,"OP_Servo_Action_World");
+            return;
+        }
     }
     private static FleetRegistry.Exit invalidReason(Control c) {
         if(!c.body().isValid()||c.operator().getReference()!=c.body())return FleetRegistry.Exit.WORLD_CHANGE;
@@ -227,12 +258,13 @@ final class NativeControl {
     /** Independent native action context; outgoing transport remains the actual authenticated connection. */
     private static final class ActorHandler extends GamePacketHandler {
         private final GamePacketHandler transport;
+        private UUID sourceToken;
         ActorHandler(GamePacketHandler transport) { super(transport.getChannel(),transport.getProtocolVersion(),transport.getAuth());this.transport=transport; }
-        @Override public void write(ToClientPacket packet) { transport.write(packet); }
-        @Override public void write(ToClientPacket... packets) { transport.write(packets); }
-        @Override public void write(ToClientPacket[] packets,ToClientPacket extra) { transport.write(packets,extra); }
-        @Override public void writeNoCache(ToClientPacket packet) { transport.writeNoCache(packet); }
-        @Override public boolean writePacket(ToClientPacket packet,boolean cache) { return transport.writePacket(packet,cache); }
+        @Override public void write(ToClientPacket packet) { ControlOutputScope.run(sourceToken,()->transport.write(packet)); }
+        @Override public void write(ToClientPacket... packets) { ControlOutputScope.run(sourceToken,()->transport.write(packets)); }
+        @Override public void write(ToClientPacket[] packets,ToClientPacket extra) { ControlOutputScope.run(sourceToken,()->transport.write(packets,extra)); }
+        @Override public void writeNoCache(ToClientPacket packet) { ControlOutputScope.run(sourceToken,()->transport.writeNoCache(packet)); }
+        @Override public boolean writePacket(ToClientPacket packet,boolean cache) { return ControlOutputScope.call(sourceToken,()->transport.writePacket(packet,cache)); }
         @Override public void disconnect(FormattedMessage message) { transport.disconnect(message); }
         @Override public void disconnect(Message message) { transport.disconnect(message); }
     }

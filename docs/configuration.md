@@ -15,4 +15,6 @@ Version 0.2.0-dev has no player configuration file or configurable power system.
 
 Use the game's sound volume controls for mod cues. Generated deployment sounds play at the robot after successful deployment; remote feedback is private to the operator. Repeated feedback is limited. Human listening and real multiplayer sound checks remain pending.
 
+A short servo cue follows accepted robot interactions. Mining and placement feedback requires an actual block change. These cues use the original generated robot sound family and do not loop.
+
 The Assembly Dock performs crafting. It does not charge robots, consume fuel or schedule autonomous tasks.

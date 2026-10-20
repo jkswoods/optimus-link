@@ -94,7 +94,7 @@ final class NativeFleet {
     }
     static void soundWorld(Ref<EntityStore> ref,String event) {
         var store=ref.getStore();var t=store.getComponent(ref,TransformComponent.getComponentType());if(t==null)return;
-        var p=t.getPosition();SoundUtil.playSoundEvent3d(SoundEvent.getAssetMap().getIndex(event),SoundCategory.SFX,p.x,p.y+1,p.z,store);
+        var p=t.getPosition();SoundUtil.playSoundEvent3d(SoundEvent.getAssetMap().getIndex(event),SoundCategory.SFX,p.x,p.y+1,p.z,NativeControl::soundAudience,store);
     }
     static void soundPrivate(PlayerRef operator,String event) {
         long now=System.nanoTime();var prior=LAST_FEEDBACK.get(operator.getUuid());if(prior!=null&&now-prior<800_000_000L)return;
