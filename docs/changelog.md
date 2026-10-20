@@ -10,6 +10,7 @@
 - Connected original servo feedback and tool/use motion to native robot actions.
 - Added original-entity checks, destroyed-robot roster cleanup and a controlled-robot world-transfer guard.
 - Stopped delayed actor output after release to protect the returned body's inventory view.
+- Kept robot saves in world entity storage and cleared temporary control state before loading a saved robot.
 - Added the player guide and original Optimus Link branding.
 
 Gameplay, safe exits, ordinary reload and current-build screenshots remain under verification. This is not a public release.
