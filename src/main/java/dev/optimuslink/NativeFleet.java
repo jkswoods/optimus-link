@@ -71,9 +71,13 @@ final class NativeFleet {
             if(!store.getExternalData().getWorld().getWorldConfig().getUuid().equals(held.getFromMetadataOrNull(HOME_WORLD)))throw new IllegalStateException("Return to the world where this remote was first bound.");
             fleet.remote(operator.getUuid(),remoteId);
         }
+        verifySingleRemote(operatorRef,remoteId);
         if(target!=null&&target.isValid()&&target.getStore()==store) {
             var identity=store.getComponent(target,OptimusLinkPlugin.robotType);
             if(identity!=null) {
+                var entityId=store.getComponent(target,UUIDComponent.getComponentType());
+                if(entityId==null)throw new IllegalStateException("Robot entity identity is unavailable.");
+                fleet.identify(operator.getUuid(),identity.id,store.getExternalData().getWorld().getWorldConfig().getUuid(),entityId.getUuid());
                 var a=store.getComponent(operatorRef,TransformComponent.getComponentType());var b=store.getComponent(target,TransformComponent.getComponentType());
                 if(a==null||b==null||a.getPosition().distanceSquared(b.getPosition())>25)throw new IllegalArgumentException("Optimus is out of linking reach.");
                 if(fleet.link(operator.getUuid(),remoteId,identity.id)) {
@@ -90,7 +94,21 @@ final class NativeFleet {
         var hotbar=ref.getStore().getComponent(ref,InventoryComponent.Hotbar.getComponentType());
         var held=hotbar==null?null:hotbar.getActiveItem();
         if(held==null||!held.getItemId().equals("OP_Remote")||!operator.getUuid().equals(held.getFromMetadataOrNull(OWNER)))return null;
-        var id=held.getFromMetadataOrNull(REMOTE);if(id!=null)OptimusLinkPlugin.state(ref.getStore()).fleet().remote(operator.getUuid(),id);return id;
+        var id=held.getFromMetadataOrNull(REMOTE);
+        if(id!=null) { OptimusLinkPlugin.state(ref.getStore()).fleet().remote(operator.getUuid(),id);verifySingleRemote(ref,id); }
+        return id;
+    }
+    private static void verifySingleRemote(Ref<EntityStore> operator,UUID id) {
+        int copies=0;
+        for(var type:InventoryComponent.EVERYTHING) {
+            var component=operator.getStore().getComponent(operator,type);if(component==null)continue;
+            var inventory=component.getInventory();
+            for(short slot=0;slot<inventory.getCapacity();slot++) {
+                var item=inventory.getItemStack(slot);
+                if(!ItemStack.isEmpty(item)&&"OP_Remote".equals(item.getItemId())&&id.equals(item.getFromMetadataOrNull(REMOTE)))copies+=item.getQuantity();
+                if(copies>1)throw new IllegalStateException("Duplicate copies of this bound remote are in your inventory. Keep only one before using it.");
+            }
+        }
     }
     static void soundWorld(Ref<EntityStore> ref,String event) {
         var store=ref.getStore();var t=store.getComponent(ref,TransformComponent.getComponentType());if(t==null)return;

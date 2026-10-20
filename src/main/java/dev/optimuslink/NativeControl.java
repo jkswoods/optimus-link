@@ -166,6 +166,10 @@ final class NativeControl {
         for(var c:ACTIVE.values())if(c.robot()==robot&&valid(c))return c.token().token();
         return null;
     }
+    static PlayerRef operatorFor(Ref<EntityStore> robot,UUID token) {
+        for(var c:ACTIVE.values())if(c.robot()==robot&&c.token().token().equals(token)&&valid(c))return c.operator();
+        return null;
+    }
     static boolean soundAudience(Ref<EntityStore> audience) {
         for(var c:ACTIVE.values())if(c.body()==audience)return false;
         return true;
@@ -246,6 +250,9 @@ final class NativeControl {
     static void stopAll() { for(var c:List.copyOf(ACTIVE.values()))requestEnd(c,FleetRegistry.Exit.SHUTDOWN); }
     static void worldLeaving(World world) {
         for(var c:List.copyOf(ACTIVE.values()))if(c.robot().isValid()&&c.robot().getStore().getExternalData().getWorld()==world)requestEnd(c,FleetRegistry.Exit.UNLOAD);
+    }
+    static void entityRemoved(Ref<EntityStore> robot) {
+        for(var c:List.copyOf(ACTIVE.values()))if(c.robot()==robot)end(c.operator().getUuid(),c,FleetRegistry.Exit.ROBOT_DEATH);
     }
     static final class Tick extends TickingSystem<EntityStore> {
         @Override public void tick(float dt,int index,Store<EntityStore> store) {

@@ -11,7 +11,7 @@ import java.util.UUID;
 /** Server authority for stable identities and exclusive control. Inventories stay on native entities. */
 public final class FleetRegistry {
     public enum Refusal { UNKNOWN_REMOTE, UNKNOWN_ROBOT, WRONG_OWNER, ALREADY_LINKED, NOT_LINKED,
-        OPERATOR_BUSY, ROBOT_BUSY, WRONG_WORLD, DUPLICATE_ID, CORRUPT_STATE }
+        OPERATOR_BUSY, ROBOT_BUSY, WRONG_WORLD, DUPLICATE_ID, INVALID_IDENTITY, CORRUPT_STATE }
     public enum Exit { MANUAL, DISCONNECT, OPERATOR_DEATH, ROBOT_DEATH, WORLD_CHANGE, UNLOAD, SHUTDOWN, INVALID_AUTHORITY }
     public static final class Denied extends IllegalStateException {
         private static final long serialVersionUID = 1L;
@@ -26,6 +26,7 @@ public final class FleetRegistry {
             case ROBOT_BUSY -> "Release this robot before changing its link or removing it.";
             case WRONG_WORLD -> "Return to the robot's world before controlling it.";
             case DUPLICATE_ID -> "This robot or remote identity already exists.";
+            case INVALID_IDENTITY -> "This robot identity does not match its original deployed entity. Copied robot identities cannot be linked or controlled.";
             case CORRUPT_STATE -> "Saved fleet data is invalid. Restore a paired world and player backup.";
         }); this.reason=reason; }
         public Refusal reason() { return reason; }
@@ -104,6 +105,13 @@ public final class FleetRegistry {
     public synchronized Optional<Session> session(UUID operator) { return Optional.ofNullable(byOperator.get(operator)); }
     public synchronized Optional<Session> controlling(UUID robot) { return Optional.ofNullable(byRobot.get(robot)); }
     public synchronized Robot robot(UUID id) { var r=robots.get(id);if(r==null)throw new Denied(Refusal.UNKNOWN_ROBOT);return r; }
+    public synchronized Optional<Robot> findRobot(UUID id) { return Optional.ofNullable(robots.get(id)); }
+    public synchronized Robot identify(UUID operator,UUID id,UUID world,UUID entity) {
+        var robot=ownedRobot(operator,id);
+        if(!world.equals(robot.world()))throw new Denied(Refusal.WRONG_WORLD);
+        if(!entity.equals(robot.entity()))throw new Denied(Refusal.INVALID_IDENTITY);
+        return robot;
+    }
     public synchronized Remote remote(UUID operator,UUID id) { return ownedRemote(operator,id); }
     public synchronized List<Robot> roster(UUID operator,UUID remote) {
         ownedRemote(operator,remote);

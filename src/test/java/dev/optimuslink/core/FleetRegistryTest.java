@@ -47,6 +47,11 @@ public final class FleetRegistryTest {
         denied(CORRUPT_STATE,()->FleetRegistry.restore(new FleetRegistry.Snapshot(1,0,List.of(),List.of(badRobot))));
         denied(CORRUPT_STATE,()->FleetRegistry.restore(new FleetRegistry.Snapshot(2,0,List.of(),List.of())));
         var known=f.robot(robot);
+        check(f.identify(owner,robot,world,known.entity()).equals(known));
+        denied(INVALID_IDENTITY,()->f.identify(owner,robot,world,id()));
+        denied(WRONG_WORLD,()->f.identify(owner,robot,id(),known.entity()));
+        denied(WRONG_OWNER,()->f.identify(stranger,robot,world,known.entity()));
+        check(f.findRobot(id()).isEmpty());check(f.findRobot(robot).orElseThrow().equals(known));
         denied(DUPLICATE_ID,()->f.deploy(id(),owner,world,known.entity()));check(f.snapshot().equals(before));
         check(restored.unlink(owner,remote,robot));check(restored.roster(owner,remote).size()==1);
         check(restored.link(owner,otherRemote,robot));check(restored.roster(owner,otherRemote).size()==1);
