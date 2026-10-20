@@ -1,0 +1,8 @@
+/build/
+/site/
+/.publication-policy.json
+/.gradle/
+__pycache__/
+*.pyc
+.DS_Store
+.env

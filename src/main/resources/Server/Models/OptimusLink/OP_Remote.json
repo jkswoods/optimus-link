@@ -1,0 +1,31 @@
+{
+  "Model": "Items/OptimusLink/OP_Remote.blockymodel",
+  "Texture": "Items/OptimusLink/OP_Remote.png",
+  "MinScale": 1,
+  "MaxScale": 1,
+  "AnimationSets": {
+    "RemotePress": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Remote_RemotePress.blockyanim",
+          "Looping": false,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    }
+  },
+  "EyeHeight": 0.20750332729796173,
+  "HitBox": {
+    "Min": {
+      "X": -0.1340629730300139,
+      "Y": -0.03672290912245212,
+      "Z": -0.0390625
+    },
+    "Max": {
+      "X": 0.1340629730300139,
+      "Y": 0.22265625,
+      "Z": 0.0640625
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "Layers": [
+    {
+      "Files": [
+        "Sounds/OptimusLink/equipment_handle_world.ogg"
+      ],
+      "Volume": 0,
+      "Looping": false
+    }
+  ],
+  "Volume": 0,
+  "MaxInstance": 4,
+  "SpatialBlend": 1,
+  "StartAttenuationDistance": 1,
+  "MaxDistance": 10
+}

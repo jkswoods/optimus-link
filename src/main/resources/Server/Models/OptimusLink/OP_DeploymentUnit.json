@@ -1,0 +1,31 @@
+{
+  "Model": "Items/OptimusLink/OP_DeploymentUnit.blockymodel",
+  "Texture": "Items/OptimusLink/OP_DeploymentUnit.png",
+  "MinScale": 1,
+  "MaxScale": 1,
+  "AnimationSets": {
+    "Open": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_DeploymentUnit_Open.blockyanim",
+          "Looping": false,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    }
+  },
+  "EyeHeight": 0.31875000000000003,
+  "HitBox": {
+    "Min": {
+      "X": -0.2890625,
+      "Y": 0.0,
+      "Z": -0.171875
+    },
+    "Max": {
+      "X": 0.2890625,
+      "Y": 0.3984375,
+      "Z": 0.203125
+    }
+  }
+}

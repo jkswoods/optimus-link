@@ -1,0 +1,142 @@
+{
+  "Model": "Characters/OptimusLink/OP_Optimus.blockymodel",
+  "Texture": "Characters/OptimusLink/OP_Optimus.png",
+  "MinScale": 1,
+  "MaxScale": 1,
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Idle.blockyanim",
+          "Looping": true,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Walk": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Walk.blockyanim",
+          "Looping": true,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Run": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Run.blockyanim",
+          "Looping": true,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Jump": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Jump.blockyanim",
+          "Looping": false,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Crouch": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Crouch.blockyanim",
+          "Looping": true,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "ToolSwing": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_ToolSwing.blockyanim",
+          "Looping": false,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Mine": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Mine.blockyanim",
+          "Looping": true,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Use": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Use.blockyanim",
+          "Looping": false,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Carry": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Carry.blockyanim",
+          "Looping": true,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Deploy": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Deploy.blockyanim",
+          "Looping": false,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Shutdown": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Shutdown.blockyanim",
+          "Looping": false,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "Link": {
+      "Animations": [
+        {
+          "Animation": "Characters/OptimusLink/Animations/OP_Optimus_Link.blockyanim",
+          "Looping": false,
+          "Speed": 1,
+          "BlendingDuration": 0.15
+        }
+      ]
+    }
+  },
+  "EyeHeight": 1.8125,
+  "CrouchOffset": -0.23,
+  "HitBox": {
+    "Min": {
+      "X": -0.3,
+      "Y": 0,
+      "Z": -0.3
+    },
+    "Max": {
+      "X": 0.3,
+      "Y": 1.953125,
+      "Z": 0.3
+    }
+  }
+}
