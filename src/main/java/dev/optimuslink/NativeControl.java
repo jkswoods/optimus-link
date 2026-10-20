@@ -268,6 +268,15 @@ final class NativeControl {
         private final GamePacketHandler transport;
         private ControlOutputScope.Lifetime output=new ControlOutputScope.Lifetime(null);
         ActorHandler(GamePacketHandler transport) { super(transport.getChannel(),transport.getProtocolVersion(),transport.getAuth());this.transport=transport; }
+        // This action context never owns channels or heartbeat queues. Native Player/WorldMap
+        // systems also visit the temporary robot PlayerRef, while Pongs still arrive at the
+        // authenticated operator handler. A second inherited ping queue corrupts that pairing.
+        @Override public com.hypixel.hytale.protocol.io.ChannelConnection getChannel() { return transport==null?super.getChannel():transport.getChannel(); }
+        @Override public com.hypixel.hytale.protocol.io.ChannelConnection getChannel(NetworkChannel channel) { return transport==null?super.getChannel(channel):transport.getChannel(channel); }
+        @Override public com.hypixel.hytale.protocol.io.ChannelConnection getChannel(com.hypixel.hytale.protocol.packets.stream.StreamType stream) { return transport==null?super.getChannel(stream):transport.getChannel(stream); }
+        @Override public com.hypixel.hytale.server.core.io.PacketHandler.PingInfo getPingInfo(com.hypixel.hytale.protocol.packets.connection.PongType type) { return transport==null?super.getPingInfo(type):transport.getPingInfo(type); }
+        @Override public void tickPing(float dt) { /* The original operator PlayerRef ticks the connection heartbeat. */ }
+        @Override public void sendPing() { output.run(transport::sendPing); }
         @Override public boolean stillActive() { return output.isOpen()&&transport.stillActive(); }
         @Override public void write(ToClientPacket packet) { output.run(()->transport.write(packet)); }
         @Override public void write(ToClientPacket... packets) { output.run(()->transport.write(packets)); }
