@@ -25,7 +25,7 @@ Choose **Assume control** beside a loaded robot within 32 blocks of your body. Y
 | Walk, look and jump | Your normal game bindings |
 | Mine, place and use held equipment | Your normal item actions, using the robot's held item |
 | Open storage and move items | Your normal inventory binding, using robot-owned containers |
-| Return to your body | `/optimus-release` |
+| Return to your body | Press **1**, or use `/optimus-release` |
 | List your robots in this world | `/optimus-list` |
 | Recover a lost remote link | `/optimus-recover ROBOT_ID` while within 5 blocks of the parked robot |
 

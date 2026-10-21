@@ -1,0 +1,12 @@
+{
+  "MaxStack": 1,
+  "Quality": "Common",
+  "DropOnDeath": false,
+  "ItemSoundSetId": "OP_Equipment",
+  "TranslationProperties": {
+    "Name": "server.items.OP_ReleaseControl.name",
+    "Description": "server.items.OP_ReleaseControl.description"
+  },
+  "Icon": "Icons/Items/OptimusLink/ReleaseControl.png",
+  "Categories": []
+}

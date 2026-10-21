@@ -8,7 +8,7 @@
     "Name": "server.items.OP_Remote.name",
     "Description": "server.items.OP_Remote.description"
   },
-  "Icon": "Icons/ItemsGenerated/OptimusLink_OP_Remote.png",
+  "Icon": "Icons/Items/OptimusLink/FleetRemote.png",
   "Model": "Items/OptimusLink/OP_Remote.blockymodel",
   "Texture": "Items/OptimusLink/OP_Remote.png",
   "Categories": [

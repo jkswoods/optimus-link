@@ -14,9 +14,14 @@ final class ClientActorView {
         // Source-world entity references must not follow the player into another store.
         return new EntityViewer(previous.viewRadiusBlocks,output);
     }
-    static void switchLocal(EntityViewer viewer,Ref<EntityStore> target,int networkId,PacketHandler output) {
+    static void switchLocal(EntityViewer viewer,Ref<EntityStore> previous,int previousId,Ref<EntityStore> target,int networkId,PacketHandler output) {
+        // Recreate the old local actor as an ordinary remote entity. Keeping its client
+        // instance alive also keeps the local movement animation controller attached.
+        if(previous!=null) {
+            viewer.sent.removeInt(previous);viewer.visible.remove(previous);viewer.updates.remove(previous);
+        }
         viewer.sent.removeInt(target);viewer.visible.remove(target);viewer.updates.remove(target);
-        output.writeNoCache(new EntityUpdates(new int[]{networkId},null));
+        output.writeNoCache(new EntityUpdates(previousId<0?new int[]{networkId}:new int[]{previousId,networkId},null));
         output.writeNoCache(new SetClientId(networkId));
     }
 }

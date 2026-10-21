@@ -18,7 +18,7 @@ Copied robot identities are unsupported. If duplicate copies of one bound remote
 
 Move your body within 32 blocks of the loaded robot and release any existing session. Hold the same remote used to open the page. Reopen the roster if you changed held items or its contents changed.
 
-The possession adapter is experimental. Native checks showed a clear robot view, its own inventory and successful return to the operator. Mining, pickup, placement, hotbar/storage transfers and a tool with mined dirt surviving controlled disconnect and normal reload have passed. Chest use with empty hands or a held tool and transfers in both directions have also passed. Walking, looking, jumping and the remaining failure exits are unverified. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
+The possession adapter is experimental. Native checks showed a clear robot view, its own inventory and successful return to the operator. Mining, pickup, placement, hotbar/storage transfers and a tool with mined dirt surviving controlled disconnect and normal reload have passed. Chest use with empty hands or a held tool and transfers in both directions have also passed. Walking, looking, jumping and the remaining failure exits are unverified. Press **1** to return through the fixed release slot. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
 
 ## A robot is unavailable after changing worlds
 
@@ -43,3 +43,7 @@ The pocket-crafting window-close error has been repaired and retested on both ro
 ## Reporting an issue
 
 Accounts with repository access can use [Optimus Link issues](https://github.com/jkswoods/optimus-link/issues). Include the mod/server versions, what action failed and whether it happened before or after reload. Remove personal names, server addresses and unrelated data from shared captures or logs.
+
+## Cannot assume control with a full robot inventory
+
+Release Control reserves hotbar slot 1. If that slot contains an item and every other robot hotbar and storage slot is full, free one slot before assuming control. Existing items are preserved.

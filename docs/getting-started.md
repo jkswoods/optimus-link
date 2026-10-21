@@ -24,6 +24,6 @@ A robot already linked to a remote must be unlinked before another remote can li
 
 Use the remote to open its roster. Choose **Assume control** beside a nearby robot. Your operator body stays behind and can be hurt; choose a safe location first. Control is limited to 32 blocks from that body in this development version.
 
-Use your normal movement, look, jump and item controls. Open the inventory to equip the robot from its own storage. Use `/optimus-release` to return to your body before walking away or leaving the world.
+Use your normal movement, look, jump and item controls. Open the inventory to equip the robot from its own storage. Press **1** to release control and return to your body before walking away or leaving the world. `/optimus-release` remains available as a fallback.
 
 Return to the remote and assume the other robot. Its inventory is independent. [Inventory and recovery](inventory.md) explains how to keep track of your equipment and replace a lost remote.

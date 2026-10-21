@@ -157,6 +157,8 @@ final class NativeControl {
         world.execute(()-> {
             if(ACTIVE.get(operator.getUuid())!=control)return;
             if(!valid(control)) { end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);return; }
+            if(RobotReleaseControl.selected(packet)) { end(operator.getUuid(),FleetRegistry.Exit.MANUAL);return; }
+            if(RobotReleaseControl.blocked(packet)) { RobotInventory.refreshClient(robot);return; }
             control.handler().accept(packet);
             if(packet instanceof ClientMovement movement&&movement.teleportAck!=null)
                 LOGGER.atInfo().log("Optimus pose acknowledgement robot=%s wire=%s position=%s pending=%s",control.token().robot(),movement.teleportAck.teleportId,movement.absolutePosition,control.handler().getPlayerRef().getTeleportAckTracker());
@@ -197,11 +199,18 @@ final class NativeControl {
         var oldMusic=store.getComponent(robot,ForcedMusicTracker.getComponentType());
         var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,oldCollisions,oldMusic,viewer,previousViewer,new Feedback());
         try {
+            RobotReleaseControl.reserve(store.getComponent(robot,com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.getComponentType()),
+                store.getComponent(robot,com.hypixel.hytale.server.core.inventory.InventoryComponent.Storage.getComponentType()));
+            handler.releaseControl=true;
+            var hotbar=store.getComponent(robot,com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.getComponentType());
+            if(hotbar.getActiveSlot()==0)hotbar.setActiveSlot((byte)1,robot,store);
             RobotSavepoints.attach(robot);
             control.feedback().savepointAttached=true;
             RobotSavepoints.playerInteractions(robot);
             var bodyInput=store.getComponent(body,PlayerInput.getComponentType());if(bodyInput!=null)bodyInput.getMovementUpdateQueue().clear();
             var bodyVelocity=store.getComponent(body,Velocity.getComponentType());if(bodyVelocity!=null)bodyVelocity.setZero();
+            var bodyStates=store.getComponent(body,MovementStatesComponent.getComponentType());
+            if(bodyStates!=null)bodyStates.setMovementStates(parkedStates(bodyStates.getMovementStates()));
             var bodyManager=store.getComponent(body,managerType);if(bodyManager!=null)bodyManager.clear();
             store.getComponent(body,Player.getComponentType()).getWindowManager().closeAllWindows(body,store);
             // One viewer follows the controlled actor; its sent-entity state survives the handoff.
@@ -233,19 +242,27 @@ final class NativeControl {
             store.ensureComponent(robot,MovementManager.getComponentType());
             ACTIVE.put(operator.getUuid(),control);
             Player.setGameMode(robot,store.getComponent(body,Player.getComponentType()).getGameMode(),store);
-            synchronizePose(actorRef,robot,viewer);
+            synchronizePose(actorRef,robot,viewer,body);
             RobotInventory.refreshClient(robot);
-            operator.sendMessage(Message.raw("Controlling Optimus. Your body remains exposed. Use /optimus-release to return. Control range 32 blocks."));
+            operator.sendMessage(Message.raw("Controlling Optimus. Your body remains exposed. Press 1 to return, or use /optimus-release. Control range 32 blocks."));
             NativeFleet.soundPrivate(operator,"OP_Remote_Link_Inventory");
         } catch(RuntimeException ex) {
             ACTIVE.put(operator.getUuid(),control);end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);throw ex;
         }
     }
-    private static void synchronizePose(PlayerRef context,Ref<EntityStore> target,EntityViewer viewer) {
+    static com.hypixel.hytale.protocol.MovementStates parkedStates(com.hypixel.hytale.protocol.MovementStates previous) {
+        var idle=new com.hypixel.hytale.protocol.MovementStates();
+        idle.idle=true;idle.horizontalIdle=true;idle.onGround=previous.onGround;
+        idle.crouching=previous.crouching;idle.forcedCrouching=previous.forcedCrouching;
+        idle.inFluid=previous.inFluid;idle.swimming=previous.swimming;
+        return idle;
+    }
+    private static void synchronizePose(PlayerRef context,Ref<EntityStore> target,EntityViewer viewer,Ref<EntityStore> previous) {
         var store=target.getStore();var transform=store.getComponent(target,TransformComponent.getComponentType());
         var head=store.getComponent(target,HeadRotation.getComponentType());
         int networkId=store.getComponent(target,NetworkId.getComponentType()).getId();
-        ClientActorView.switchLocal(viewer,target,networkId,context.getPacketHandler());
+        var previousNetwork=previous!=null&&previous.isValid()&&previous.getStore()==store?store.getComponent(previous,NetworkId.getComponentType()):null;
+        ClientActorView.switchLocal(viewer,previous,previousNetwork==null?-1:previousNetwork.getId(),target,networkId,context.getPacketHandler());
         // PlayerSpawnedSystem ran when Player was added, before this ID change. Publish
         // the full self state again after the old remote object has been removed.
         // On return, restoreViewer publishes the body's self state after deferred cleanup.
@@ -309,6 +326,7 @@ final class NativeControl {
         c.fleet().end(operator,c.token().token(),reason);c.handler().getInteractionPacketQueue().clear();
         if(c.robot().isValid()) {
             var store=c.robot().getStore();var managerType=InteractionModule.get().getInteractionManagerComponent();
+            RobotReleaseControl.release(store.getComponent(c.robot(),com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.getComponentType()));
             var current=store.getComponent(c.robot(),managerType);if(current!=null)current.clear();
             if(store.getComponent(c.robot(),Player.getComponentType())==c.actor()) {
                 c.actor().getWindowManager().closeAllWindows(c.robot(),store);
@@ -339,9 +357,10 @@ final class NativeControl {
         if(c.body().isValid()) {
             var player=c.body().getStore().getComponent(c.body(),Player.getComponentType());
             if(player!=null&&c.operator().getPacketHandler().stillActive()) {
-                synchronizePose(c.operator(),c.body(),c.viewer());
+                synchronizePose(c.operator(),c.body(),c.viewer(),c.robot());
                 Player.setGameMode(c.body(),player.getGameMode(),c.body().getStore());
                 c.operator().sendMessage(Message.raw("Returned to your body: "+reason.name().toLowerCase(Locale.ROOT)));
+                if(reason==FleetRegistry.Exit.MANUAL)NativeFleet.soundPrivate(c.operator(),"OP_Remote_Link_Inventory");
             }
         }
     }
@@ -422,6 +441,7 @@ final class NativeControl {
         private ControlOutputScope.Lifetime output=new ControlOutputScope.Lifetime(null);
         private PageOwner pages;
         private volatile boolean transferBlocked;
+        private boolean releaseControl;
         ActorHandler(GamePacketHandler transport) { super(transport.getChannel(),transport.getProtocolVersion(),transport.getAuth());this.transport=transport; }
         // This action context never owns channels or heartbeat queues. Native Player/WorldMap
         // systems also visit the temporary robot PlayerRef, while Pongs still arrive at the
@@ -440,11 +460,13 @@ final class NativeControl {
             finally { if(previous==null)PAGE_OUTPUT.remove();else PAGE_OUTPUT.set(previous); }
         }
         private void send(Runnable action) { output.run(()->withPages(()->{action.run();return null;})); }
-        @Override public void write(ToClientPacket packet) { send(()->transport.write(packet)); }
-        @Override public void write(ToClientPacket... packets) { send(()->transport.write(packets)); }
-        @Override public void write(ToClientPacket[] packets,ToClientPacket extra) { send(()->transport.write(packets,extra)); }
-        @Override public void writeNoCache(ToClientPacket packet) { send(()->transport.writeNoCache(packet)); }
-        @Override public boolean writePacket(ToClientPacket packet,boolean cache) { return output.write(()->withPages(()->transport.writePacket(packet,cache))); }
+        private ToClientPacket project(ToClientPacket packet) { return releaseControl?RobotReleaseControl.project(packet):packet; }
+        private ToClientPacket[] project(ToClientPacket[] packets) { return Arrays.stream(packets).map(this::project).toArray(ToClientPacket[]::new); }
+        @Override public void write(ToClientPacket packet) { send(()->transport.write(project(packet))); }
+        @Override public void write(ToClientPacket... packets) { send(()->transport.write(project(packets))); }
+        @Override public void write(ToClientPacket[] packets,ToClientPacket extra) { send(()->transport.write(project(packets),project(extra))); }
+        @Override public void writeNoCache(ToClientPacket packet) { send(()->transport.writeNoCache(project(packet))); }
+        @Override public boolean writePacket(ToClientPacket packet,boolean cache) { return output.write(()->withPages(()->transport.writePacket(project(packet),cache))); }
         @Override public void disconnect(FormattedMessage message) { output.run(()->transport.disconnect(message)); }
         @Override public void disconnect(Message message) { output.run(()->transport.disconnect(message)); }
     }

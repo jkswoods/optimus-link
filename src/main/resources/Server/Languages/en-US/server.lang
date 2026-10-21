@@ -6,3 +6,5 @@ items.OP_StandbyDock.name=Optimus Assembly Dock
 items.OP_StandbyDock.description=Craft fleet remotes and Optimus deployment units. Requires no fuel or power.
 benchCategories.OP_Robotics=Robotics
 npcRoles.OP_Optimus_Robot.name=Optimus Robot
+items.OP_ReleaseControl.name=Release Control
+items.OP_ReleaseControl.description=Press 1 to return to your body. This permanent control cannot be moved or dropped.
