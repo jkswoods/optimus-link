@@ -37,7 +37,7 @@ public final class RobotPlayerStorageTest {
             check(storage.save(operator,player,true)==nativeStorage.completion,"real player native save future is unchanged");
             check(nativeStorage.saved==1&&nativeStorage.snapshot==player&&nativeStorage.id==operator&&nativeStorage.force,"real player UUID, holder and force pass through unchanged");
             storage.save(robotUuid,robot,true).join();storage.save(robotUuid,robot,false).join();
-            check(entitySectionSaves[0]==2,"both forced and periodic robot saves dirty native entity sections");
+            check(entitySectionSaves[0]==2,"both forced and periodic robot saves publish native NPC snapshots");
             check(nativeStorage.saved==1,"neither robot save creates a player file");
             check(robot.getComponent(OptimusLinkPlugin.robotType)!=null,"save does not mutate the native robot snapshot");
             check(storage.load(operator)==nativeStorage.loaded&&nativeStorage.id==operator,"real player load delegates exact future and UUID");

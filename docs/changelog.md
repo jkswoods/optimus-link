@@ -13,6 +13,7 @@
 - Kept robot saves in world entity storage and cleared temporary control state before loading a saved robot.
 - Kept robot heartbeat and map channels on the operator's existing connection, and aligned the Dock interaction box with its model.
 - Replaced temporary player subclasses with native components, initialized player collision state, and retained each UI acknowledgement's original page manager. Native control and save acceptance remain pending.
+- Kept the temporary control facade out of chunk snapshots while retaining robot-owned data in native entity storage. Native lifecycle verification remains pending.
 - Added the player guide and original Optimus Link branding.
 
 Gameplay, safe exits, ordinary reload and current-build screenshots remain under verification. This is not a public release.

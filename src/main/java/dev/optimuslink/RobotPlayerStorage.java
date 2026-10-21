@@ -1,10 +1,8 @@
 package dev.optimuslink;
 
 import com.hypixel.hytale.component.Holder;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.playerdata.PlayerStorage;
-import com.hypixel.hytale.server.core.universe.world.chunk.section.EntitySection;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.io.IOException;
 import java.util.Set;
@@ -27,21 +25,8 @@ final class RobotPlayerStorage implements PlayerStorage {
         var universe=Universe.get();var current=universe.getPlayerStorage();
         if(current==installed&&installed!=null)return;
         if(installed!=null)throw new IllegalStateException("Player storage changed during Optimus control; reconnect before retrying.");
-        installed=new RobotPlayerStorage(current,RobotPlayerStorage::markSection);
+        installed=new RobotPlayerStorage(current,RobotSavepoints::request);
         universe.setPlayerStorage(installed);
-    }
-    private static void markSection(Holder<EntityStore> snapshot) {
-        var transform=snapshot.getComponent(TransformComponent.getComponentType());
-        var sectionRef=transform==null?null:transform.getSectionRef();
-        if(sectionRef!=null&&sectionRef.isValid()) {
-            // Native PlayerSavingSystems invokes saveConfig inside its parallel ECS pass.
-            // Ordinary getComponent asserts the world thread; use the supported concurrent
-            // reader here. The native pass joins before the world advances chunk saving.
-            var section=sectionRef.getStore().getComponentConcurrent(sectionRef,EntitySection.getComponentType());
-            if(section!=null)section.markNeedsSaving();
-        }
-        // Native EntitySection snapshots retain NPC identity and all actual inventory components.
-        // RobotLifecycle.Load strips the temporary player facade before native player systems run.
     }
     @Override public CompletableFuture<Void> save(UUID uuid,Holder<EntityStore> snapshot,boolean force) {
         if(snapshot.getComponent(OptimusLinkPlugin.robotType)==null)return delegate.save(uuid,snapshot,force);

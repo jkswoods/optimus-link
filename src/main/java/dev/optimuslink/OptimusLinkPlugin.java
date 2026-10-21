@@ -26,6 +26,9 @@ public final class OptimusLinkPlugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new NativeControl.Tick());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle.Load());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle());
+        getEntityStoreRegistry().registerSystem(new RobotSavepoints.Unload());
+        getChunkStoreRegistry().registerSystem(new RobotSavepoints.Tick());
+        getChunkStoreRegistry().registerSystem(new RobotSavepoints.Shutdown());
         getEntityStoreRegistry().registerSystem(new RobotTransferGuard());
         getEntityStoreRegistry().registerSystem(new RobotActionFeedback.Break());
         getEntityStoreRegistry().registerSystem(new RobotActionFeedback.Place());

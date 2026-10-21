@@ -48,6 +48,56 @@ public final class NativeActorComponentsTest {
         var event=new CustomPageEvent();event.type=CustomPageEventType.Acknowledge;
         manager.handleLegacyCustomPageEvent(null,null,event);check(true,"actual pinned PageManager accepts its expected acknowledgement");
     }
+    private static void snapshots(Player actor,PlayerRef actorRef,Object unsafe,java.lang.reflect.Method allocate) throws Exception {
+        var moduleClass=com.hypixel.hytale.server.core.modules.entity.EntityModule.class;
+        var module=allocate.invoke(unsafe,moduleClass);var instance=moduleClass.getDeclaredField("instance");instance.setAccessible(true);
+        check(instance.get(null)==null,"native clone fixture must not replace a running entity module");
+        for(var name:new String[]{"codecMap","classMap"}) { var field=moduleClass.getDeclaredField(name);field.setAccessible(true);field.set(module,new HashMap<>()); }
+        instance.set(null,module);
+        var registry=EntityStore.REGISTRY;var oldIdentityType=OptimusLinkPlugin.robotType;
+        var itemStore=com.hypixel.hytale.server.core.asset.HytaleAssetStore.builder(com.hypixel.hytale.server.core.asset.type.item.config.Item.class,new com.hypixel.hytale.assetstore.map.DefaultAssetMap<String,com.hypixel.hytale.server.core.asset.type.item.config.Item>())
+            .setPath("in-memory-native-item-test").setCodec(com.hypixel.hytale.server.core.asset.type.item.config.Item.CODEC).setKeyFunction(com.hypixel.hytale.server.core.asset.type.item.config.Item::getId).build();
+        com.hypixel.hytale.assetstore.AssetRegistry.register(itemStore); // Empty in-memory catalog, no files loaded.
+        com.hypixel.hytale.component.Store<EntityStore> snapshotStore=null;
+        try {
+            // A serializable Player component selects the actual Entity.clone implementation.
+            // Its field codec is never reached because the native legacy class codec is absent;
+            // omit asset-dependent default migrations from this server-free registry fixture.
+            var playerType=registry.registerComponent(Player.class,"SnapshotPlayer",com.hypixel.hytale.codec.builder.BuilderCodec.builder(Player.class,Player::new).build());
+            var refType=registry.registerComponent(PlayerRef.class,()->null);
+            var identityType=registry.registerComponent(RobotIdentity.class,"SnapshotRobot",RobotIdentity.CODEC);
+            var inventoryType=registry.registerComponent(com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.class,"SnapshotHotbar",com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.CODEC);
+            OptimusLinkPlugin.robotType=identityType;
+            var robot=UUID.randomUUID();var live=registry.newHolder();live.addComponent(playerType,actor);live.addComponent(refType,actorRef);live.addComponent(identityType,new RobotIdentity(robot));
+            var inventory=new com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar((short)9);
+            var metadata=new org.bson.BsonDocument("OriginalRobotItem",new org.bson.BsonString("kept"));
+            inventory.getInventory().setItemStackForSlot((short)0,new com.hypixel.hytale.server.core.inventory.ItemStack("Ingredient_Stick",3,0d,0d,metadata));live.addComponent(inventoryType,inventory);
+            snapshotStore=registry.addStore(null,new com.hypixel.hytale.component.EmptyResourceStorage());
+            try { live.cloneSerializable(registry.getData());throw new AssertionError("temporary native Player unexpectedly cloned into a chunk"); }
+            catch(NullPointerException expected) { check(expected.getMessage().contains("codec"),"actual native Entity.clone reproduces the missing Player codec failure"); }
+            live.ensureComponent(registry.getNonSerializedComponentType());
+            check(!live.hasSerializableComponents(registry.getData()),"native NonSerialized excludes the active action reference from chunk saves");
+            check(live.cloneSerializable(registry.getData()).getArchetype().isEmpty(),"cloning a marked live entity first would lose the robot snapshot");
+            var saved=RobotSnapshot.capture(live,registry);
+            check(saved.getComponent(identityType).id.equals(robot),"player-free snapshot retains exact robot identity");
+            check(saved.getComponent(playerType)==null&&saved.getComponent(refType)==null,"snapshot never clones or persists temporary player components");
+            check(saved.getComponent(registry.getNonSerializedComponentType())==null,"persisted snapshot omits the transient live-entity marker");
+            var copied=saved.getComponent(inventoryType).getInventory();
+            check(copied!=inventory.getInventory(),"saved native container is an independent snapshot");
+            check(copied.getItemStack((short)0).getQuantity()==3&&metadata.equals(copied.getItemStack((short)0).getMetadata()),"native robot item quantity and metadata survive snapshotting");
+            inventory.getInventory().setItemStackForSlot((short)0,null);
+            check(copied.getItemStack((short)0).getQuantity()==3,"later live inventory changes cannot mutate an already published snapshot");
+            var section=new com.hypixel.hytale.server.core.universe.world.chunk.section.EntitySection();var unrelated=registry.newHolder();unrelated.addComponent(identityType,new RobotIdentity(UUID.randomUUID()));
+            section.addEntityHolder(unrelated);section.addEntityHolder(saved);
+            var cloned=(com.hypixel.hytale.server.core.universe.world.chunk.section.EntitySection)section.cloneSerializable();
+            check(cloned.getEntityHolders().size()==2,"actual native EntitySection serializes the clean robot holder beside unrelated holders");
+            check(cloned.getEntityHolders().get(1).getComponent(inventoryType).getInventory().getItemStack((short)0).getQuantity()==3,"actual section snapshot retains native robot inventory contents");
+            RobotSavepoints.removeImage(section,saved);
+            check(section.getEntityHolders().size()==1&&section.getEntityHolders().get(0)==unrelated,"release removes only the exact temporary holder and preserves unrelated holder identity/order");
+            RobotSavepoints.removeImage(section,saved);
+            check(section.getEntityHolders().size()==1&&section.getEntityHolders().get(0)==unrelated,"repeated cleanup cannot remove another native entity holder");
+        } finally { if(snapshotStore!=null)snapshotStore.shutdown();com.hypixel.hytale.assetstore.AssetRegistry.unregister(itemStore);OptimusLinkPlugin.robotType=oldIdentityType;instance.set(null,null); }
+    }
     public static void main(String[] args) throws Exception {
         // Player's native WorldMapTracker consults static server constants. Parse inert options
         // without constructing HytaleServer, opening stores/listeners or loading any assets.
@@ -111,6 +161,7 @@ public final class NativeActorComponentsTest {
             acknowledge(receipts,bodyWire.manager);acknowledge(receipts,actorWire.manager);
             acknowledge(receipts,actorWire.manager);acknowledge(receipts,bodyWire.manager);
             check(receipts.acknowledge()==null,"native assume/release/reopen receipts drain exactly once");
+            snapshots(actor,actorRef,unsafe,allocate);
         } catch(Exception|Error failure) { failure.printStackTrace(System.err);throw failure; }
         finally { registry.shutdown();bus.shutdown();serverInstance.set(null,null);com.hypixel.hytale.server.core.HytaleServer.SCHEDULED_EXECUTOR.shutdownNow(); }
         System.out.println("Native actor components: "+assertions+" assertions passed");

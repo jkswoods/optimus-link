@@ -82,7 +82,7 @@ final class NativeControl {
         com.hypixel.hytale.protocol.packets.interface_.ExecuteServersidePageCommand.class,
         com.hypixel.hytale.protocol.packets.interface_.ExecuteServersideHudCommand.class);
     private record Router(PlayerRef operator,GamePacketHandler transport,ActorHandler fallback,LegacyPageReceipts<PageOwner> pages) {}
-    private static final class Feedback { Long lastServo;boolean transferRestoreQueued; }
+    private static final class Feedback { Long lastServo;boolean transferRestoreQueued,savepointAttached; }
     private record Control(FleetRegistry.Session token,FleetRegistry fleet,PlayerRef operator,Ref<EntityStore> body,
         Ref<EntityStore> robot,Player actor,ActorHandler handler,InteractionManager previousInteractions,PlayerInput previousInput,
         CollisionResultComponent previousCollisions,EntityViewer viewer,EntityViewer previousRobotViewer,Feedback feedback) {}
@@ -189,6 +189,8 @@ final class NativeControl {
         var oldCollisions=store.getComponent(robot,CollisionResultComponent.getComponentType());
         var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,oldCollisions,viewer,previousViewer,new Feedback());
         try {
+            RobotSavepoints.attach(robot);
+            control.feedback().savepointAttached=true;
             var bodyInput=store.getComponent(body,PlayerInput.getComponentType());if(bodyInput!=null)bodyInput.getMovementUpdateQueue().clear();
             var bodyVelocity=store.getComponent(body,Velocity.getComponentType());if(bodyVelocity!=null)bodyVelocity.setZero();
             var bodyManager=store.getComponent(body,managerType);if(bodyManager!=null)bodyManager.clear();
@@ -290,11 +292,15 @@ final class NativeControl {
                 if(!c.robot().isValid())return;
                 if(store.getComponent(c.robot(),Player.getComponentType())==c.actor())store.removeComponent(c.robot(),Player.getComponentType());
                 if(store.getComponent(c.robot(),PlayerRef.getComponentType())==c.handler().getPlayerRef())store.removeComponent(c.robot(),PlayerRef.getComponentType());
-                if(c.previousRobotViewer()==null)store.removeComponent(c.robot(),EntityViewer.getComponentType());else store.putComponent(c.robot(),EntityViewer.getComponentType(),c.previousRobotViewer());
+                if(c.previousRobotViewer()==null)store.tryRemoveComponent(c.robot(),EntityViewer.getComponentType());else store.putComponent(c.robot(),EntityViewer.getComponentType(),c.previousRobotViewer());
                 restoreViewer(c);
-                if(c.previousInput()==null)store.removeComponent(c.robot(),PlayerInput.getComponentType());else store.putComponent(c.robot(),PlayerInput.getComponentType(),c.previousInput());
-                if(c.previousCollisions()==null)store.removeComponent(c.robot(),CollisionResultComponent.getComponentType());else store.putComponent(c.robot(),CollisionResultComponent.getComponentType(),c.previousCollisions());
-                if(c.previousInteractions()==null)store.removeComponent(c.robot(),managerType);else store.putComponent(c.robot(),managerType,c.previousInteractions());
+                if(c.previousInput()==null)store.tryRemoveComponent(c.robot(),PlayerInput.getComponentType());else store.putComponent(c.robot(),PlayerInput.getComponentType(),c.previousInput());
+                if(c.previousCollisions()==null)store.tryRemoveComponent(c.robot(),CollisionResultComponent.getComponentType());else store.putComponent(c.robot(),CollisionResultComponent.getComponentType(),c.previousCollisions());
+                if(c.previousInteractions()==null)store.tryRemoveComponent(c.robot(),managerType);else store.putComponent(c.robot(),managerType,c.previousInteractions());
+                if(c.feedback().savepointAttached) {
+                    RobotSavepoints.release(c.token().robot());
+                    store.tryRemoveComponent(c.robot(),EntityStore.REGISTRY.getNonSerializedComponentType());
+                }
                 var velocity=store.getComponent(c.robot(),Velocity.getComponentType());if(velocity!=null)velocity.setZero();
             });
         } else restoreViewer(c);
