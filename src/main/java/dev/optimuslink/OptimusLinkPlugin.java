@@ -27,6 +27,7 @@ public final class OptimusLinkPlugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new OperatorWorldTransfer());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle.Load());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle());
+        getEntityStoreRegistry().registerSystem(new RobotDeath());
         getEntityStoreRegistry().registerSystem(new RobotSavepoints.Unload());
         getChunkStoreRegistry().registerSystem(new RobotSavepoints.Tick());
         getChunkStoreRegistry().registerSystem(new RobotSavepoints.Shutdown());

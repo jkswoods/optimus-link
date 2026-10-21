@@ -9,7 +9,7 @@
 - Repaired the operator’s world-change exit and restored native robot save references before retiring temporary control snapshots. Both robots, their inventories and links survived the world change, re-entry, controlled disconnect and normal reload.
 - Verified the controlled-robot transfer guard with a native cross-world request, safe operator return, retained robots and successful control re-entry.
 - Verified nearby link recovery onto another existing remote, separate one-robot rosters, control and manual return. Robot inventories and remote metadata remained unchanged in the normal save; both separate rosters and the equipped tool remained available after normal reload.
-- Fixed the prematurely closed operator respawn page. A native check passed automatic return, the normal Respawn button, pickup of both original remote drops and normal reload with both robots' inventories and links intact. Robot destruction is still unverified.
+- Fixed the prematurely closed operator respawn page. A native check passed automatic return, the normal Respawn button, pickup of both original remote drops and normal reload with both robots' inventories and links intact. A separate native robot-death check exposed unintended revival; the source repair suppresses robot respawn and extracts all eight inventory sections into drops, with native retesting pending.
 - Added Assembly Dock, Fleet Remote and deployment-unit recipes.
 - Added robot deployment, owner-bound remotes, exclusive links and a paginated fleet page.
 - Added the native control adapter, release, owner robot listing and nearby lost-link recovery.
