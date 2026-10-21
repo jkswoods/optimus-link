@@ -1,7 +1,8 @@
 site_name: Optimus Link
 site_description: Craft robots, link a fleet and take control.
+site_url: https://jkswoods.github.io/optimus-link/
 repo_url: https://github.com/jkswoods/optimus-link
-repo_name: Private source repository
+repo_name: Source repository
 edit_uri: ""
 theme:
   name: readthedocs

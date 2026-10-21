@@ -17,4 +17,4 @@ Each robot belongs to its deploying player and links to one remote. A remote can
 
 The Assembly Dock crafts equipment without fuel or power. Robots retain their own inventories when parked. This version has no charging, autonomous jobs or ownership-transfer system.
 
-The [private source repository](https://github.com/jkswoods/optimus-link) is available to accounts with access. There is no public release download. This independent fan mod is not affiliated with Tesla or Hytale.
+[Download the development prerelease](https://github.com/jkswoods/optimus-link/releases/tag/v0.2.0-dev) or browse the [source repository](https://github.com/jkswoods/optimus-link). This independent fan mod is not affiliated with Tesla or Hytale.

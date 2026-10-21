@@ -18,7 +18,7 @@
 - Corrected the held-tool grip, chest interactions and inventory selection when returning to the operator.
 - Preserved the normal operator Respawn screen and prevented destroyed robots from reviving.
 
-This is a private development candidate. See [Compatibility and backups](compatibility.md) for remaining animation, listening and multiplayer limits.
+This is an experimental development prerelease. See [Compatibility and backups](compatibility.md) for remaining animation, listening and multiplayer limits.
 
 ## 0.1.x — authoring stage
 

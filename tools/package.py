@@ -15,7 +15,7 @@ def main():
         if z.testzip():raise SystemExit('JAR integrity check failed')
     if not (args.site/'index.html').is_file():raise SystemExit('Build the player guide first')
     entries={args.jar.name:jar,'THIRD_PARTY_NOTICES.md':(ROOT/'THIRD_PARTY_NOTICES.md').read_bytes()}
-    entries['READ-ME.txt']=(f'Optimus Link {version}\nHytale {target["hytale"]}; Java {target["java_release"]}.\nExperimental private development candidate. Native gameplay coverage is partial; some animation transitions, human sound listening and actual second-client play remain pending. Use a disposable world.\nOpen guide/index.html for installation, recipes, controls and known limits.\nThis package is not a public release. No distribution license has been selected.\n\nJAR SHA256: {digest(jar)}\n').encode()
+    entries['READ-ME.txt']=(f'Optimus Link {version}\nHytale {target["hytale"]}; Java {target["java_release"]}.\nExperimental development prerelease. Native gameplay coverage is partial; some animation transitions, human sound listening and actual second-client play remain pending. Use a disposable world.\nOpen guide/index.html for installation, recipes, controls and known limits.\nThis prerelease is for testing and is not a production release. No distribution license has been selected.\n\nJAR SHA256: {digest(jar)}\n').encode()
     for path in sorted(args.site.rglob('*')):
         if path.is_symlink():raise SystemExit('The site contains a symlink')
         if path.is_file():

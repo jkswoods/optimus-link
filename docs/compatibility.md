@@ -18,6 +18,6 @@ The 0.1.x authoring plugin was a model test tool. Its test scenes and items do n
 
 ## Distribution and multiplayer
 
-The private repository and locally supplied development package are the available channels. There is no public release download or selected redistribution license.
+Use the [GitHub prerelease](https://github.com/jkswoods/optimus-link/releases/tag/v0.2.0-dev) for the tested JAR and offline guide. The [source repository](https://github.com/jkswoods/optimus-link) is public. This remains an experimental development build; no redistribution license has been selected.
 
 The server checks ownership and prevents concurrent control in automated tests. Genuine second-client play is still pending; report its results separately from single-player behavior.

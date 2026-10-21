@@ -2,9 +2,9 @@
 
 Craft humanoid robots, link several to a Fleet Remote and control one at a time in Hytale. Each robot keeps its own equipment and storage. Select **Release Control in hotbar slot 1** to return to your body; the control cannot be moved or dropped on death.
 
-This private **0.2.0-dev** build targets **Hytale 0.7.2 / Java 25**. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](docs/compatibility.md) before testing.
+This experimental **0.2.0-dev** prerelease targets **Hytale 0.7.2 / Java 25**. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](docs/compatibility.md) before testing.
 
-Start with [installation](docs/installation.md) and [your first session](docs/getting-started.md). The guide covers [recipes](docs/recipes.md), [fleet controls](docs/fleet.md), [inventories and recovery](docs/inventory.md) and [troubleshooting](docs/troubleshooting.md). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
+[Download the prerelease](https://github.com/jkswoods/optimus-link/releases/tag/v0.2.0-dev) and read the [online player guide](https://jkswoods.github.io/optimus-link/). Start with [installation](docs/installation.md) and [your first session](docs/getting-started.md). The guide covers [recipes](docs/recipes.md), [fleet controls](docs/fleet.md), [inventories and recovery](docs/inventory.md) and [troubleshooting](docs/troubleshooting.md). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
 
 ## Build
 
@@ -28,4 +28,4 @@ The guide helper uses the archive epoch in `target.json` for reproducible output
 
 Original models, animations and connected ElevenLabs audio are included. The operator's body remains exposed under normal world damage rules while controlling a robot.
 
-No public release download or redistribution license has been selected. This independent fan mod is not affiliated with Tesla or Hytale.
+No redistribution license has been selected. This independent fan mod is not affiliated with Tesla or Hytale.

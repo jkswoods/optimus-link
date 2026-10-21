@@ -6,3 +6,16 @@ __pycache__/
 *.pyc
 .DS_Store
 .env
+
+# Local development evidence and runtime data
+/project/
+/reports/
+/captures/
+/logs/
+/saves/
+/playerdata/
+*.log
+*.jfr
+*.hprof
+*.dump
+*.dmp
