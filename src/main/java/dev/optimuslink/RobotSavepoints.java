@@ -99,6 +99,20 @@ final class RobotSavepoints {
         var point=ACTIVE.remove(id);if(point==null)return;
         point.retired=true;point.requested.set(false);removeImage(point.section,point.image);
     }
+    static void releaseToLive(UUID id) {
+        var point=ACTIVE.get(id);if(point==null)return;
+        var store=point.robot.getStore();store.assertThread();
+        var current=section(point.robot);
+        store.tryRemoveComponent(point.robot,EntityStore.REGISTRY.getNonSerializedComponentType());
+        // A controlled NPC is saved through its holder. Rejoin the current native
+        // section before retiring that holder, including when the last player leaves.
+        restoreLiveReference(current,point.robot,store.getComponent(point.robot,com.hypixel.hytale.server.core.entity.Dirty.getComponentType()));
+        release(id);
+    }
+    static void restoreLiveReference(EntitySection section,Ref<EntityStore> robot,com.hypixel.hytale.server.core.entity.Dirty dirty) {
+        robot.getStore().assertThread();section.addEntityReference(robot);
+        if(dirty!=null) { dirty.setSection(section);dirty.markDirty(); }
+    }
     private static void flush(Store<ChunkStore> store,boolean force) {
         store.assertThread();var world=store.getExternalData().getWorld();long now=System.nanoTime();
         for(var point:ACTIVE.values())if(point.world==world&&!point.retired&&point.robot.isValid()) {

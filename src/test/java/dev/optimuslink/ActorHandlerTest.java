@@ -74,6 +74,13 @@ public final class ActorHandlerTest {
         var removed=(com.hypixel.hytale.protocol.packets.entities.EntityUpdates)sent.removeFirst();
         check(java.util.Arrays.equals(removed.removed,new int[]{41})&&removed.updates==null,"only the target network ID is removed from the operator's client");
         check(sent.removeFirst() instanceof com.hypixel.hytale.protocol.packets.player.SetClientId id&&id.clientId==41,"native local identity follows target removal on the same connection");
+        var transferred=ClientActorView.forWorldTransfer(viewer,real);
+        check(transferred!=viewer&&transferred.viewRadiusBlocks==viewer.viewRadiusBlocks,"destination viewer preserves the actual view radius without sharing the source viewer");
+        check(transferred.packetReceiver==real,"destination body viewer uses the authenticated transport");
+        check(transferred.sent.isEmpty()&&transferred.visible.isEmpty()&&transferred.updates.isEmpty(),"destination viewer starts without source-world entity references or pending updates");
+        check(viewer.sent.getInt(unrelated)==42&&viewer.visible.contains(unrelated)&&viewer.updates.get(unrelated)==otherUpdate,"preparing body transfer leaves the actor's source tracking intact until cleanup");
+        transferred.sent.put(unrelated,51);
+        check(viewer.sent.getInt(unrelated)==42,"destination and actor tracking maps remain independent");
         var body=new com.hypixel.hytale.server.core.universe.PlayerRef(null,java.util.UUID.randomUUID(),"Operator","en-US",real,null);
         var position=new org.joml.Vector3d(2.5,80,.5);
         var rotation=new com.hypixel.hytale.math.vector.Rotation3f();

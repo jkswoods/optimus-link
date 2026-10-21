@@ -327,8 +327,7 @@ final class NativeControl {
                 if(c.previousCollisions()==null)store.tryRemoveComponent(c.robot(),CollisionResultComponent.getComponentType());else store.putComponent(c.robot(),CollisionResultComponent.getComponentType(),c.previousCollisions());
                 if(c.previousInteractions()==null)store.tryRemoveComponent(c.robot(),managerType);else store.putComponent(c.robot(),managerType,c.previousInteractions());
                 if(c.feedback().savepointAttached) {
-                    RobotSavepoints.release(c.token().robot());
-                    store.tryRemoveComponent(c.robot(),EntityStore.REGISTRY.getNonSerializedComponentType());
+                    RobotSavepoints.releaseToLive(c.token().robot());
                 }
                 var velocity=store.getComponent(c.robot(),Velocity.getComponentType());if(velocity!=null)velocity.setZero();
             });
@@ -356,6 +355,16 @@ final class NativeControl {
     static void stopAll() { for(var c:List.copyOf(ACTIVE.values()))requestEnd(c,FleetRegistry.Exit.SHUTDOWN); }
     static void worldLeaving(World world) {
         for(var c:List.copyOf(ACTIVE.values()))if(c.robot().isValid()&&c.robot().getStore().getExternalData().getWorld()==world)requestEnd(c,FleetRegistry.Exit.UNLOAD);
+    }
+    static void operatorLeaving(Holder<EntityStore> holder,Store<EntityStore> store) {
+        var operator=holder.getComponent(PlayerRef.getComponentType());if(operator==null)return;
+        var c=ACTIVE.get(operator.getUuid());
+        if(c==null||c.operator()!=operator||c.body().getStore()!=store||!operator.getPacketHandler().stillActive())return;
+        // The camera viewer is on the robot. Waiting for the old body reference to
+        // become invalid is too late: World.addPlayer immediately spawns this holder.
+        if(holder.getComponent(EntityViewer.getComponentType())==null)
+            holder.putComponent(EntityViewer.getComponentType(),ClientActorView.forWorldTransfer(c.viewer(),operator.getPacketHandler()));
+        requestEnd(c,FleetRegistry.Exit.WORLD_CHANGE);
     }
     static void worldTransferRequested(Ref<EntityStore> robot,com.hypixel.hytale.server.core.modules.entity.teleport.Teleport teleport) {
         var destination=teleport.getWorld();

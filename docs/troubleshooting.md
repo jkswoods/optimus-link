@@ -22,7 +22,7 @@ The possession adapter is experimental. Native checks showed a clear robot view,
 
 ## A robot is unavailable after changing worlds
 
-Release control before changing worlds. The current candidate has a defect that can leave a linked robot unavailable and lose its saved inventory when the operator changes worlds during control. Stop using that session and retain its paired world/player backup and exact JAR. Repeated recovery commands or cloning the robot are not a verified repair; restore a matching known-good backup after disconnecting normally.
+Release control before changing worlds. An earlier development build could lose a robot when the operator changed worlds during control. The repair has passed a focused native check and subsequent normal reload; upgrading does not recreate an entity already lost by the older build. If affected, disconnect normally and retain the failed save and exact JAR. Restore a matching known-good world/player backup rather than cloning a robot or repeatedly trying recovery commands.
 
 ## I lost the remote
 

@@ -140,6 +140,21 @@ public final class NativeActorComponentsTest {
             check(section.getEntityHolders().size()==1&&section.getEntityHolders().get(0)==unrelated,"release removes only the exact temporary holder and preserves unrelated holder identity/order");
             RobotSavepoints.removeImage(section,saved);
             check(section.getEntityHolders().size()==1&&section.getEntityHolders().get(0)==unrelated,"repeated cleanup cannot remove another native entity holder");
+            var parked=snapshotStore.addEntity(saved.cloneSerializable(registry.getData()),com.hypixel.hytale.component.AddReason.LOAD);
+            var current=new com.hypixel.hytale.server.core.universe.world.chunk.section.EntitySection();
+            current.addEntityHolder(saved);
+            RobotSavepoints.removeImage(current,saved);
+            check(((com.hypixel.hytale.server.core.universe.world.chunk.section.EntitySection)current.cloneSerializable()).getEntityHolders().isEmpty(),"retiring the control holder without restoring the live reference reproduces an empty native save section");
+            var dirty=new com.hypixel.hytale.server.core.entity.Dirty(section,false);
+            RobotSavepoints.restoreLiveReference(current,parked,dirty);
+            var resumed=(com.hypixel.hytale.server.core.universe.world.chunk.section.EntitySection)current.cloneSerializable();
+            check(resumed.getEntityHolders().size()==1&&resumed.getEntityHolders().getFirst().getComponent(identityType).id.equals(robot),"restoring the current native section reference preserves exactly one original robot in an immediate save");
+            var resumedItem=resumed.getEntityHolders().getFirst().getComponent(inventoryType).getInventory().getItemStack((short)0);
+            check(resumedItem.getQuantity()==3&&metadata.equals(resumedItem.getMetadata()),"immediate native serialization after release retains the robot's existing items and metadata");
+            check(dirty.isDirty(),"returning native persistence marks the released NPC dirty before the chunk can unload");
+            RobotSavepoints.restoreLiveReference(current,parked,dirty);
+            check(((com.hypixel.hytale.server.core.universe.world.chunk.section.EntitySection)current.cloneSerializable()).getEntityHolders().size()==1,"repeating native reference restoration cannot duplicate the robot");
+            check(section.getEntityHolders().size()==1&&section.getEntityHolders().getFirst()==unrelated,"restoring the current section does not replace unrelated holders in the previous section");
         } finally { if(snapshotStore!=null)snapshotStore.shutdown();com.hypixel.hytale.assetstore.AssetRegistry.unregister(itemStore);OptimusLinkPlugin.robotType=oldIdentityType;instance.set(null,null); }
     }
     public static void main(String[] args) throws Exception {
