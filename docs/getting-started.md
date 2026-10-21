@@ -1,12 +1,16 @@
 # Your first session
 
-This walkthrough describes the current development implementation. Ordinary crafting and control still need native gameplay verification.
+Crafting, deployment and linking have native test evidence. Player-style robot actions and inventory transfers remain under gameplay verification.
 
 ## Make the equipment
 
 Gather wood and obtain Iron Bars, Copper Bars and Light Leather through the base game's processing routes. [Crafting](recipes.md) gives exact quantities and material sources.
 
 At a Workbench, craft one **Optimus Assembly Dock**. Place it with standing room nearby, open it and select the Robotics category. Craft a **Fleet Remote** and an **Optimus Deployment Unit**. A useful first fleet has two deployment units and one remote.
+
+![Native development workshop with a Workbench, storage Chest, Optimus Assembly Dock and deployed robot](assets/native/workshop.jpg)
+
+*Native development-world capture: Workbench on the left, storage Chest in the centre, Assembly Dock on the right and a deployed Optimus behind them.*
 
 ## Deploy and link
 

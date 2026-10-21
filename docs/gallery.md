@@ -2,4 +2,4 @@
 
 The [fleet guide](fleet.md) includes an actual 0.2.0-dev native roster capture after linking two robots to one remote. The homepage banner is original illustrative branding, not an in-game capture.
 
-The guide is still awaiting clean images of the Assembly Dock in the world, its native crafting screen and a robot performing an ordinary item action. The roster image does not establish playable control or save/reload acceptance.
+The [first-session guide](getting-started.md) shows the Assembly Dock, Workbench, Chest and a deployed robot in the native development world. Images of the Dock's crafting screen and a robot performing an ordinary item action are still pending. These captures do not establish playable control or raw survival gathering.
