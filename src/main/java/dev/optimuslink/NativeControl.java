@@ -9,7 +9,6 @@ import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains;
 import com.hypixel.hytale.protocol.packets.player.ClientMovement;
-import com.hypixel.hytale.protocol.packets.player.SetClientId;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.InteractionManager;
 import com.hypixel.hytale.server.core.entity.AnimationUtils;
@@ -50,6 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /** Native actor routing. The real connection/Universe identity always remains the operator. */
 final class NativeControl {
+    private static final com.hypixel.hytale.logger.HytaleLogger LOGGER=com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass();
     private static final Map<UUID,Control> ACTIVE=new ConcurrentHashMap<>();
     private static final Map<UUID,Router> ROUTERS=new ConcurrentHashMap<>();
     private record PageOwner(PageManager manager,Ref<EntityStore> ref,Store<EntityStore> store) {}
@@ -155,6 +155,8 @@ final class NativeControl {
             if(ACTIVE.get(operator.getUuid())!=control)return;
             if(!valid(control)) { end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);return; }
             control.handler().accept(packet);
+            if(packet instanceof ClientMovement movement&&movement.teleportAck!=null)
+                LOGGER.atInfo().log("Optimus pose acknowledgement robot=%s wire=%s position=%s pending=%s",control.token().robot(),movement.teleportAck.teleportId,movement.absolutePosition,control.handler().getPlayerRef().getTeleportAckTracker());
         });
     }
     static void begin(PlayerRef operator,UUID remote,UUID robotId) {
@@ -224,20 +226,27 @@ final class NativeControl {
             ACTIVE.put(operator.getUuid(),control);
             Player.setGameMode(robot,store.getComponent(body,Player.getComponentType()).getGameMode(),store);
             RobotInventory.refreshClient(robot);
-            synchronizePose(actorRef,robot);
+            synchronizePose(actorRef,robot,viewer);
             operator.sendMessage(Message.raw("Controlling Optimus. Your body remains exposed. Use /optimus-release to return. Control range 32 blocks."));
             NativeFleet.soundPrivate(operator,"OP_Remote_Link_Inventory");
         } catch(RuntimeException ex) {
             ACTIVE.put(operator.getUuid(),control);end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);throw ex;
         }
     }
-    private static void synchronizePose(PlayerRef context,Ref<EntityStore> target) {
+    private static void synchronizePose(PlayerRef context,Ref<EntityStore> target,EntityViewer viewer) {
         var store=target.getStore();var transform=store.getComponent(target,TransformComponent.getComponentType());
         var head=store.getComponent(target,HeadRotation.getComponentType());
-        context.getPacketHandler().write(new SetClientId(store.getComponent(target,NetworkId.getComponentType()).getId()));
+        int networkId=store.getComponent(target,NetworkId.getComponentType()).getId();
+        ClientActorView.switchLocal(viewer,target,networkId,context.getPacketHandler());
+        // PlayerSpawnedSystem ran when Player was added, before this ID change. Publish
+        // the full self state again after the old remote object has been removed.
+        // On return, restoreViewer publishes the body's self state after deferred cleanup.
+        if(store.getComponent(target,EntityViewer.getComponentType())!=null)PlayerSystems.PlayerSpawnedSystem.sendPlayerSelf(target,store);
+        context.getPacketHandler().write(new SetServerCamera(ClientCameraView.FirstPerson,false,null));
         // Changing the local entity ID does not replace the client's predicted position.
         // The native teleport queue holds movement until the client acknowledges this pose.
         TeleportSystems.queueAndSendClientTeleport(context,transform.getPosition(),transform.getRotation(),head==null?transform.getRotation():head.getRotation(),true);
+        LOGGER.atInfo().log("Optimus pose handoff context=%s network=%s position=%s pending=%s",context.getUsername(),networkId,transform.getPosition(),context.getTeleportAckTracker());
     }
     private static boolean valid(Control c) {
         return invalidReason(c)==null;
@@ -318,8 +327,7 @@ final class NativeControl {
         if(c.body().isValid()) {
             var player=c.body().getStore().getComponent(c.body(),Player.getComponentType());
             if(player!=null&&c.operator().getPacketHandler().stillActive()) {
-                synchronizePose(c.operator(),c.body());
-                c.operator().getPacketHandler().write(new SetServerCamera(ClientCameraView.FirstPerson,false,null));
+                synchronizePose(c.operator(),c.body(),c.viewer());
                 Player.setGameMode(c.body(),player.getGameMode(),c.body().getStore());
                 c.operator().sendMessage(Message.raw("Returned to your body: "+reason.name().toLowerCase(Locale.ROOT)));
             }
