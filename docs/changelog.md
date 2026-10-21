@@ -4,6 +4,8 @@
 
 - Corrected the original robot's empty hand sockets to the native held-item axis; the pickaxe grip has passed an in-game check.
 - Verified ordinary robot mining, pickup and placement, with the tool and mined dirt retained through controlled disconnect and normal reload.
+- Verified chest use with empty hands or a held tool, transfers in both directions, and the returned operator’s selected slot and immediately usable remote.
+- Repaired the native music-state initialization required for controlled chunk unloading; a focused unload and re-entry check has passed.
 - Added Assembly Dock, Fleet Remote and deployment-unit recipes.
 - Added robot deployment, owner-bound remotes, exclusive links and a paginated fleet page.
 - Added the native control adapter, release, owner robot listing and nearby lost-link recovery.
@@ -18,7 +20,7 @@
 - Kept the temporary control facade out of chunk snapshots while retaining robot-owned data in native entity storage. A real tool survived active saving, controlled disconnect and normal reload in the correct robot; other lifecycle paths remain pending.
 - Added the player guide and original Optimus Link branding.
 
-Walking, looking, jumping, interactions with world containers and the remaining safe exits remain under verification. This is not a public release.
+Walking, looking, jumping and the remaining safe exits remain under verification. Changing the operator’s world while controlling a robot has a known robot-loss defect; release control first. This is not a public release.
 
 ## 0.1.x — authoring stage
 

@@ -1,6 +1,6 @@
 # Fleet and controls
 
-These controls are implemented in 0.2.0-dev. Linking, views, inventory handling, mining, placement and manual return have native evidence; movement and the remaining interactions still need gameplay verification.
+These controls are implemented in 0.2.0-dev. Linking, views, inventory handling, mining, placement and manual return have native evidence; chest interactions have also passed. Walking, looking, jumping and the remaining failure exits still need gameplay verification.
 
 ## Link robots
 
@@ -12,7 +12,7 @@ Use **Unlink** in the original remote's roster to free a parked robot for anothe
 
 ![Fleet Remote showing two Optimus robots linked to the same remote, with separate control and unlink buttons](assets/native/fleet-two-robots.jpg)
 
-An actual development-build roster after linking two robots to one remote. Inventory handling, mining, placement, manual return and a nonempty inventory through controlled disconnect and normal reload have native evidence. Walking, looking, jumping and world-container interactions remain under verification.
+An actual development-build roster after linking two robots to one remote. Inventory handling, mining, placement, manual return and a nonempty inventory through controlled disconnect and normal reload have native evidence. Chest interactions with empty hands or a held tool and transfers in both directions have also passed. Walking, looking and jumping remain under verification.
 
 [Open the roster image at full size](assets/native/fleet-two-robots.jpg).
 
@@ -29,7 +29,7 @@ Choose **Assume control** beside a loaded robot within 32 blocks of your body. Y
 | List your robots in this world | `/optimus-list` |
 | Recover a lost remote link | `/optimus-recover ROBOT_ID` while within 5 blocks of the parked robot |
 
-Native pickup and transfers between a robot's hotbar and storage have passed. A robot has mined a dirt block with a crude pickaxe, collected the dirt into its own hotbar and placed it against a support using normal item actions. Walking, looking, jumping and interactions with world containers while controlled remain under gameplay verification.
+Native pickup and transfers between a robot's hotbar and storage have passed. A robot has mined a dirt block with a crude pickaxe, collected the dirt into its own hotbar and placed it against a support using normal item actions. A controlled robot has also opened a chest with empty hands or a held pickaxe and moved tools and blocks through its inventory in both directions. Walking, looking and jumping remain under gameplay verification.
 
 ![Robot view after mining the near dirt block, with the remaining wood support ahead and the collected dirt in hotbar slot 2](assets/native/robot-mining-pickup.png)
 
@@ -37,8 +37,8 @@ Native pickup and transfers between a robot's hotbar and storage have passed. A 
 
 ## Safe exits
 
-Manual release clears the active control session and restores the operator view. The implementation also ends control when a participant becomes unavailable, dies, changes world, leaves range or disconnects. Those lifecycle cases require native verification before relying on this build in a valued world.
+Manual release and leaving control range have restored the operator view, selected slot and immediately usable remote in native checks. Controlled disconnect followed by normal reload preserved separate inventories. Chunk unloading has passed a focused native check. Death, destruction and the remaining failure exits still need verification.
 
-Robots remain in their original world. The candidate handles a world-transfer request from a controlled robot by releasing control and returning you to your body. This transfer guard still awaits native verification. Delayed output from a released robot is discarded so it cannot replace the returned body's inventory view.
+**Release control before changing worlds.** Changing the operator’s world while controlling a robot can make that robot unavailable and lose its saved inventory. The separate guard for a transfer request from the controlled robot still awaits native verification. Robots and bound remotes belong to their original world; this version does not provide fleet migration. Delayed output from a released robot is discarded so it cannot replace the returned body's inventory view.
 
 There is one active robot per operator. Release the current robot before selecting another. No control session is restored after a server restart.

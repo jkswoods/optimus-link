@@ -18,7 +18,11 @@ Copied robot identities are unsupported. If duplicate copies of one bound remote
 
 Move your body within 32 blocks of the loaded robot and release any existing session. Hold the same remote used to open the page. Reopen the roster if you changed held items or its contents changed.
 
-The possession adapter is experimental. Native checks showed a clear robot view, its own inventory and successful return to the operator. Mining, pickup, placement, hotbar/storage transfers and a tool with mined dirt surviving controlled disconnect and normal reload have passed. Walking, looking, jumping, world-container interactions and the remaining failure exits are unverified. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
+The possession adapter is experimental. Native checks showed a clear robot view, its own inventory and successful return to the operator. Mining, pickup, placement, hotbar/storage transfers and a tool with mined dirt surviving controlled disconnect and normal reload have passed. Chest use with empty hands or a held tool and transfers in both directions have also passed. Walking, looking, jumping and the remaining failure exits are unverified. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
+
+## A robot is unavailable after changing worlds
+
+Release control before changing worlds. The current candidate has a defect that can leave a linked robot unavailable and lose its saved inventory when the operator changes worlds during control. Stop using that session and retain its paired world/player backup and exact JAR. Repeated recovery commands or cloning the robot are not a verified repair; restore a matching known-good backup after disconnecting normally.
 
 ## I lost the remote
 
@@ -26,9 +30,9 @@ Use `/optimus-list`, approach your parked robot and use `/optimus-recover ROBOT_
 
 ## My inventory looks wrong
 
-Release control first: the robot and operator intentionally show different inventories. If either loses or duplicates items, stop using the candidate and keep a paired world/player backup. Basic inventory handling and normal reload have passed; the remaining failure exits and world-container transfers while controlled are still open.
+Release control first: the robot and operator intentionally show different inventories. If either loses or duplicates items, stop using the candidate and keep a paired world/player backup. Inventory handling, chest transfers and normal reload have passed; the remaining failure exits are still open.
 
-The pocket-crafting window-close error has been repaired and retested on both robots. If `Window id 0 is invalid!` appears on an older candidate, update to the current build. Inventory rendering alone does not establish working crafting or transfers through world containers.
+The pocket-crafting window-close error has been repaired and retested on both robots. If `Window id 0 is invalid!` appears on an older candidate, update to the current build. This window fix does not establish every crafting or container interaction.
 
 ## Reporting an issue
 
