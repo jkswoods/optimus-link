@@ -15,7 +15,7 @@ The implementation supplies 36 storage slots, a 9 slot hotbar and the native equ
 3. Use `/optimus-recover ROBOT_ID`. At least the first 8 characters are required; use more if the prefix is ambiguous.
 4. Hold your replacement remote and use it on that robot to link it.
 
-Recovery revokes the old remote's link. It does not refund a deployment unit, create another robot, transfer ownership or alter inventory. A currently controlled robot must be released first. This recovery path still needs a native check.
+Recovery revokes the old remote's link. It does not refund a deployment unit, create another robot, transfer ownership or alter inventory. A currently controlled robot must be released first. A focused native check revoked one robot's link, linked it to another existing remote and successfully controlled and released it. The old remote retained only its other robot. Both robots' inventories and the original remote metadata were unchanged in the normal save. Reload of the newly split links still awaits verification.
 
 ## Keep your fleet safe
 

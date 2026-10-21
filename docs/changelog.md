@@ -7,6 +7,8 @@
 - Verified chest use with empty hands or a held tool, transfers in both directions, and the returned operator’s selected slot and immediately usable remote.
 - Repaired the native music-state initialization required for controlled chunk unloading; a focused unload and re-entry check has passed.
 - Repaired the operator’s world-change exit and restored native robot save references before retiring temporary control snapshots. Both robots, their inventories and links survived the world change, re-entry, controlled disconnect and normal reload.
+- Verified the controlled-robot transfer guard with a native cross-world request, safe operator return, retained robots and successful control re-entry.
+- Verified nearby link recovery onto another existing remote, separate one-robot rosters, control and manual return. Robot inventories and remote metadata remained unchanged in the normal save; reload of these new links remains pending.
 - Added Assembly Dock, Fleet Remote and deployment-unit recipes.
 - Added robot deployment, owner-bound remotes, exclusive links and a paginated fleet page.
 - Added the native control adapter, release, owner robot listing and nearby lost-link recovery.
@@ -21,7 +23,7 @@
 - Kept the temporary control facade out of chunk snapshots while retaining robot-owned data in native entity storage. A real tool survived active saving, controlled disconnect and normal reload in the correct robot; other lifecycle paths remain pending.
 - Added the player guide and original Optimus Link branding.
 
-Walking, looking, jumping and the remaining safe exits remain under verification. The operator’s world-change exit has passed a focused native check; the separate controlled-robot transfer guard remains unverified. Release control before changing worlds. This is not a public release.
+Walking, looking, jumping, death and destruction remain under verification. The operator’s world-change exit and the controlled-robot transfer guard have passed focused native checks. Release control before changing worlds. This is not a public release.
 
 ## 0.1.x — authoring stage
 
