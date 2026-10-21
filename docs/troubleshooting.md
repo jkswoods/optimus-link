@@ -18,7 +18,7 @@ Copied robot identities are unsupported. If duplicate copies of one bound remote
 
 Move your body within 32 blocks of the loaded robot and release any existing session. Hold the same remote used to open the page. Reopen the roster if you changed held items or its contents changed.
 
-The possession adapter is experimental. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
+The possession adapter is experimental. The last native test showed the camera inside the operator's body and a robot snapping to the operator's old position. A further handoff repair is awaiting gameplay verification. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
 
 ## I lost the remote
 

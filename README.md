@@ -2,7 +2,7 @@
 
 Hytale humanoid robot fleets controlled through a craftable handheld remote.
 
-This private development mod targets Hytale 0.7.2 and Java 25. Version 0.2.0-dev includes craftable equipment, deployment, fleet linking, a native control adapter, release and nearby lost-link recovery. It passes focused authority/persistence tests and isolated asset loading; ordinary gameplay, inventories and normal reload are awaiting native verification. Use a disposable world. There is no public release download.
+This private development mod targets Hytale 0.7.2 and Java 25. Version 0.2.0-dev includes craftable equipment, deployment, fleet linking, a native control adapter, release and nearby lost-link recovery. Native crafting, two-robot linking, manual return and basic save/reload have been exercised. The last control test still showed a broken camera and position handoff; the next repair awaits gameplay verification. Playable remote control, robot item use and full lifecycle checks remain open. Use a disposable world. There is no public release download.
 
 Each robot may link to one remote. A remote can hold a roster of multiple robots; an operator controls one at a time. Robot equipment and inventory remain separate from the operator's. The operator's body remains exposed while controlling a robot.
 
