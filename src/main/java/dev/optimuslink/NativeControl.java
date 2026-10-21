@@ -2,6 +2,8 @@ package dev.optimuslink;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.Holder;
+import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
 import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
@@ -13,12 +15,17 @@ import com.hypixel.hytale.server.core.entity.InteractionManager;
 import com.hypixel.hytale.server.core.entity.AnimationUtils;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent;
+import com.hypixel.hytale.server.core.entity.entities.player.data.UniqueItemUsagesComponent;
 import com.hypixel.hytale.server.core.entity.entities.player.CameraManager;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
+import com.hypixel.hytale.server.core.entity.entities.player.pages.PageManager;
 import com.hypixel.hytale.server.core.io.handlers.game.GamePacketHandler;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.CollisionResultComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.BreathingComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerInput;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSettings;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSystems;
@@ -29,13 +36,13 @@ import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntitySta
 import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
 import com.hypixel.hytale.server.core.modules.interaction.InteractionSimulationHandler;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
-import com.hypixel.hytale.server.core.permissions.PermissionQuery;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import dev.optimuslink.core.FleetRegistry;
 import dev.optimuslink.core.ControlOutputScope;
+import dev.optimuslink.core.LegacyPageReceipts;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,7 +50,10 @@ import java.util.concurrent.ConcurrentHashMap;
 final class NativeControl {
     private static final Map<UUID,Control> ACTIVE=new ConcurrentHashMap<>();
     private static final Map<UUID,Router> ROUTERS=new ConcurrentHashMap<>();
+    private record PageOwner(PageManager manager,Ref<EntityStore> ref,Store<EntityStore> store) {}
+    private static final ThreadLocal<PageOwner> PAGE_OUTPUT=new ThreadLocal<>();
     private static final PacketFilter BODY_OUTPUT=(handler,packet)-> {
+        observePageOutput(handler,packet);
         if(!(packet instanceof com.hypixel.hytale.protocol.packets.inventory.UpdatePlayerInventory)&&!(packet instanceof com.hypixel.hytale.protocol.packets.world.PlaySoundEvent3D))return false;
         for(var c:ACTIVE.values())if(c.operator().getPacketHandler()==handler)return !ControlOutputScope.current(c.token().token());
         return false;
@@ -71,11 +81,11 @@ final class NativeControl {
         com.hypixel.hytale.protocol.packets.interface_.DismissServersidePage.class,
         com.hypixel.hytale.protocol.packets.interface_.ExecuteServersidePageCommand.class,
         com.hypixel.hytale.protocol.packets.interface_.ExecuteServersideHudCommand.class);
-    private record Router(PlayerRef operator,GamePacketHandler transport,ActorHandler fallback) {}
-    private static final class Feedback { Long lastServo; }
+    private record Router(PlayerRef operator,GamePacketHandler transport,ActorHandler fallback,LegacyPageReceipts<PageOwner> pages) {}
+    private static final class Feedback { Long lastServo;boolean transferRestoreQueued; }
     private record Control(FleetRegistry.Session token,FleetRegistry fleet,PlayerRef operator,Ref<EntityStore> body,
         Ref<EntityStore> robot,Player actor,ActorHandler handler,InteractionManager previousInteractions,PlayerInput previousInput,
-        EntityViewer viewer,EntityViewer previousRobotViewer,Feedback feedback) {}
+        CollisionResultComponent previousCollisions,EntityViewer viewer,EntityViewer previousRobotViewer,Feedback feedback) {}
 
     /** Native handler table also covers ChannelConnection paths which bypass inbound packet adapters. */
     static void install(PlayerRef operator) {
@@ -89,10 +99,46 @@ final class NativeControl {
                 catch(ReflectiveOperationException ex) { throw new IllegalStateException("Pinned packet ID missing: "+type.getSimpleName(),ex); }
                 game.registerHandler(packetId,packet->route(operator,game,fallback,packet));
             }
-            return new Router(operator,game,fallback);
+            return new Router(operator,game,fallback,new LegacyPageReceipts<>());
         });
     }
+    private static void observePageOutput(com.hypixel.hytale.server.core.io.PacketHandler handler,Packet packet) {
+        boolean custom=packet instanceof com.hypixel.hytale.protocol.packets.interface_.CustomPage;
+        if(!custom&&!(packet instanceof com.hypixel.hytale.protocol.packets.interface_.SetPage))return;
+        for(var router:ROUTERS.values())if(router.transport()==handler) {
+            if(!custom) { router.pages().setPage();return; }
+            var owner=PAGE_OUTPUT.get();
+            if(owner==null) {
+                var body=router.operator().getReference();if(body==null||!body.isValid())return;
+                var player=body.getStore().getComponent(body,Player.getComponentType());if(player==null)return;
+                owner=new PageOwner(player.getPageManager(),body,body.getStore());
+            }
+            router.pages().customPage(owner,((com.hypixel.hytale.protocol.packets.interface_.CustomPage)packet).isInitial);
+            return;
+        }
+    }
+    private static boolean routePageEvent(PlayerRef operator,ToServerPacket packet) {
+        if(!(packet instanceof com.hypixel.hytale.protocol.packets.interface_.CustomPageEvent event))return false;
+        var router=ROUTERS.get(operator.getUuid());if(router==null||router.operator()!=operator)return false;
+        var ack=event.type==com.hypixel.hytale.protocol.packets.interface_.CustomPageEventType.Acknowledge;
+        var owner=ack?router.pages().acknowledge():router.pages().visible();
+        if(owner==null)return false;
+        owner.store().getExternalData().getWorld().execute(()-> {
+            // A late acknowledgement must drain its original manager even after control ends.
+            if(!ack) {
+                if(!owner.ref().isValid())return;
+                var player=owner.store().getComponent(owner.ref(),Player.getComponentType());
+                if(player==null||player.getPageManager()!=owner.manager())return;
+                var c=ACTIVE.get(operator.getUuid());
+                if(c!=null&&owner.ref()==c.robot()&&!valid(c))return;
+            }
+            owner.manager().handleLegacyCustomPageEvent(owner.ref(),owner.store(),event);
+            if(event.type==com.hypixel.hytale.protocol.packets.interface_.CustomPageEventType.Dismiss)router.pages().dismiss(owner);
+        });
+        return true;
+    }
     private static void route(PlayerRef operator,GamePacketHandler real,ActorHandler fallback,ToServerPacket packet) {
+        if(routePageEvent(operator,packet))return;
         var control=ACTIVE.get(operator.getUuid());
         if(control==null) {
             if(packet instanceof SyncInteractionChains sync)real.handle(sync);
@@ -127,12 +173,21 @@ final class NativeControl {
         var oldManager=store.getComponent(robot,managerType);var oldInput=store.getComponent(robot,PlayerInput.getComponentType());
         var handler=new ActorHandler((GamePacketHandler)operator.getPacketHandler());
         var robotUuid=store.getComponent(robot,UUIDComponent.getComponentType()).getUuid();
-        var actorRef=new RobotPlayerRef(operator,robotUuid,handler);actorRef.addedToStore(robot);handler.setPlayerRef(actorRef);
-        var actor=new ControlledRobotPlayer();actor.init(robotUuid,actorRef);actor.loadIntoWorld(store.getExternalData().getWorld());actor.setReference(robot);
+        RobotPlayerStorage.install();
+        // Native ECS snapshots validate exact registered classes, including transient components.
+        // PlayerRef UUID is the authenticated permission identity. The NPC's UUIDComponent,
+        // Player entity UUID and all inventory/save ownership remain the robot's stable UUID.
+        var actorRef=new PlayerRef(EntityStore.REGISTRY.newHolder(),operator.getUuid(),"Optimus",operator.getLanguage(),handler,operator.getChunkTracker());
+        actorRef.addedToStore(robot);handler.setPlayerRef(actorRef);
+        var actor=new Player();actor.init(robotUuid,actorRef);actor.loadIntoWorld(store.getExternalData().getWorld());actor.setReference(robot);
+        handler.pages=new PageOwner(actor.getPageManager(),robot,store);
         RobotInventory.attach(actor,inventory);
-        var token=fleet.begin(operator.getUuid(),remote,robotId,store.getExternalData().getWorld().getWorldConfig().getUuid());
+        final FleetRegistry.Session token;
+        try { token=fleet.begin(operator.getUuid(),remote,robotId,store.getExternalData().getWorld().getWorldConfig().getUuid()); }
+        catch(RuntimeException failure) { actor.getWorldMapTracker().unregisterEvents();throw failure; }
         handler.output=new ControlOutputScope.Lifetime(token.token());
-        var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,viewer,previousViewer,new Feedback());
+        var oldCollisions=store.getComponent(robot,CollisionResultComponent.getComponentType());
+        var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,oldCollisions,viewer,previousViewer,new Feedback());
         try {
             var bodyInput=store.getComponent(body,PlayerInput.getComponentType());if(bodyInput!=null)bodyInput.getMovementUpdateQueue().clear();
             var bodyVelocity=store.getComponent(body,Velocity.getComponentType());if(bodyVelocity!=null)bodyVelocity.setZero();
@@ -143,7 +198,20 @@ final class NativeControl {
             store.putComponent(robot,EntityViewer.getComponentType(),viewer);
             store.ensureComponent(robot,CameraManager.getComponentType());
             store.ensureComponent(robot,PlayerSettings.getComponentType());
+            // PlayerCollisionResultAddSystem is a HolderSystem: adding Player to an existing NPC
+            // does not run it. Apply the same native settings before any movement packet can tick.
+            var collisions=new CollisionResultComponent();
+            collisions.getCollisionResult().setDefaultPlayerSettings();collisions.resetLocationChange();
+            actor.configTriggerBlockProcessing(true,true,collisions);
+            store.putComponent(robot,CollisionResultComponent.getComponentType(),collisions);
+            store.ensureComponent(robot,MovementStatesComponent.getComponentType());
+            store.ensureComponent(robot,UniqueItemUsagesComponent.getComponentType());
+            store.ensureComponent(robot,BreathingComponent.getComponentType());
             store.putComponent(robot,PlayerRef.getComponentType(),actorRef);
+            // PlayerRefAddedSystem briefly indexes the action context by that UUID. Keep the
+            // real body as the sole world/Universe connection entry. Native untrack uses
+            // Map.remove(uuid, ref), so removing the actor cannot remove the body's entry.
+            store.getExternalData().getWorld().trackPlayerRef(operator);
             store.putComponent(robot,PlayerInput.getComponentType(),new PlayerInput());
             store.putComponent(robot,managerType,new InteractionManager(actorRef,new InteractionSimulationHandler()));
             actor.setNetworkId(store.getComponent(robot,NetworkId.getComponentType()).getId());
@@ -208,7 +276,7 @@ final class NativeControl {
     }
     private static void end(UUID operator,Control c,FleetRegistry.Exit reason) {
         if(!ACTIVE.remove(operator,c))return;
-        c.handler().output.retire();
+        c.actor().getWorldMapTracker().unregisterEvents();
         c.fleet().end(operator,c.token().token(),reason);c.handler().getInteractionPacketQueue().clear();
         if(c.robot().isValid()) {
             var store=c.robot().getStore();var managerType=InteractionModule.get().getInteractionManagerComponent();
@@ -225,10 +293,12 @@ final class NativeControl {
                 if(c.previousRobotViewer()==null)store.removeComponent(c.robot(),EntityViewer.getComponentType());else store.putComponent(c.robot(),EntityViewer.getComponentType(),c.previousRobotViewer());
                 restoreViewer(c);
                 if(c.previousInput()==null)store.removeComponent(c.robot(),PlayerInput.getComponentType());else store.putComponent(c.robot(),PlayerInput.getComponentType(),c.previousInput());
+                if(c.previousCollisions()==null)store.removeComponent(c.robot(),CollisionResultComponent.getComponentType());else store.putComponent(c.robot(),CollisionResultComponent.getComponentType(),c.previousCollisions());
                 if(c.previousInteractions()==null)store.removeComponent(c.robot(),managerType);else store.putComponent(c.robot(),managerType,c.previousInteractions());
                 var velocity=store.getComponent(c.robot(),Velocity.getComponentType());if(velocity!=null)velocity.setZero();
             });
         } else restoreViewer(c);
+        c.handler().output.retire();
         if(c.body().isValid()) {
             var player=c.body().getStore().getComponent(c.body(),Player.getComponentType());
             if(player!=null&&c.operator().getPacketHandler().stillActive()) {
@@ -252,6 +322,34 @@ final class NativeControl {
     static void worldLeaving(World world) {
         for(var c:List.copyOf(ACTIVE.values()))if(c.robot().isValid()&&c.robot().getStore().getExternalData().getWorld()==world)requestEnd(c,FleetRegistry.Exit.UNLOAD);
     }
+    static void worldTransferRequested(Ref<EntityStore> robot,com.hypixel.hytale.server.core.modules.entity.teleport.Teleport teleport) {
+        var destination=teleport.getWorld();
+        if(destination==null||destination==robot.getStore().getExternalData().getWorld())return;
+        for(var c:ACTIVE.values())if(c.robot()==robot) {
+            // Native PlayerMoveSystem still unloads its source holder. Its destination checks
+            // stillActive before reading that holder or adding it to another world.
+            c.handler().transferBlocked=true;
+            requestEnd(c,FleetRegistry.Exit.WORLD_CHANGE);
+            return;
+        }
+    }
+    static void preserveBlockedTransfer(Holder<EntityStore> holder,Store<EntityStore> store) {
+        var identity=holder.getComponent(OptimusLinkPlugin.robotType);if(identity==null)return;
+        for(var c:ACTIVE.values())if(c.handler().transferBlocked&&c.token().robot().equals(identity.id)&&!c.feedback().transferRestoreQueued) {
+            c.feedback().transferRestoreQueued=true;
+            // Finish all native removal callbacks first. Re-add the original NPC holder and
+            // its original containers in the source world, after stripping the action facade.
+            store.getExternalData().getWorld().execute(()-> {
+                RobotLifecycle.Load.sanitize(holder);
+                if(c.previousInteractions()!=null)holder.putComponent(InteractionModule.get().getInteractionManagerComponent(),c.previousInteractions());
+                if(c.previousInput()!=null)holder.putComponent(PlayerInput.getComponentType(),c.previousInput());
+                if(c.previousCollisions()!=null)holder.putComponent(CollisionResultComponent.getComponentType(),c.previousCollisions());
+                if(c.previousRobotViewer()!=null)holder.putComponent(EntityViewer.getComponentType(),c.previousRobotViewer());
+                store.addEntity(holder,AddReason.LOAD);
+            });
+            return;
+        }
+    }
     static void entityRemoved(Ref<EntityStore> robot) {
         for(var c:List.copyOf(ACTIVE.values()))if(c.robot()==robot)end(c.operator().getUuid(),c,FleetRegistry.Exit.ROBOT_DEATH);
     }
@@ -267,6 +365,8 @@ final class NativeControl {
     private static final class ActorHandler extends GamePacketHandler {
         private final GamePacketHandler transport;
         private ControlOutputScope.Lifetime output=new ControlOutputScope.Lifetime(null);
+        private PageOwner pages;
+        private volatile boolean transferBlocked;
         ActorHandler(GamePacketHandler transport) { super(transport.getChannel(),transport.getProtocolVersion(),transport.getAuth());this.transport=transport; }
         // This action context never owns channels or heartbeat queues. Native Player/WorldMap
         // systems also visit the temporary robot PlayerRef, while Pongs still arrive at the
@@ -277,36 +377,20 @@ final class NativeControl {
         @Override public com.hypixel.hytale.server.core.io.PacketHandler.PingInfo getPingInfo(com.hypixel.hytale.protocol.packets.connection.PongType type) { return transport==null?super.getPingInfo(type):transport.getPingInfo(type); }
         @Override public void tickPing(float dt) { /* The original operator PlayerRef ticks the connection heartbeat. */ }
         @Override public void sendPing() { output.run(transport::sendPing); }
-        @Override public boolean stillActive() { return output.isOpen()&&transport.stillActive(); }
-        @Override public void write(ToClientPacket packet) { output.run(()->transport.write(packet)); }
-        @Override public void write(ToClientPacket... packets) { output.run(()->transport.write(packets)); }
-        @Override public void write(ToClientPacket[] packets,ToClientPacket extra) { output.run(()->transport.write(packets,extra)); }
-        @Override public void writeNoCache(ToClientPacket packet) { output.run(()->transport.writeNoCache(packet)); }
-        @Override public boolean writePacket(ToClientPacket packet,boolean cache) { return output.write(()->transport.writePacket(packet,cache)); }
+        @Override public boolean stillActive() { return !transferBlocked&&output.isOpen()&&transport.stillActive(); }
+        private <T> T withPages(java.util.function.Supplier<T> action) {
+            var previous=PAGE_OUTPUT.get();
+            if(pages!=null)PAGE_OUTPUT.set(pages);
+            try { return action.get(); }
+            finally { if(previous==null)PAGE_OUTPUT.remove();else PAGE_OUTPUT.set(previous); }
+        }
+        private void send(Runnable action) { output.run(()->withPages(()->{action.run();return null;})); }
+        @Override public void write(ToClientPacket packet) { send(()->transport.write(packet)); }
+        @Override public void write(ToClientPacket... packets) { send(()->transport.write(packets)); }
+        @Override public void write(ToClientPacket[] packets,ToClientPacket extra) { send(()->transport.write(packets,extra)); }
+        @Override public void writeNoCache(ToClientPacket packet) { send(()->transport.writeNoCache(packet)); }
+        @Override public boolean writePacket(ToClientPacket packet,boolean cache) { return output.write(()->withPages(()->transport.writePacket(packet,cache))); }
         @Override public void disconnect(FormattedMessage message) { output.run(()->transport.disconnect(message)); }
         @Override public void disconnect(Message message) { output.run(()->transport.disconnect(message)); }
-    }
-    private static final class RobotPlayerRef extends PlayerRef {
-        private final PlayerRef operator;
-        RobotPlayerRef(PlayerRef operator,UUID robot,GamePacketHandler handler) {
-            super(EntityStore.REGISTRY.newHolder(),robot,"Optimus",operator.getLanguage(),handler,operator.getChunkTracker());this.operator=operator;
-        }
-        @Override public com.hypixel.hytale.component.Holder<EntityStore> removeFromStore() {
-            // This is an action context attached to an NPC, never a transferable Universe player.
-            // Pinned TeleportSystems calls this before World.addPlayer; the retired actor transport
-            // makes addPlayer return before reading a holder or moving any entity/inventory.
-            var c=ACTIVE.get(operator.getUuid());
-            if(c!=null&&c.handler().getPlayerRef()==this) {
-                end(operator.getUuid(),c,FleetRegistry.Exit.WORLD_CHANGE);
-                operator.sendMessage(Message.raw("Optimus stayed in its world. You returned to your body before world transfer."));
-            }
-            ((ActorHandler)getPacketHandler()).output.retire();
-            addedToStore(null); // Detach only this temporary PlayerRef; do not unload the NPC.
-            return null;
-        }
-        @Override public boolean hasPermission(String permission) { return operator.hasPermission(permission); }
-        @Override public boolean hasPermission(String permission,boolean defaultValue) { return operator.hasPermission(permission,defaultValue); }
-        @Override public boolean hasPermission(PermissionQuery query) { return operator.hasPermission(query); }
-        @Override public boolean hasPermission(PermissionQuery query,boolean defaultValue) { return operator.hasPermission(query,defaultValue); }
     }
 }

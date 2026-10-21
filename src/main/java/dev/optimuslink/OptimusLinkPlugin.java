@@ -26,6 +26,7 @@ public final class OptimusLinkPlugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new NativeControl.Tick());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle.Load());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle());
+        getEntityStoreRegistry().registerSystem(new RobotTransferGuard());
         getEntityStoreRegistry().registerSystem(new RobotActionFeedback.Break());
         getEntityStoreRegistry().registerSystem(new RobotActionFeedback.Place());
         getEntityStoreRegistry().registerSystem(new RobotActionFeedback.Use());
@@ -34,6 +35,10 @@ public final class OptimusLinkPlugin extends JavaPlugin {
         getCommandRegistry().registerCommand(new ListCommand());
         NativeControl.installOutputFilter();
     }
-    @Override protected void shutdown() { NativeControl.stopAll();NativeControl.removeOutputFilter(); }
+    @Override protected void shutdown() {
+        NativeControl.stopAll();NativeControl.removeOutputFilter();
+        // Plugin shutdown precedes Universe shutdown. Retain the transparent storage decorator
+        // through its final entity/player saves; the server process disposes it with Universe.
+    }
     static FleetWorldState state(Store<EntityStore> store) { return store.getResource(stateType); }
 }

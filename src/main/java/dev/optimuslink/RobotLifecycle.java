@@ -31,14 +31,20 @@ final class RobotLifecycle extends RefSystem<EntityStore> {
         @Override public Query<EntityStore> getQuery() { return OptimusLinkPlugin.robotType; }
         @Override public Set<Dependency<EntityStore>> getDependencies() { return RootDependency.firstSet(); }
         @Override public void onEntityAdd(Holder<EntityStore> holder,AddReason reason,Store<EntityStore> store) {
+            sanitize(holder);
+        }
+        static void sanitize(Holder<EntityStore> holder) {
             if(holder.getComponent(Player.getComponentType())==null)return;
             remove(holder,Player.getComponentType());remove(holder,PlayerRef.getComponentType());
             remove(holder,PlayerInput.getComponentType());remove(holder,EntityViewer.getComponentType());
             remove(holder,InteractionModule.get().getInteractionManagerComponent());
             remove(holder,CameraManager.getComponentType());remove(holder,MovementManager.getComponentType());
             remove(holder,PlayerSettings.getComponentType());
+            remove(holder,com.hypixel.hytale.server.core.modules.entity.component.CollisionResultComponent.getComponentType());
         }
-        @Override public void onEntityRemoved(Holder<EntityStore> holder,RemoveReason reason,Store<EntityStore> store) {}
+        @Override public void onEntityRemoved(Holder<EntityStore> holder,RemoveReason reason,Store<EntityStore> store) {
+            if(reason==RemoveReason.UNLOAD)NativeControl.preserveBlockedTransfer(holder,store);
+        }
         private static <T extends com.hypixel.hytale.component.Component<EntityStore>> void remove(Holder<EntityStore> holder,ComponentType<EntityStore,T> type) {
             if(holder.getComponent(type)!=null)holder.removeComponent(type);
         }

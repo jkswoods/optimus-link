@@ -57,6 +57,17 @@ public final class ActorHandlerTest {
         for(var pong:PongType.VALUES)check(actor.getPingInfo(pong)==real.getPingInfo(pong),"latency state must be shared with the real connection");
         var replacement=channel(new ArrayList<>());real.setChannel(NetworkChannel.WorldMap,replacement);
         check(actor.getChannel(NetworkChannel.WorldMap)==replacement,"channel changes must not leave a stale actor snapshot");
+        var blocked=type.getDeclaredField("transferBlocked");blocked.setAccessible(true);blocked.setBoolean(actor,true);
+        check(!actor.stillActive(),"a cross-world robot request must immediately become ineligible for native player transfer");
+        var ref=new com.hypixel.hytale.server.core.universe.PlayerRef(null,java.util.UUID.randomUUID(),"Optimus","en-US",actor,null);
+        var unsafeClass=Class.forName("sun.misc.Unsafe");var singleton=unsafeClass.getDeclaredField("theUnsafe");singleton.setAccessible(true);
+        var worldClass=com.hypixel.hytale.server.core.universe.world.World.class;
+        var destination=(com.hypixel.hytale.server.core.universe.world.World)unsafeClass.getMethod("allocateInstance",Class.class).invoke(singleton.get(null),worldClass);
+        var alive=worldClass.getDeclaredField("alive");alive.setAccessible(true);alive.set(destination,new java.util.concurrent.atomic.AtomicBoolean(true));
+        check(destination.addPlayer(ref)==null,"actual native World.addPlayer rejects the inactive robot before accessing a holder or destination store");
+        actor.writeNoCache(new com.hypixel.hytale.protocol.packets.interface_.SetPage(com.hypixel.hytale.protocol.packets.interface_.Page.None,false));
+        check(sent.size()==1,"page cleanup can still be emitted before the transfer-blocked output lifetime retires");sent.clear();
+        blocked.setBoolean(actor,false);check(actor.stillActive(),"normal actor lifetime remains live before release");
         var output=type.getDeclaredField("output");output.setAccessible(true);
         ((ControlOutputScope.Lifetime)output.get(actor)).retire();
         actor.sendPing();actor.tickPing(10);check(sent.isEmpty(),"a retired actor must not send a late heartbeat");
