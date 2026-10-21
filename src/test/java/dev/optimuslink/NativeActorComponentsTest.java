@@ -30,12 +30,13 @@ public final class NativeActorComponentsTest {
     }
     private static final class PageTransport extends com.hypixel.hytale.server.core.io.PacketHandler {
         PageManager manager;final LegacyPageReceipts<PageManager> receipts;
+        int pageCloses;
         PageTransport(LegacyPageReceipts<PageManager> receipts) { super(null,new com.hypixel.hytale.server.core.io.ProtocolVersion(0));this.receipts=receipts; }
         @Override public String getIdentifier() { return "in-memory-native-page-test"; }
         @Override public void accept(com.hypixel.hytale.protocol.ToServerPacket packet) { throw new UnsupportedOperationException(); }
         @Override public void write(com.hypixel.hytale.protocol.ToClientPacket packet) {
             if(packet instanceof CustomPage page)receipts.customPage(manager,page.isInitial);
-            else if(packet instanceof SetPage)receipts.setPage();
+            else if(packet instanceof SetPage) { pageCloses++;receipts.setPage(); }
         }
         @Override public void writeNoCache(com.hypixel.hytale.protocol.ToClientPacket packet) { write(packet); }
     }
@@ -91,6 +92,45 @@ public final class NativeActorComponentsTest {
         var manager=receipts.acknowledge();check(manager==expected,"native page packet receipt retains the originating manager");
         var event=new CustomPageEvent();event.type=CustomPageEventType.Acknowledge;
         manager.handleLegacyCustomPageEvent(null,null,event);check(true,"actual pinned PageManager accepts its expected acknowledgement");
+    }
+    private static void interruptedPages(Player body,Player actor,PlayerRef bodyRef,PlayerRef actorRef,
+            PageTransport bodyWire,PageTransport actorWire,LegacyPageReceipts<PageManager> receipts) {
+        // A native body page interrupts an actor with no legacy page (ordinary inventory).
+        body.getPageManager().openCustomPage(null,null,new EmptyPage(bodyRef));
+        actor.getPageManager().closePage(null,null); // Reproduce the actual old release path.
+        acknowledge(receipts,body.getPageManager());
+        check(receipts.acknowledge()==body.getPageManager(),"old empty-actor close wrongly creates a body receipt");
+        var ack=new CustomPageEvent();ack.type=CustomPageEventType.Acknowledge;
+        try { body.getPageManager().handleLegacyCustomPageEvent(null,null,ack);throw new AssertionError("spurious empty-actor close was accepted"); }
+        catch(IllegalArgumentException expected) { check(expected.getMessage().contains("unexpected acknowledgement"),"native counters reproduce the operator-death acknowledgement fault"); }
+        body.getPageManager().resetPages(bodyRef);receipts.clear();
+
+        var bodyPage=new EmptyPage(bodyRef);body.getPageManager().openCustomPage(null,null,bodyPage);
+        int closes=actorWire.pageCloses;
+        NativeControl.retireActorPage(actor.getPageManager(),actorRef,null,null,receipts.visible());
+        check(actorWire.pageCloses==closes,"retiring an empty actor cannot send a close over the body's replacement page");
+        check(body.getPageManager().getCustomPage()==bodyPage&&receipts.visible()==body.getPageManager(),"body page and event ownership survive actor retirement");
+        acknowledge(receipts,body.getPageManager());
+        check(receipts.acknowledge()==null,"body page has exactly its native initial acknowledgement");
+        body.getPageManager().resetPages(bodyRef);receipts.clear();
+
+        // An actor update already in flight must still drain after a body takeover.
+        actor.getPageManager().openCustomPage(null,null,new EmptyPage(actorRef));
+        bodyPage=new EmptyPage(bodyRef);body.getPageManager().openCustomPage(null,null,bodyPage);
+        closes=actorWire.pageCloses;
+        NativeControl.retireActorPage(actor.getPageManager(),actorRef,null,null,receipts.visible());
+        check(actor.getPageManager().getCustomPage()==null,"retiring the hidden actor clears its local native page state");
+        check(actorWire.pageCloses==closes&&body.getPageManager().getCustomPage()==bodyPage,"hidden actor teardown cannot dismiss the operator page");
+        acknowledge(receipts,actor.getPageManager());acknowledge(receipts,body.getPageManager());
+        check(receipts.acknowledge()==null,"late actor and body acknowledgements each reach their original native manager exactly once");
+        body.getPageManager().resetPages(bodyRef);receipts.clear();
+
+        actor.getPageManager().openCustomPage(null,null,new EmptyPage(actorRef));
+        closes=actorWire.pageCloses;
+        NativeControl.retireActorPage(actor.getPageManager(),actorRef,null,null,receipts.visible());
+        check(actorWire.pageCloses==closes+1,"ordinary return still closes the visible actor page");
+        acknowledge(receipts,actor.getPageManager());acknowledge(receipts,actor.getPageManager());
+        check(actor.getPageManager().getCustomPage()==null&&receipts.acknowledge()==null,"ordinary actor close retains native acknowledgement validation");
     }
     private static void snapshots(Player actor,PlayerRef actorRef,Object unsafe,java.lang.reflect.Method allocate) throws Exception {
         var moduleClass=com.hypixel.hytale.server.core.modules.entity.EntityModule.class;
@@ -220,6 +260,8 @@ public final class NativeActorComponentsTest {
             acknowledge(receipts,bodyWire.manager);acknowledge(receipts,actorWire.manager);
             acknowledge(receipts,actorWire.manager);acknowledge(receipts,bodyWire.manager);
             check(receipts.acknowledge()==null,"native assume/release/reopen receipts drain exactly once");
+            bodyWire.manager.resetPages(bodyRef);receipts.clear();
+            interruptedPages(bodyPlayer,pageActor,bodyRef,pageActorRef,bodyWire,actorWire,receipts);
             windows(bodyPlayer,pageActor,pageActorRef,refType,unsafe,allocate);
             snapshots(actor,actorRef,unsafe,allocate);
         } catch(Exception|Error failure) { failure.printStackTrace(System.err);throw failure; }

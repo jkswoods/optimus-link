@@ -15,10 +15,12 @@ The implementation supplies 36 storage slots, a 9 slot hotbar and the native equ
 3. Use `/optimus-recover ROBOT_ID`. At least the first 8 characters are required; use more if the prefix is ambiguous.
 4. Hold your replacement remote and use it on that robot to link it.
 
-Recovery revokes the old remote's link. It does not refund a deployment unit, create another robot, transfer ownership or alter inventory. A currently controlled robot must be released first. A focused native check revoked one robot's link, linked it to another existing remote and successfully controlled and released it. The old remote retained only its other robot. Both robots' inventories and the original remote metadata were unchanged in the normal save. Reload of the newly split links still awaits verification.
+Recovery revokes the old remote's link. It does not refund a deployment unit, create another robot, transfer ownership or alter inventory. A currently controlled robot must be released first. A focused native check revoked one robot's link, linked it to another existing remote and successfully controlled and released it. The old remote retained only its other robot. Both robots' inventories and the original remote metadata were unchanged in the normal save. Both separate rosters and the first robot's equipped tool remained available after a normal reload.
 
 ## Keep your fleet safe
 
 Keep the world and player data together when making backups. Bound remotes work in their original world. Moving items between worlds does not migrate a robot or its links.
+
+Operator-death recovery currently fails its native check: the respawn page may close before you can use it. Release control if your body is in danger. Normal death loss rules still apply; both remote items became world drops in the test, with their identities intact. Both robots retained their equipment and links. The repair awaits an in-game retest.
 
 Do not clone bound remotes or robot entities with editor or administrative tools. Physical clone handling, destruction drops and removal are not yet verified. There is no packing or robot-refund feature in this candidate.

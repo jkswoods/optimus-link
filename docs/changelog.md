@@ -8,7 +8,8 @@
 - Repaired the native music-state initialization required for controlled chunk unloading; a focused unload and re-entry check has passed.
 - Repaired the operator’s world-change exit and restored native robot save references before retiring temporary control snapshots. Both robots, their inventories and links survived the world change, re-entry, controlled disconnect and normal reload.
 - Verified the controlled-robot transfer guard with a native cross-world request, safe operator return, retained robots and successful control re-entry.
-- Verified nearby link recovery onto another existing remote, separate one-robot rosters, control and manual return. Robot inventories and remote metadata remained unchanged in the normal save; reload of these new links remains pending.
+- Verified nearby link recovery onto another existing remote, separate one-robot rosters, control and manual return. Robot inventories and remote metadata remained unchanged in the normal save; both separate rosters and the equipped tool remained available after normal reload.
+- Preserved a failed native operator-death check: the respawn page closed prematurely. A page-cleanup repair passes focused native API tests and awaits an in-game retest. Robot destruction is still unverified.
 - Added Assembly Dock, Fleet Remote and deployment-unit recipes.
 - Added robot deployment, owner-bound remotes, exclusive links and a paginated fleet page.
 - Added the native control adapter, release, owner robot listing and nearby lost-link recovery.

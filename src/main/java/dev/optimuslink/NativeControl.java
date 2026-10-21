@@ -312,7 +312,10 @@ final class NativeControl {
             var current=store.getComponent(c.robot(),managerType);if(current!=null)current.clear();
             if(store.getComponent(c.robot(),Player.getComponentType())==c.actor()) {
                 c.actor().getWindowManager().closeAllWindows(c.robot(),store);
-                c.actor().getPageManager().closePage(c.robot(),store);
+                var router=ROUTERS.get(operator);
+                var visible=router==null?null:router.pages().visible();
+                retireActorPage(c.actor().getPageManager(),c.handler().getPlayerRef(),c.robot(),store,
+                    visible==null?null:visible.manager());
             }
             // Native queued callbacks run before the deferred component cleanup.
             store.getExternalData().getWorld().execute(()-> {
@@ -341,6 +344,14 @@ final class NativeControl {
                 c.operator().sendMessage(Message.raw("Returned to your body: "+reason.name().toLowerCase(Locale.ROOT)));
             }
         }
+    }
+    static void retireActorPage(PageManager actor,PlayerRef actorRef,Ref<EntityStore> robot,
+            Store<EntityStore> store,PageManager visible) {
+        // The body can open its native respawn page before the control tick returns.
+        // Closing an empty actor manager would send SetPage(None), hide that body page
+        // and manufacture a close receipt on a manager that never sent the close.
+        if(visible!=null&&visible!=actor)actor.resetPages(actorRef);
+        else actor.closePage(robot,store);
     }
     private static void restoreViewer(Control c) {
         if(!c.body().isValid()||c.operator().getReference()!=c.body())return;

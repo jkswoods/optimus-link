@@ -6,7 +6,7 @@ This private development mod targets Hytale 0.7.2 and Java 25. Version 0.2.0-dev
 
 Each robot may link to one remote. A remote can hold a roster of multiple robots; an operator controls one at a time. Robot equipment and inventory remain separate from the operator's. The operator's body remains exposed while controlling a robot.
 
-Focused native checks also passed the controlled-robot world-transfer guard and nearby link recovery onto another existing remote. Recovery preserved both robots' inventories and original remote metadata in the normal save; reload of the newly split links remains pending.
+Focused native checks also passed the controlled-robot world-transfer guard and nearby link recovery onto another existing remote, including normal reload of the split rosters and the equipped tool. Operator death currently has a known respawn-page fault; the repair passes focused native API tests and awaits an in-game retest. Both robots' inventories and links survived the failed check, and the original remotes were retained as native world drops.
 
 Build with `python3 tools/build.py --server PATH_TO_HYTALE_SERVER_JAR --jdk PATH_TO_JDK_25`. The server dependency must match the fingerprint in `target.json`; it is not redistributed. Run the focused authority, persistence, output-isolation and native transport tests with the same command and `--test`. The transport test uses in-memory channels and the pinned packet handlers; it does not start a server or replace native gameplay verification.
 
