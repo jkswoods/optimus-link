@@ -34,7 +34,10 @@ final class RobotPlayerStorage implements PlayerStorage {
         var transform=snapshot.getComponent(TransformComponent.getComponentType());
         var sectionRef=transform==null?null:transform.getSectionRef();
         if(sectionRef!=null&&sectionRef.isValid()) {
-            var section=sectionRef.getStore().getComponent(sectionRef,EntitySection.getComponentType());
+            // Native PlayerSavingSystems invokes saveConfig inside its parallel ECS pass.
+            // Ordinary getComponent asserts the world thread; use the supported concurrent
+            // reader here. The native pass joins before the world advances chunk saving.
+            var section=sectionRef.getStore().getComponentConcurrent(sectionRef,EntitySection.getComponentType());
             if(section!=null)section.markNeedsSaving();
         }
         // Native EntitySection snapshots retain NPC identity and all actual inventory components.
