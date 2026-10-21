@@ -77,6 +77,8 @@ final class NativeControl {
         com.hypixel.hytale.protocol.packets.inventory.SwitchHotbarBlockSet.class,
         com.hypixel.hytale.protocol.packets.player.LoadHotbar.class,
         com.hypixel.hytale.protocol.packets.player.SaveHotbar.class,
+        // Pocket crafting opens window 0 on the same actor that receives its actions/close.
+        com.hypixel.hytale.protocol.packets.window.ClientOpenWindow.class,
         com.hypixel.hytale.protocol.packets.window.SendWindowAction.class,
         com.hypixel.hytale.protocol.packets.window.CloseWindow.class,
         com.hypixel.hytale.protocol.packets.interface_.CustomPageEvent.class,

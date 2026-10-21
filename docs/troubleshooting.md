@@ -18,7 +18,7 @@ Copied robot identities are unsupported. If duplicate copies of one bound remote
 
 Move your body within 32 blocks of the loaded robot and release any existing session. Hold the same remote used to open the page. Reopen the roster if you changed held items or its contents changed.
 
-The possession adapter is experimental. The last native test showed the camera inside the operator's body and a robot snapping to the operator's old position. A further handoff repair is awaiting gameplay verification. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
+The possession adapter is experimental. The latest native test showed a clear robot view, its own inventory and successful return to the operator. Ordinary movement and item actions remain unverified. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
 
 ## I lost the remote
 
@@ -27,6 +27,8 @@ Use `/optimus-list`, approach your parked robot and use `/optimus-recover ROBOT_
 ## My inventory looks wrong
 
 Release control first: the robot and operator intentionally show different inventories. If either loses or duplicates items, stop using the candidate and keep a paired world/player backup. Inventory and reload acceptance is still open.
+
+The latest installed test build raised `Window id 0 is invalid!` when closing the robot's pocket-crafting inventory. The opening request reached the operator's window manager while the close reached the robot's. A routing repair is in source and awaits native retesting. Inventory rendering alone does not establish working crafting or transfers.
 
 ## Reporting an issue
 

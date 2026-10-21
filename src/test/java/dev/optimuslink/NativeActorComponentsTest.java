@@ -43,6 +43,50 @@ public final class NativeActorComponentsTest {
         EmptyPage(PlayerRef owner) { super(owner,CustomPageLifetime.CanDismiss); }
         @Override public void build(com.hypixel.hytale.component.Ref<EntityStore> ref,com.hypixel.hytale.server.core.ui.builder.UICommandBuilder commands,com.hypixel.hytale.server.core.ui.builder.UIEventBuilder events,com.hypixel.hytale.component.Store<EntityStore> store) {}
     }
+    private static final class EmptyPocketWindow extends com.hypixel.hytale.server.core.entity.entities.player.windows.Window {
+        int closes;
+        EmptyPocketWindow() { super(com.hypixel.hytale.protocol.packets.window.WindowType.PocketCrafting); }
+        @Override public com.google.gson.JsonObject getData() { return new com.google.gson.JsonObject(); }
+        @Override protected boolean onOpen0(com.hypixel.hytale.component.Ref<EntityStore> ref,com.hypixel.hytale.component.Store<EntityStore> store) { return true; }
+        @Override protected void onClose0(com.hypixel.hytale.component.Ref<EntityStore> ref,com.hypixel.hytale.component.ComponentAccessor<EntityStore> store) { closes++; }
+    }
+    private static void windows(Player body,Player actor,PlayerRef actorRef,
+            com.hypixel.hytale.component.ComponentType<EntityStore,PlayerRef> refType,Object unsafe,java.lang.reflect.Method allocate) throws Exception {
+        var universeClass=com.hypixel.hytale.server.core.universe.Universe.class;
+        var instance=universeClass.getDeclaredField("instance");instance.setAccessible(true);
+        check(instance.get(null)==null,"window fixture must run without a live Universe");
+        var universe=allocate.invoke(unsafe,universeClass);
+        var component=universeClass.getDeclaredField("playerRefComponentType");component.setAccessible(true);component.set(universe,refType);
+        instance.set(null,universe);
+        var windowTypes=com.hypixel.hytale.server.core.entity.entities.player.windows.Window.CLIENT_REQUESTABLE_WINDOW_TYPES;
+        var windowType=com.hypixel.hytale.protocol.packets.window.WindowType.PocketCrafting;
+        var original=windowTypes.put(windowType,EmptyPocketWindow::new);
+        try {
+            @SuppressWarnings("unchecked") var accessor=(com.hypixel.hytale.component.ComponentAccessor<EntityStore>)java.lang.reflect.Proxy.newProxyInstance(
+                NativeActorComponentsTest.class.getClassLoader(),new Class<?>[]{com.hypixel.hytale.component.ComponentAccessor.class},(proxy,method,args)-> {
+                    if(method.getName().equals("getComponent")&&args[1]==refType)return actorRef;
+                    throw new UnsupportedOperationException(method.getName());
+                });
+            var oldBodyWindow=new EmptyPocketWindow();body.getWindowManager().clientOpenWindow(null,oldBodyWindow,null);
+            check(body.getWindowManager().getWindow(0)==oldBodyWindow,"native client-open reserves pocket window zero on its owning manager");
+            try { actor.getWindowManager().closeWindow(null,0,accessor);throw new AssertionError("old split window routing unexpectedly succeeded"); }
+            catch(IllegalStateException expected) { check(expected.getMessage().equals("Window id 0 is invalid!"),"actual native manager reproduces the seventh-session window-close failure"); }
+            for(int i=0;i<2;i++) {
+                var robotWindow=new EmptyPocketWindow();actor.getWindowManager().clientOpenWindow(null,robotWindow,null);
+                check(actor.getWindowManager().getWindow(0)==robotWindow&&robotWindow.getPlayerRef()==actorRef,"native pocket window belongs to the robot action context");
+                check(actor.getWindowManager().closeWindow(null,0,accessor)==robotWindow&&robotWindow.closes==1,"matching native open/close completes exactly once");
+                check(actor.getWindowManager().getWindow(0)==null&&body.getWindowManager().getWindow(0)==oldBodyWindow,"robot close preserves the operator's separate window identity");
+            }
+            var routed=NativeControl.class.getDeclaredField("ROUTED");routed.setAccessible(true);
+            var packets=(java.util.List<?>)routed.get(null);
+            check(packets.contains(com.hypixel.hytale.protocol.packets.window.ClientOpenWindow.class)
+                &&packets.contains(com.hypixel.hytale.protocol.packets.window.SendWindowAction.class)
+                &&packets.contains(com.hypixel.hytale.protocol.packets.window.CloseWindow.class),"all native pocket-window lifecycle packets must follow the same controlled actor");
+        } finally {
+            if(original==null)windowTypes.remove(windowType);else windowTypes.put(windowType,original);
+            instance.set(null,null);
+        }
+    }
     private static void acknowledge(LegacyPageReceipts<PageManager> receipts,PageManager expected) {
         var manager=receipts.acknowledge();check(manager==expected,"native page packet receipt retains the originating manager");
         var event=new CustomPageEvent();event.type=CustomPageEventType.Acknowledge;
@@ -161,6 +205,7 @@ public final class NativeActorComponentsTest {
             acknowledge(receipts,bodyWire.manager);acknowledge(receipts,actorWire.manager);
             acknowledge(receipts,actorWire.manager);acknowledge(receipts,bodyWire.manager);
             check(receipts.acknowledge()==null,"native assume/release/reopen receipts drain exactly once");
+            windows(bodyPlayer,pageActor,pageActorRef,refType,unsafe,allocate);
             snapshots(actor,actorRef,unsafe,allocate);
         } catch(Exception|Error failure) { failure.printStackTrace(System.err);throw failure; }
         finally { registry.shutdown();bus.shutdown();serverInstance.set(null,null);com.hypixel.hytale.server.core.HytaleServer.SCHEDULED_EXECUTOR.shutdownNow(); }
