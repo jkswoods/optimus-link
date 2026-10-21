@@ -32,7 +32,7 @@ Use `/optimus-list`, approach your parked robot and use `/optimus-recover ROBOT_
 
 Control should return to your body and show the normal Respawn screen. Your world's death loss rules still apply to the operator's items. In the focused native check, both original remotes dropped and could be picked up again; both robots retained their equipment and links through normal reload.
 
-An earlier development candidate closed the respawn page prematurely. Update to the supplied candidate containing the respawn-page repair. If the page still fails, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Robot destruction is a separate case with a known unintended-revival fault in the tested candidate. Its source repair passes focused checks and awaits native retesting; do not rely on destruction or its drops yet.
+An earlier development candidate closed the respawn page prematurely. Update to the supplied candidate containing the respawn-page repair. If the page still fails, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Robot destruction is a separate case: control returns to the healthy operator, the robot leaves its roster and its contents drop in the world. A focused native check passed removal, original-tool drop, normal reload and pickup. An earlier candidate revived the robot instead; use the supplied candidate containing the robot-death repair.
 
 ## My inventory looks wrong
 

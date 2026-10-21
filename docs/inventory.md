@@ -2,7 +2,7 @@
 
 Every robot uses its own native inventory components. Taking control attaches the controls to those existing containers; it does not copy the operator's inventory. Native pickup and hotbar/storage transfers have been exercised with a real tool and mined dirt. They remained with the correct robot through controlled disconnect and normal reload; the other robot and operator kept their separate inventories.
 
-The implementation supplies 36 storage slots, a 9 slot hotbar and the native equipment containers. Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory. The corrected pickaxe grip, ordinary mining and placement have passed native checks. Robots have opened a chest using the normal Interact action, with empty hands or a held pickaxe, and transferred tools and blocks through its real inventory in both directions. Chest contents and robot storage survived controlled disconnect and normal reload. Chunk unloading has passed a focused native check. The operator’s world-change exit has also passed a focused check, including both robots’ inventories and links through a subsequent normal reload. Release control before changing worlds. The other failure exits remain under verification.
+The implementation supplies 36 storage slots, a 9 slot hotbar and the native equipment containers. Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory. The corrected pickaxe grip, ordinary mining and placement have passed native checks. Robots have opened a chest using the normal Interact action, with empty hands or a held pickaxe, and transferred tools and blocks through its real inventory in both directions. Chest contents and robot storage survived controlled disconnect and normal reload. Chunk unloading has passed a focused native check. The operator’s world-change exit has also passed a focused check, including both robots’ inventories and links through a subsequent normal reload. Release control before changing worlds. Operator death and robot destruction have also passed focused native checks.
 
 ![First-person robot view holding a crude pickaxe upright in its white hand](assets/native/robot-held-pickaxe.jpg)
 
@@ -21,6 +21,12 @@ Recovery revokes the old remote's link. It does not refund a deployment unit, cr
 
 Keep the world and player data together when making backups. Bound remotes work in their original world. Moving items between worlds does not migrate a robot or its links.
 
-If your body dies, control returns to it so you can use the normal Respawn screen. This passed a focused native check: both robots retained their equipment and links, and the two original remotes could be picked up from their world drops. The robots, inventories and links also survived a normal reload. Your world's normal death loss rules still apply. Robot destruction currently has a known unintended-revival fault. The source repair aims to drop all eight robot inventory sections once and let native corpse removal retire the robot; native retesting is pending.
+If your body dies, control returns to it so you can use the normal Respawn screen. This passed a focused native check: both robots retained their equipment and links, and the two original remotes could be picked up from their world drops. The robots, inventories and links also survived a normal reload. Your world's normal death loss rules still apply. If a robot dies, control returns to your body, the robot is removed from its roster and its inventory contents become normal world drops. A focused native check preserved the other robot and both original remotes, then recovered the destroyed robot's original equipped tool once after normal reload. Robot destruction does not refund a deployment unit.
 
-Do not clone bound remotes or robot entities with editor or administrative tools. Physical clone handling, destruction drops and removal are not yet verified. There is no packing or robot-refund feature in this candidate.
+Do not clone bound remotes or robot entities with editor or administrative tools. Physical clone handling remains unverified. There is no packing or robot-refund feature in this candidate.
+
+![Fleet Remote showing no linked robots after its only robot was destroyed](assets/native/robot-destruction-roster.jpg)
+
+*Actual 0.2.0-dev roster after robot destruction. The other remote retained its surviving robot. The original tool drop survived normal reload and was picked up once.*
+
+[View the destruction roster at full size](assets/native/robot-destruction-roster.jpg).
