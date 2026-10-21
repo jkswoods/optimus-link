@@ -2,7 +2,8 @@
 
 ## 0.2.0-dev — in development
 
-- Corrected the original robot's empty hand sockets to the native held-item axis; in-game grip verification is pending.
+- Corrected the original robot's empty hand sockets to the native held-item axis; the pickaxe grip has passed an in-game check.
+- Verified ordinary robot mining, pickup and placement, with the tool and mined dirt retained through controlled disconnect and normal reload.
 - Added Assembly Dock, Fleet Remote and deployment-unit recipes.
 - Added robot deployment, owner-bound remotes, exclusive links and a paginated fleet page.
 - Added the native control adapter, release, owner robot listing and nearby lost-link recovery.
@@ -17,7 +18,7 @@
 - Kept the temporary control facade out of chunk snapshots while retaining robot-owned data in native entity storage. A real tool survived active saving, controlled disconnect and normal reload in the correct robot; other lifecycle paths remain pending.
 - Added the player guide and original Optimus Link branding.
 
-Movement, mining, placement, the remaining safe exits and hand/tool alignment remain under verification. This is not a public release.
+Walking, looking, jumping, interactions with world containers and the remaining safe exits remain under verification. This is not a public release.
 
 ## 0.1.x — authoring stage
 

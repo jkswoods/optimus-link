@@ -18,7 +18,7 @@ Copied robot identities are unsupported. If duplicate copies of one bound remote
 
 Move your body within 32 blocks of the loaded robot and release any existing session. Hold the same remote used to open the page. Reopen the roster if you changed held items or its contents changed.
 
-The possession adapter is experimental. The latest native test showed a clear robot view, its own inventory and successful return to the operator. Native pickup, hotbar/storage transfers and a tool surviving controlled disconnect and normal reload have passed. Movement, mining, placement and the remaining failure exits are unverified. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
+The possession adapter is experimental. Native checks showed a clear robot view, its own inventory and successful return to the operator. Mining, pickup, placement, hotbar/storage transfers and a tool with mined dirt surviving controlled disconnect and normal reload have passed. Walking, looking, jumping, world-container interactions and the remaining failure exits are unverified. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
 
 ## I lost the remote
 

@@ -1,6 +1,6 @@
 # Fleet and controls
 
-The following controls are implemented in 0.2.0-dev and await native gameplay verification.
+These controls are implemented in 0.2.0-dev. Linking, views, inventory handling, mining, placement and manual return have native evidence; movement and the remaining interactions still need gameplay verification.
 
 ## Link robots
 
@@ -12,7 +12,7 @@ Use **Unlink** in the original remote's roster to free a parked robot for anothe
 
 ![Fleet Remote showing two Optimus robots linked to the same remote, with separate control and unlink buttons](assets/native/fleet-two-robots.jpg)
 
-An actual development-build roster after linking two robots to one remote. Basic inventory handling, manual return and a nonempty inventory through controlled disconnect and normal reload have native evidence. Movement and world actions remain under verification.
+An actual development-build roster after linking two robots to one remote. Inventory handling, mining, placement, manual return and a nonempty inventory through controlled disconnect and normal reload have native evidence. Walking, looking, jumping and world-container interactions remain under verification.
 
 [Open the roster image at full size](assets/native/fleet-two-robots.jpg).
 
@@ -29,7 +29,11 @@ Choose **Assume control** beside a loaded robot within 32 blocks of your body. Y
 | List your robots in this world | `/optimus-list` |
 | Recover a lost remote link | `/optimus-recover ROBOT_ID` while within 5 blocks of the parked robot |
 
-Native pickup and transfers between a robot's hotbar and storage have passed. Mining, placement and interactions with world containers while controlled remain under gameplay verification.
+Native pickup and transfers between a robot's hotbar and storage have passed. A robot has mined a dirt block with a crude pickaxe, collected the dirt into its own hotbar and placed it against a support using normal item actions. Walking, looking, jumping and interactions with world containers while controlled remain under gameplay verification.
+
+![Robot view after mining the near dirt block, with the remaining wood support ahead and the collected dirt in hotbar slot 2](assets/native/robot-mining-pickup.png)
+
+*Actual 0.2.0-dev view after mining and pickup. Select the collected block in the robot's hotbar to place it. This check used a prepared target and does not establish walking, looking or jumping.*
 
 ## Safe exits
 

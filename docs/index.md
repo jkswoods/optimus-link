@@ -6,7 +6,7 @@
 
 Craft humanoid robots, link several to a Fleet Remote and choose one to control. Each robot belongs to its deploying player and can link to one remote. A remote holds a paginated roster; you control one robot at a time.
 
-> **0.2.0-dev is experimental.** Crafting, two-robot linking, manual return and basic save/reload have native test evidence. Both robots pass native view, inventory-window and return checks. A robot-owned tool survived native pickup, hotbar/storage transfers, controlled disconnect and normal reload. Grip alignment is being refined; movement, mining, placement and the remaining lifecycle checks are still open. Use a disposable world. There is no public release download yet.
+> **0.2.0-dev is experimental.** Crafting, two-robot linking, views, inventory windows and manual return have native test evidence. A controlled robot has mined, picked up and placed a block using its own inventory, with a corrected tool grip. Its tool and mined dirt, the placed blocks and separate inventories survived controlled disconnect and normal reload. Walking, looking, jumping, world-container interactions and the remaining lifecycle checks are still open. Use a disposable world. There is no public release download yet.
 
 Start with [installation](installation.md), then follow the [first session](getting-started.md). The [crafting table](recipes.md) lists every recipe. [Fleet controls](fleet.md) explains linking and release, and [inventory and recovery](inventory.md) covers a lost remote.
 
