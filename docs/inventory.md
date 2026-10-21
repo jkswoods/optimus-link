@@ -21,6 +21,6 @@ Recovery revokes the old remote's link. It does not refund a deployment unit, cr
 
 Keep the world and player data together when making backups. Bound remotes work in their original world. Moving items between worlds does not migrate a robot or its links.
 
-Operator-death recovery currently fails its native check: the respawn page may close before you can use it. Release control if your body is in danger. Normal death loss rules still apply; both remote items became world drops in the test, with their identities intact. Both robots retained their equipment and links. The repair awaits an in-game retest.
+If your body dies, control returns to it so you can use the normal Respawn screen. This passed a focused native check: both robots retained their equipment and links, and the two original remotes could be picked up from their world drops. The robots, inventories and links also survived a normal reload. Your world's normal death loss rules still apply. Robot destruction and its drops remain unverified.
 
 Do not clone bound remotes or robot entities with editor or administrative tools. Physical clone handling, destruction drops and removal are not yet verified. There is no packing or robot-refund feature in this candidate.

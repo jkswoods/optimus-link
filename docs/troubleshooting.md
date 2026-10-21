@@ -28,9 +28,11 @@ Release control before changing worlds. An earlier development build could lose 
 
 Use `/optimus-list`, approach your parked robot and use `/optimus-recover ROBOT_ID`. The [recovery guide](inventory.md) gives the full sequence and its current verification status.
 
-## The respawn page closes when my body dies
+## I died while controlling a robot
 
-This is a known fault in the development candidate while controlling a robot. The repair awaits an in-game retest. Release control if your body is in danger. The focused check preserved both robots and their inventories; both original remotes became world drops under the native death rules. Keep the failed world and player data together with the exact JAR if reporting this fault.
+Control should return to your body and show the normal Respawn screen. Your world's death loss rules still apply to the operator's items. In the focused native check, both original remotes dropped and could be picked up again; both robots retained their equipment and links through normal reload.
+
+An earlier development candidate closed the respawn page prematurely. Update to the supplied candidate containing the respawn-page repair. If the page still fails, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Robot destruction is a separate case and remains unverified.
 
 ## My inventory looks wrong
 
