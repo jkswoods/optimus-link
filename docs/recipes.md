@@ -1,6 +1,6 @@
 # Crafting and progression
 
-Each 0.2.0-dev recipe produces **one** item. Start with an Assembly Dock, then craft remotes and deployment units in its Robotics category.
+Each 0.2.1-dev recipe produces **one** item. Start with an Assembly Dock, then craft remotes and deployment units in its Robotics category.
 
 | Result | Crafting station | Ingredients | Craft time |
 | --- | --- | --- | --- |

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1-dev — Hytale 0.7.3 compatibility
+
+- Targets Hytale 0.7.3 with the matching pinned server dependency.
+- Keeps the existing robot control, recipes, models, animations and sound families.
+- Retains 0.2.0-dev as the separate Hytale 0.7.2 build. Keep a matching world/player/JAR backup before upgrading.
+
 ## 0.2.0-dev
 
 - Craft an Optimus Assembly Dock, Fleet Remote and robot deployment units.

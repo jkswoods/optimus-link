@@ -2,7 +2,7 @@
 
 ## The Assembly Dock recipe is missing
 
-Enable the gameplay JAR for this world, use Hytale 0.7.2 and keep only one Optimus Link gameplay version installed. Look in the base Workbench's **Crafting** category. The older model-only plugin does not provide these recipes.
+Enable the gameplay JAR for this world, use the Hytale version matching your Optimus Link JAR and keep only one Optimus Link gameplay version installed. Look in the base Workbench's **Crafting** category. The older model-only plugin does not provide these recipes.
 
 ## Deployment is refused
 
