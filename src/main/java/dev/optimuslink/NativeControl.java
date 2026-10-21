@@ -24,6 +24,8 @@ import com.hypixel.hytale.server.core.io.handlers.game.GamePacketHandler;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
 import com.hypixel.hytale.server.core.io.adapter.PacketFilter;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
+import com.hypixel.hytale.server.core.modules.entity.teleport.TeleportSystems;
 import com.hypixel.hytale.server.core.modules.entity.component.CollisionResultComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BreathingComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerInput;
@@ -222,12 +224,20 @@ final class NativeControl {
             ACTIVE.put(operator.getUuid(),control);
             Player.setGameMode(robot,store.getComponent(body,Player.getComponentType()).getGameMode(),store);
             RobotInventory.refreshClient(robot);
-            operator.getPacketHandler().write(new SetClientId(store.getComponent(robot,NetworkId.getComponentType()).getId()));
+            synchronizePose(actorRef,robot);
             operator.sendMessage(Message.raw("Controlling Optimus. Your body remains exposed. Use /optimus-release to return. Control range 32 blocks."));
             NativeFleet.soundPrivate(operator,"OP_Remote_Link_Inventory");
         } catch(RuntimeException ex) {
             ACTIVE.put(operator.getUuid(),control);end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);throw ex;
         }
+    }
+    private static void synchronizePose(PlayerRef context,Ref<EntityStore> target) {
+        var store=target.getStore();var transform=store.getComponent(target,TransformComponent.getComponentType());
+        var head=store.getComponent(target,HeadRotation.getComponentType());
+        context.getPacketHandler().write(new SetClientId(store.getComponent(target,NetworkId.getComponentType()).getId()));
+        // Changing the local entity ID does not replace the client's predicted position.
+        // The native teleport queue holds movement until the client acknowledges this pose.
+        TeleportSystems.queueAndSendClientTeleport(context,transform.getPosition(),transform.getRotation(),head==null?transform.getRotation():head.getRotation(),true);
     }
     private static boolean valid(Control c) {
         return invalidReason(c)==null;
@@ -308,7 +318,8 @@ final class NativeControl {
         if(c.body().isValid()) {
             var player=c.body().getStore().getComponent(c.body(),Player.getComponentType());
             if(player!=null&&c.operator().getPacketHandler().stillActive()) {
-                c.operator().getPacketHandler().write(new SetClientId(c.body().getStore().getComponent(c.body(),NetworkId.getComponentType()).getId()),new SetServerCamera(ClientCameraView.FirstPerson,false,null));
+                synchronizePose(c.operator(),c.body());
+                c.operator().getPacketHandler().write(new SetServerCamera(ClientCameraView.FirstPerson,false,null));
                 Player.setGameMode(c.body(),player.getGameMode(),c.body().getStore());
                 c.operator().sendMessage(Message.raw("Returned to your body: "+reason.name().toLowerCase(Locale.ROOT)));
             }

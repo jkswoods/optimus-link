@@ -60,6 +60,25 @@ public final class ActorHandlerTest {
         var blocked=type.getDeclaredField("transferBlocked");blocked.setAccessible(true);blocked.setBoolean(actor,true);
         check(!actor.stillActive(),"a cross-world robot request must immediately become ineligible for native player transfer");
         var ref=new com.hypixel.hytale.server.core.universe.PlayerRef(null,java.util.UUID.randomUUID(),"Optimus","en-US",actor,null);
+        actor.setPlayerRef(ref);
+        var body=new com.hypixel.hytale.server.core.universe.PlayerRef(null,java.util.UUID.randomUUID(),"Operator","en-US",real,null);
+        var position=new org.joml.Vector3d(2.5,80,.5);
+        var rotation=new com.hypixel.hytale.math.vector.Rotation3f();
+        com.hypixel.hytale.server.core.modules.entity.teleport.TeleportSystems.queueAndSendClientTeleport(ref,position,rotation,rotation,true);
+        check(sent.size()==1&&sent.getFirst().getId()==com.hypixel.hytale.protocol.packets.player.ClientTeleport.PACKET_ID,"actor pose must use an actual native ClientTeleport");
+        com.hypixel.hytale.protocol.packets.player.ClientTeleport teleport;
+        var packet=sent.removeFirst();
+        try(var arena=java.lang.foreign.Arena.ofConfined()) {
+            var bytes=arena.allocate(packet.computeSize());packet.serialize(bytes,0);
+            teleport=com.hypixel.hytale.protocol.packets.player.ClientTeleport.toObject(bytes);
+        } finally { if(packet instanceof com.hypixel.hytale.protocol.CachedPacket<?> cached)cached.close(); }
+        check(teleport.modelTransform.position.x==2.5&&teleport.modelTransform.position.y==80&&teleport.modelTransform.position.z==.5,"pose handoff targets the robot rather than the old body position");
+        check(teleport.resetVelocity,"native pose handoff clears old client velocity");
+        check(!ref.getTeleportAckTracker().isEmpty(),"robot's native tracker must wait for its pose acknowledgement");
+        check(body.getTeleportAckTracker().isEmpty(),"robot pose must not add pending work to the real body's tracker");
+        var acknowledgement=ref.getTeleportAckTracker().validate(teleport.teleportId,teleport.modelTransform.position);
+        check(acknowledgement.status()==com.hypixel.hytale.server.core.modules.entity.teleport.TeleportAckTracker.Status.OK,"native robot teleport acknowledgement validates");
+        check(ref.getTeleportAckTracker().isEmpty(),"native robot movement can resume after the matching acknowledgement");
         var unsafeClass=Class.forName("sun.misc.Unsafe");var singleton=unsafeClass.getDeclaredField("theUnsafe");singleton.setAccessible(true);
         var worldClass=com.hypixel.hytale.server.core.universe.world.World.class;
         var destination=(com.hypixel.hytale.server.core.universe.world.World)unsafeClass.getMethod("allocateInstance",Class.class).invoke(singleton.get(null),worldClass);
@@ -70,6 +89,8 @@ public final class ActorHandlerTest {
         blocked.setBoolean(actor,false);check(actor.stillActive(),"normal actor lifetime remains live before release");
         var output=type.getDeclaredField("output");output.setAccessible(true);
         ((ControlOutputScope.Lifetime)output.get(actor)).retire();
+        com.hypixel.hytale.server.core.modules.entity.teleport.TeleportSystems.queueAndSendClientTeleport(ref,position,rotation,rotation,true);
+        check(sent.isEmpty()&&ref.getTeleportAckTracker().isEmpty(),"native teleport rolls back a swallowed retired-actor packet instead of leaving a pending acknowledgement");
         actor.sendPing();actor.tickPing(10);check(sent.isEmpty(),"a retired actor must not send a late heartbeat");
         check(!actor.stillActive(),"retired actor must remain inactive");
         real.tickPing(1);check(sent.size()==1,"actor retirement must not stop the body heartbeat");reply(real,sent);
