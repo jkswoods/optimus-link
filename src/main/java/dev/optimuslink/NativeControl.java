@@ -197,6 +197,7 @@ final class NativeControl {
         try {
             RobotSavepoints.attach(robot);
             control.feedback().savepointAttached=true;
+            RobotSavepoints.playerInteractions(robot);
             var bodyInput=store.getComponent(body,PlayerInput.getComponentType());if(bodyInput!=null)bodyInput.getMovementUpdateQueue().clear();
             var bodyVelocity=store.getComponent(body,Velocity.getComponentType());if(bodyVelocity!=null)bodyVelocity.setZero();
             var bodyManager=store.getComponent(body,managerType);if(bodyManager!=null)bodyManager.clear();
@@ -227,8 +228,8 @@ final class NativeControl {
             store.ensureComponent(robot,MovementManager.getComponentType());
             ACTIVE.put(operator.getUuid(),control);
             Player.setGameMode(robot,store.getComponent(body,Player.getComponentType()).getGameMode(),store);
-            RobotInventory.refreshClient(robot);
             synchronizePose(actorRef,robot,viewer);
+            RobotInventory.refreshClient(robot);
             operator.sendMessage(Message.raw("Controlling Optimus. Your body remains exposed. Use /optimus-release to return. Control range 32 blocks."));
             NativeFleet.soundPrivate(operator,"OP_Remote_Link_Inventory");
         } catch(RuntimeException ex) {
@@ -311,6 +312,7 @@ final class NativeControl {
             // Native queued callbacks run before the deferred component cleanup.
             store.getExternalData().getWorld().execute(()-> {
                 if(!c.robot().isValid())return;
+                RobotSavepoints.restoreInteractions(c.robot());
                 if(store.getComponent(c.robot(),Player.getComponentType())==c.actor())store.removeComponent(c.robot(),Player.getComponentType());
                 if(store.getComponent(c.robot(),PlayerRef.getComponentType())==c.handler().getPlayerRef())store.removeComponent(c.robot(),PlayerRef.getComponentType());
                 if(c.previousRobotViewer()==null)store.tryRemoveComponent(c.robot(),EntityViewer.getComponentType());else store.putComponent(c.robot(),EntityViewer.getComponentType(),c.previousRobotViewer());

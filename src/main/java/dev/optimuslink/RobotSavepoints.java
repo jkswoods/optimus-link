@@ -15,6 +15,7 @@ import com.hypixel.hytale.component.system.StoreSystem;
 import com.hypixel.hytale.component.system.tick.RunWhenPausedSystem;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.interaction.Interactions;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.EntitySection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -31,13 +32,34 @@ final class RobotSavepoints {
     private static final long CAPTURE_INTERVAL=1_000_000_000L;
     static final class Point {
         final UUID id;final Ref<EntityStore> robot;final World world;
+        final Interactions originalInteractions;
         final AtomicBoolean requested=new AtomicBoolean();
         EntitySection section;Holder<EntityStore> image;long capturedAt;volatile boolean retired;
         Point(UUID id,Ref<EntityStore> robot,World world,EntitySection section,Holder<EntityStore> image) {
             this.id=id;this.robot=robot;this.world=world;this.section=section;this.image=image;capturedAt=System.nanoTime();
+            originalInteractions=image.getComponent(Interactions.getComponentType());
         }
     }
     private RobotSavepoints() {}
+    static void playerInteractions(Ref<EntityStore> robot) {
+        var point=ACTIVE.get(robot.getStore().getComponent(robot,OptimusLinkPlugin.robotType).id);
+        if(point==null)throw new IllegalStateException("Robot action bindings require an active native savepoint.");
+        var bindings=RobotActionBindings.forPlayer(point.originalInteractions);
+        if(bindings!=null)robot.getStore().putComponent(robot,Interactions.getComponentType(),bindings);
+    }
+    static void restoreInteractions(Ref<EntityStore> robot) {
+        var point=ACTIVE.get(robot.getStore().getComponent(robot,OptimusLinkPlugin.robotType).id);
+        if(point==null)return;
+        if(point.originalInteractions==null)robot.getStore().tryRemoveComponent(robot,Interactions.getComponentType());
+        else robot.getStore().putComponent(robot,Interactions.getComponentType(),point.originalInteractions);
+    }
+    static void restoreInteractions(Holder<EntityStore> holder) {
+        if(ACTIVE.isEmpty()||OptimusLinkPlugin.robotType==null)return;
+        var identity=holder.getComponent(OptimusLinkPlugin.robotType);var point=identity==null?null:ACTIVE.get(identity.id);
+        if(point==null)return;
+        if(point.originalInteractions==null)holder.tryRemoveComponent(Interactions.getComponentType());
+        else holder.putComponent(Interactions.getComponentType(),point.originalInteractions);
+    }
     static void attach(Ref<EntityStore> robot) {
         var store=robot.getStore();store.assertThread();
         if(store.getComponent(robot,EntityStore.REGISTRY.getNonSerializedComponentType())!=null)throw new IllegalStateException("Optimus must have native world persistence before it can be controlled.");
@@ -107,7 +129,7 @@ final class RobotSavepoints {
         @Override public void onEntityAdd(Holder<EntityStore> holder,AddReason reason,Store<EntityStore> store) {}
         @Override public void onEntityRemoved(Holder<EntityStore> holder,RemoveReason reason,Store<EntityStore> store) {
             var identity=holder.getComponent(OptimusLinkPlugin.robotType);if(identity==null||!ACTIVE.containsKey(identity.id))return;
-            release(identity.id);RobotLifecycle.Load.sanitize(holder);
+            restoreInteractions(holder);release(identity.id);RobotLifecycle.Load.sanitize(holder);
             holder.tryRemoveComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         }
     }

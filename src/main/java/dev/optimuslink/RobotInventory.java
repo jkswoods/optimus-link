@@ -34,8 +34,20 @@ final class RobotInventory {
     }
     static void attach(Player actor,Holder<EntityStore> bindings) { actor.getInventory().backwardsCompatHook(bindings); }
     static void refreshClient(Ref<EntityStore> ref) {
+        var store=ref.getStore();
         for(var type:InventoryComponent.EVERYTHING) {
-            var component=ref.getStore().getComponent(ref,type);if(component!=null)component.markDirty();
+            var component=store.getComponent(ref,type);if(component!=null)component.markDirty();
         }
+        var player=store.getComponent(ref,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
+        if(player==null)return;
+        ClientInventoryState.send(player.getPacketHandler(),
+            store.getComponent(ref,InventoryComponent.Storage.getComponentType()),
+            store.getComponent(ref,InventoryComponent.Armor.getComponentType()),
+            store.getComponent(ref,InventoryComponent.Hotbar.getComponentType()),
+            store.getComponent(ref,InventoryComponent.Utility.getComponentType()),
+            store.getComponent(ref,InventoryComponent.Tool.getComponentType()),
+            store.getComponent(ref,InventoryComponent.Backpack.getComponentType()),
+            store.getComponent(ref,InventoryComponent.AbilitySlots.getComponentType()),
+            store.getComponent(ref,InventoryComponent.RuneBag.getComponentType()));
     }
 }

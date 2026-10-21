@@ -32,6 +32,7 @@ final class RobotSnapshot {
         for(int i=0;i<archetype.length();i++) {
             var type=archetype.get(i);if(type!=null&&keep(type))copy(store,robot,clean,type);
         }
+        RobotSavepoints.restoreInteractions(clean);
         return clean.cloneSerializable(EntityStore.REGISTRY.getData());
     }
     static Holder<EntityStore> capture(Holder<EntityStore> snapshot,ComponentRegistry<EntityStore> registry) {
@@ -39,6 +40,7 @@ final class RobotSnapshot {
         for(int i=0;i<archetype.length();i++) {
             var type=archetype.get(i);if(type!=null&&keep(type))copy(snapshot,clean,type);
         }
+        RobotSavepoints.restoreInteractions(clean);
         return clean.cloneSerializable(registry.getData());
     }
     private static <T extends Component<EntityStore>> void copy(Store<EntityStore> source,Ref<EntityStore> ref,Holder<EntityStore> target,ComponentType<EntityStore,T> type) { target.putComponent(type,source.getComponent(ref,type)); }
