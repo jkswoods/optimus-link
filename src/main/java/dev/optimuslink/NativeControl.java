@@ -431,7 +431,16 @@ final class NativeControl {
         @Override public void tick(float dt,int index,Store<EntityStore> store) {
             for(var c:List.copyOf(ACTIVE.values())) {
                 boolean local=c.body().isValid()?c.body().getStore()==store:c.robot().isValid()?c.robot().getStore()==store:true;
-                if(local) { var reason=invalidReason(c);if(reason!=null)requestEnd(c,reason); }
+                if(local) {
+                    var reason=invalidReason(c);
+                    if(reason==null) {
+                        // Native interactions can commit a selection without sending a
+                        // standalone SetActiveSlot packet. Observe the authoritative slot.
+                        var hotbar=store.getComponent(c.robot(),com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.getComponentType());
+                        if(hotbar!=null&&hotbar.getActiveSlot()==0)reason=FleetRegistry.Exit.MANUAL;
+                    }
+                    if(reason!=null)requestEnd(c,reason);
+                }
             }
         }
     }

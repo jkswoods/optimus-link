@@ -2,11 +2,25 @@
 
 Every robot uses its own native inventory components. Taking control attaches the controls to those existing containers; it does not copy the operator's inventory. Native pickup and hotbar/storage transfers have been exercised with a real tool and mined dirt. They remained with the correct robot through controlled disconnect and normal reload; the other robot and operator kept their separate inventories.
 
-The robot has 36 storage slots and a 9 slot hotbar. During control, **slot 1 is permanently reserved for Release Control**; press **1** to return to your body. The remaining eight hotbar slots hold equipment. The control cannot be moved or dropped, including when the robot dies. If slot 1 already contains an item, that item moves to a free robot hotbar or storage slot with its quantity, durability and metadata preserved. If neither has room, assuming control is refused until you free one slot. Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory. The corrected pickaxe grip, ordinary mining and placement have passed native checks. Robots have opened a chest using the normal Interact action, with empty hands or a held pickaxe, and transferred tools and blocks through its real inventory in both directions. Chest contents and robot storage survived controlled disconnect and normal reload. Chunk unloading has passed a focused native check. The operator’s world-change exit has also passed a focused check, including both robots’ inventories and links through a subsequent normal reload. Release control before changing worlds. Operator death and robot destruction have also passed focused native checks.
+The robot has 36 storage slots, native equipment containers and a 9 slot hotbar.
+
+## Release control
+
+During control, **slot 1 is permanently reserved for Release Control**; press **1** to return to your body. The remaining eight hotbar slots hold equipment. The control cannot be moved or dropped, including when the robot dies.
+
+If slot 1 already contains an item, that item moves to a free robot hotbar or storage slot with its quantity, durability and metadata preserved. If neither has room, assuming control is refused until you free one slot.
+
+![Corrected Fleet Remote icons in the operator’s hotbar beside the two Optimus robots](assets/native/remote-icon-corrected.jpg)
+
+*Current native view with the corrected remote thumbnails. During robot control, slot 1 provides Release Control and real tools use slots 2–9.*
+
+## Equipment
+
+Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory. The corrected pickaxe grip, ordinary mining and placement have passed native checks. Robots have opened a chest using the normal Interact action, with empty hands or a held pickaxe, and transferred tools and blocks through its real inventory in both directions. Chest contents and robot storage survived controlled disconnect and normal reload. Chunk unloading has passed a focused native check. The operator’s world-change exit has also passed a focused check, including both robots’ inventories and links through a subsequent normal reload. Release control before changing worlds. Operator death and robot destruction have also passed focused native checks.
 
 ![First-person robot view holding a crude pickaxe upright in its white hand](assets/native/robot-held-pickaxe.jpg)
 
-*Actual 0.2.0-dev robot view after equipping its own pickaxe. The robot's hotbar is separate from the operator's remote inventory.*
+*Earlier native grip check, before slot 1 was reserved for Release Control. Current tools use slots 2–9; the robot keeps its own equipment.*
 
 ## Replace a lost remote
 

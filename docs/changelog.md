@@ -1,12 +1,12 @@
 # Changelog
 
-### Playtest feedback fixes
+## Playtest feedback fixes
 
 - Fleet Remote uses its authored inventory icon.
 - Control switches retire the old local actor and park the operator body in an idle state.
 - Robot hotbar slot 1 is a protected Release Control button. Press 1 to return; the button never becomes a physical item or death drop. Existing equipment is safely moved before reserving the slot.
 
-These changes have focused automated checks; their native playtest is pending.
+Native checks verified the corrected remote and Release Control icons, protected slot behavior, preserved equipment and return from both robots. The release control is virtual and never enters a robot’s saved inventory. The body-animation repair is awaiting a walk/run retest.
 
 ## 0.2.0-dev — in development
 
