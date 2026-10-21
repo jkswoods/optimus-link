@@ -1,5 +1,9 @@
 # In-game screenshots
 
-The [fleet guide](fleet.md) includes an actual 0.2.0-dev native roster capture after linking two robots to one remote. The homepage banner is original illustrative branding, not an in-game capture.
+The guides place native screenshots beside the actions they explain:
 
-The [first-session guide](getting-started.md) shows the Assembly Dock, Workbench, Chest and a deployed robot in the native development world. The [inventory guide](inventory.md) shows the corrected held-pickaxe grip, and [fleet controls](fleet.md) shows a robot's view after ordinary mining and pickup. Chest interactions and transfers in both directions have also passed, although those captures are not included here. An image of the Dock's crafting screen is still pending. These captures do not establish full survival progression or the remaining movement and lifecycle checks.
+- [First session](getting-started.md) shows the Workbench, Chest, Assembly Dock and a deployed robot.
+- [Fleet controls](fleet.md) shows the two-robot roster and a robot's mining view.
+- [Inventory and recovery](inventory.md) shows the corrected remote icons, held-tool grip and roster after robot destruction.
+
+Captions distinguish current captures from earlier action checks made before slot 1 became Release Control. The homepage banner and navigation logo are original mod artwork.

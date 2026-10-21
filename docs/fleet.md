@@ -1,46 +1,46 @@
 # Fleet and controls
 
-These controls are implemented in 0.2.0-dev. Linking, views, inventory handling, mining, placement and manual return have native evidence; chest interactions have also passed. Walking, looking, jumping and the remaining failure exits still need gameplay verification.
+A Fleet Remote holds links to several robots. Each robot can link to **one remote**, and each operator controls **one robot at a time**.
 
-## Link robots
+## Link and switch robots
 
-Use the Fleet Remote's secondary action while aiming at one of your robots within 5 blocks. One robot can link to **one remote**; one remote can link to **many robots**. The roster shows three rows per page, with Previous and Next buttons.
+Use the remote's secondary action while aiming at one of your robots within 5 blocks. The remote binds to its first user and world. Trading it does not transfer ownership or allow another player to control your robots.
 
-Robots belong to the player who deployed them. A remote binds to its first user and world. Trading it does not transfer ownership, and another player cannot use it to take your robots.
+The roster shows three robots per page; use **Previous** and **Next** to see the rest. Choose **Assume control** beside a loaded robot within 32 blocks of your body. Release your current robot before selecting another.
 
-Use **Unlink** in the original remote's roster to free a parked robot for another remote. Unlinking keeps its ownership, equipment and storage. Active control must end first.
+Use **Unlink** on a parked robot to free it for another remote. Ownership, equipment and storage stay with the robot. If the old remote is lost, follow [nearby link recovery](inventory.md#replace-a-lost-remote).
 
-![Fleet Remote showing two Optimus robots linked to the same remote, with separate control and unlink buttons](assets/native/fleet-two-robots.jpg)
+![Fleet Remote with two linked Optimus robots and separate control and unlink buttons](assets/native/fleet-two-robots.jpg)
 
-An actual development-build roster after linking two robots to one remote. Inventory handling, mining, placement, manual return and a nonempty inventory through controlled disconnect and normal reload have native evidence. Chest interactions with empty hands or a held tool and transfers in both directions have also passed. Walking, looking and jumping remain under verification.
+*The roster separates each robot's control and unlink actions. Three visible rows are a page size, rather than a fleet limit.*
 
-[Open the roster image at full size](assets/native/fleet-two-robots.jpg).
+[View the roster at full size](assets/native/fleet-two-robots.jpg).
 
-## Assume control
+## Control a robot
 
-Choose **Assume control** beside a loaded robot within 32 blocks of your body. Your body stays in place under normal damage rules. The robot uses the operator's existing permissions and game mode; it does not grant extra permissions.
+Your body stays in the world under normal damage rules. The robot uses your existing permissions and game mode, with its own inventory and held equipment.
 
 | Action | Control |
 | --- | --- |
 | Walk, look and jump | Your normal game bindings |
-| Mine, place and use held equipment | Your normal item actions, using the robot's held item |
-| Open storage and move items | Your normal inventory binding, using robot-owned containers |
-| Return to your body | Press **1**, or use `/optimus-release` |
+| Mine, place and use equipment | Your normal item actions with the robot's held item |
+| Equip tools and move items | Your normal inventory binding |
+| Return to your body | Select **Release Control in slot 1**, normally **1**, or use `/optimus-release` |
 | List your robots in this world | `/optimus-list` |
-| Recover a lost remote link | `/optimus-recover ROBOT_ID` while within 5 blocks of the parked robot |
+| Revoke a lost remote link | `/optimus-recover ROBOT_ID` beside your parked robot |
 
-Native pickup and transfers between a robot's hotbar and storage have passed. A robot has mined a dirt block with a crude pickaxe, collected the dirt into its own hotbar and placed it against a support using normal item actions. A controlled robot has also opened a chest with empty hands or a held pickaxe and moved tools and blocks through its inventory in both directions. Walking, looking and jumping remain under gameplay verification.
+Equip tools and blocks in **slots 2–9**. Open chests and transfer items using the usual inventory controls. Keep within 32 blocks of your body.
 
-![Robot view after mining the near dirt block, with the remaining wood support ahead and the collected dirt in hotbar slot 2](assets/native/robot-mining-pickup.png)
+![Earlier robot view after mining and collecting dirt](assets/native/robot-mining-pickup.png)
 
-*Actual 0.2.0-dev view after mining and pickup. Select the collected block in the robot's hotbar to place it. This check used a prepared target and does not establish walking, looking or jumping.*
+*Earlier mining and pickup check, before slot 1 was reserved for Release Control. Current tools and blocks use slots 2–9.*
 
-## Safe exits
+Some animation transitions remain under playtest review. Check [current support limits](compatibility.md) before choosing this build for a session.
 
-Manual release and leaving control range have restored the operator view, selected slot and immediately usable remote in native checks. Controlled disconnect followed by normal reload preserved separate inventories. Chunk unloading and the operator’s world-change exit have passed focused native checks. Both robots, their inventories and links survived a subsequent controlled disconnect and normal reload. Robot destruction has also passed a focused native check and normal reload.
+## End control safely
 
-Operator death has also passed a focused native check after repairing a prematurely closed respawn page. Control returned to the body, the normal Respawn button worked and both original remotes could be picked up from their world drops. Both robots' equipment and links survived a subsequent normal reload. Keep your body protected; the world's normal death loss rules still apply. If the robot dies, control returns to your body and the destroyed robot leaves its roster. Its inventory contents become normal world drops, with no deployment-unit refund. A focused native check removed the robot, preserved the other robot and both remotes, and recovered the original equipped tool once after normal reload.
+Select slot 1 to return before walking away or changing worlds. Control also ends if the connection closes, the body or robot dies, the robot unloads, authority becomes invalid, or the robot exceeds control range.
 
-**Release control before changing worlds.** The operator’s world-change exit has passed a focused native check after repairing a defect in an earlier development build. A separate native transfer request on the controlled robot was blocked: control returned to the operator, both robots stayed in their original world and the first robot could be controlled again with its tool intact. Robots and bound remotes belong to their original world; this version does not provide fleet migration. Delayed output from a released robot is discarded so it cannot replace the returned body's inventory view.
+If your body dies, use the normal Respawn screen; your world's death-loss rules apply. If a robot dies, it leaves the roster and its possessions become world drops. The virtual Release Control button never becomes a drop. Robot destruction does not refund a deployment unit.
 
-There is one active robot per operator. Release the current robot before selecting another. No control session is restored after a server restart.
+Robots and bound remotes belong to their original world. Fleet migration and packing robots into items are unavailable. Control sessions end on restart; open the roster to assume a robot again.

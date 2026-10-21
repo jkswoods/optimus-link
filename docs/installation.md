@@ -1,6 +1,6 @@
 # Installation
 
-Version **0.2.0-dev** targets Hytale **0.7.2**. It is awaiting gameplay verification; use a new disposable world and keep backups.
+Version **0.2.0-dev** targets Hytale **0.7.2**. Use a disposable test world and check the [current support limits](compatibility.md#current-support-status).
 
 1. Close the world normally and back up its world data and player data together.
 2. Obtain `OptimusLink-0.2.0-dev.jar` from the development package supplied to you. No public release download is available.
@@ -22,4 +22,4 @@ The output is `build/OptimusLink-0.2.0-dev.jar`, with `build/SHA256SUMS.txt`. Th
 
 ## Remove or upgrade
 
-Release control with `/optimus-release`, save normally, disconnect and retain a paired world/player backup before replacing or removing the JAR. Removal can make mod entities and items unavailable. Restore the matching backup and JAR if returning to that version. See [Compatibility and backups](compatibility.md).
+Select Release Control in slot 1 or use `/optimus-release`, save normally, disconnect and retain a paired world/player backup before replacing or removing the JAR. Removal can make mod entities and items unavailable. Restore the matching backup and JAR if returning to that version. See [Compatibility and backups](compatibility.md).

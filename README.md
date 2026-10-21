@@ -1,17 +1,31 @@
 # Optimus Link
 
-Hytale humanoid robot fleets controlled through a craftable handheld remote.
+Craft humanoid robots, link several to a Fleet Remote and control one at a time in Hytale. Each robot keeps its own equipment and storage. Select **Release Control in hotbar slot 1** to return to your body; the control cannot be moved or dropped on death.
 
-This private development mod targets Hytale 0.7.2 and Java 25. Version 0.2.0-dev includes craftable equipment, deployment, fleet linking, a native control adapter, release and nearby lost-link recovery. Native crafting, two-robot linking, views, inventory windows and manual return have been exercised. A controlled robot has mined a block, collected its drop and placed it using its own inventory. The corrected pickaxe grip has passed an in-game check. Robots have also opened a chest with empty hands or a held tool and transferred items through it in both directions. A real tool, mined dirt, placed blocks, fleet links and separate robot/operator inventories survived controlled disconnect and normal reload. Manual and range returns restored the player's selected slot and immediately usable remote. The operator’s world-change exit and the robots’ inventories have also passed a focused native save/reload check. Walking, looking, jumping and the remaining lifecycle checks stay open. Use a disposable world. There is no public release download.
+This private **0.2.0-dev** build targets **Hytale 0.7.2 / Java 25**. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](docs/compatibility.md) before testing.
 
-Each robot may link to one remote. A remote can hold a roster of multiple robots; an operator controls one at a time. Robot equipment and inventory remain separate from the operator's. The operator's body remains exposed while controlling a robot. Robot hotbar slot 1 is reserved for **Release Control**: press **1** to return. The control cannot be moved or dropped on death; existing equipment is preserved when the slot is reserved.
+Start with [installation](docs/installation.md) and [your first session](docs/getting-started.md). The guide covers [recipes](docs/recipes.md), [fleet controls](docs/fleet.md), [inventories and recovery](docs/inventory.md) and [troubleshooting](docs/troubleshooting.md). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
 
-Focused native checks also passed the controlled-robot world-transfer guard and nearby link recovery onto another existing remote, including normal reload of the split rosters and the equipped tool. The operator-death repair passed a native check: the normal Respawn page remained usable, both original remotes could be picked up from their world drops, and both robots' inventories and links survived normal reload. Robot destruction has also passed a native check: control returned safely, the robot left its roster, and its original equipped tool became a normal drop that survived reload and could be picked up once. Ordinary walking, looking and jumping remain unverified.
+## Build
 
-Build with `python3 tools/build.py --server PATH_TO_HYTALE_SERVER_JAR --jdk PATH_TO_JDK_25`. The server dependency must match the fingerprint in `target.json`; it is not redistributed. Run the focused authority, persistence, output-isolation and native transport tests with the same command and `--test`. The transport test uses in-memory channels and the pinned packet handlers; it does not start a server or replace native gameplay verification.
+Use your own server JAR and JDK 25. The dependency fingerprint must match `target.json`; Hytale files are not redistributed.
 
-Original cuboid models, animation and connected ElevenLabs audio are reused from the authoring stage. The [player guide](docs/index.md) documents recipes, installation, controls and current limits. Build its local site with `python -m pip install -r requirements-docs.txt` then `python tools/build_docs.py`. The helper uses the archive epoch in `target.json` so fresh guide builds can produce identical candidate archives. Native gameplay/screenshots, safe lifecycle exits, actual save/reload and the tested package remain required before the development delivery is complete.
+```sh
+python3 tools/build.py --server PATH_TO_HYTALE_SERVER_JAR --jdk PATH_TO_JDK_25 --test
+```
 
-No distribution license has been selected. This fan mod is not affiliated with Tesla or Hytale.
+The output is `build/OptimusLink-0.2.0-dev.jar`. Focused tests cover authority, inventory preservation, safe exits and native transport behavior. They do not replace gameplay verification.
 
-After building the JAR and guide, `python3 tools/package.py --jar build/OptimusLink-0.2.0-dev.jar` creates a reproducible local candidate ZIP with checksums. It does not install, upload or certify the build for gameplay.
+## Build the guide and development package
+
+```sh
+python -m pip install -r requirements-docs.txt
+python tools/build_docs.py
+python3 tools/package.py --jar build/OptimusLink-0.2.0-dev.jar
+```
+
+The guide helper uses the archive epoch in `target.json` for reproducible output. Packaging includes the JAR, built player guide and checksums. It does not install, upload or publish the mod.
+
+Original models, animations and connected ElevenLabs audio are included. The operator's body remains exposed under normal world damage rules while controlling a robot.
+
+No public release download or redistribution license has been selected. This independent fan mod is not affiliated with Tesla or Hytale.

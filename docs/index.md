@@ -2,14 +2,19 @@
 
 ![Optimus Link — Your fleet. Your control.](assets/brand/banner.png)
 
-*Original mod artwork. The first-session and feature guides include native development-build screenshots.*
+Craft humanoid robots, link them to a Fleet Remote and take control of one at a time. Give each robot its own tools and storage, then return to your body by selecting **Release Control in hotbar slot 1**.
 
-Craft humanoid robots, link several to a Fleet Remote and choose one to control. Each robot belongs to its deploying player and can link to one remote. A remote holds a paginated roster; you control one robot at a time.
+Each robot belongs to its deploying player and links to one remote. A remote can manage several robots through its roster. Your body stays behind, exposed to normal damage while you control a robot.
 
-> **0.2.0-dev is experimental.** Crafting, two-robot linking, views, inventory windows and manual return have native test evidence. A controlled robot has mined, picked up and placed a block using its own inventory, with a corrected tool grip. Its tool and mined dirt, the placed blocks and separate inventories survived controlled disconnect and normal reload. Chest interactions with empty hands or a held tool and transfers in both directions have also passed. Walking, looking, jumping and the remaining lifecycle checks are still open. The operator’s world-change exit has also passed a focused save/reload check. Release control before changing worlds. Use a disposable world. There is no public release download yet.
+> **Experimental development build:** 0.2.0-dev targets Hytale **0.7.2** and Java **25**. Use a disposable test world. Some animation transitions remain under review. Multiplayer and sound listening checks are also pending. See [Compatibility and backups](compatibility.md) for the current support limits.
 
-Start with [installation](installation.md), then follow the [first session](getting-started.md). The [crafting table](recipes.md) lists every recipe. [Fleet controls](fleet.md) explains linking and release, and [inventory and recovery](inventory.md) covers a lost remote.
+## Start a fleet
 
-Your body stays where you left it and remains exposed to normal damage. Robots have separate storage and equipment. The Assembly Dock crafts equipment; this version has no charging or autonomous work system.
+1. [Install the supplied development package](installation.md).
+2. [Craft an Assembly Dock, a remote and deployment units](recipes.md).
+3. [Deploy and link your first two robots](getting-started.md).
+4. [Choose a robot, equip it and take control](fleet.md).
 
-The development target is Hytale **0.7.2** with Java **25**. Source is in the [private Optimus Link repository](https://github.com/jkswoods/optimus-link), available to accounts with access. This is an independent fan mod inspired by Optimus; it is not affiliated with Tesla or Hytale.
+The Assembly Dock crafts equipment without fuel or power. Robots retain their own inventories when parked. This version has no charging, autonomous jobs or ownership-transfer system.
+
+The [private source repository](https://github.com/jkswoods/optimus-link) is available to accounts with access. There is no public release download. This independent fan mod is not affiliated with Tesla or Hytale.

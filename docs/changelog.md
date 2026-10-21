@@ -1,38 +1,24 @@
 # Changelog
 
-## Playtest feedback fixes
+## 0.2.0-dev
 
-- Fleet Remote uses its authored inventory icon.
-- Control switches retire the old local actor and park the operator body in an idle state.
-- Robot hotbar slot 1 is a protected Release Control button. Press 1 to return; the button never becomes a physical item or death drop. Existing equipment is safely moved before reserving the slot.
+- Craft an Optimus Assembly Dock, Fleet Remote and robot deployment units.
+- Deploy owner-bound robots and link several to one remote. Each robot links to one remote at a time.
+- Choose a robot from the fleet roster and control its movement, view, tools and inventory. Mine, place blocks and transfer items through chests using the robot's own possessions.
+- Keep equipment, storage and fleet links through normal save/reload.
+- Return safely when control ends manually, leaves range, disconnects, changes worlds, unloads or encounters death.
+- Recover a nearby parked robot's link when its remote is lost. Destroyed robots leave the roster and drop their possessions.
+- Include original models, textures, 14 animation clips, generated audio and a player guide.
 
-Native checks verified the corrected remote and Release Control icons, protected slot behavior, preserved equipment and return from both robots. The release control is virtual and never enters a robot’s saved inventory. The body-animation repair is awaiting a walk/run retest.
+### Playtest feedback fixes
 
-## 0.2.0-dev — in development
+- Corrected Fleet Remote and Release Control inventory icons.
+- Stopped the parked operator body from mirroring Optimus walk/run animations.
+- Reserved robot hotbar slot 1 for **Release Control**. Select it to return; the button cannot be moved or dropped, including on death. Existing equipment moves to a free robot slot before control begins.
+- Corrected the held-tool grip, chest interactions and inventory selection when returning to the operator.
+- Preserved the normal operator Respawn screen and prevented destroyed robots from reviving.
 
-- Corrected the original robot's empty hand sockets to the native held-item axis; the pickaxe grip has passed an in-game check.
-- Verified ordinary robot mining, pickup and placement, with the tool and mined dirt retained through controlled disconnect and normal reload.
-- Verified chest use with empty hands or a held tool, transfers in both directions, and the returned operator’s selected slot and immediately usable remote.
-- Repaired the native music-state initialization required for controlled chunk unloading; a focused unload and re-entry check has passed.
-- Repaired the operator’s world-change exit and restored native robot save references before retiring temporary control snapshots. Both robots, their inventories and links survived the world change, re-entry, controlled disconnect and normal reload.
-- Verified the controlled-robot transfer guard with a native cross-world request, safe operator return, retained robots and successful control re-entry.
-- Verified nearby link recovery onto another existing remote, separate one-robot rosters, control and manual return. Robot inventories and remote metadata remained unchanged in the normal save; both separate rosters and the equipped tool remained available after normal reload.
-- Fixed the prematurely closed operator respawn page. A native check passed automatic return, the normal Respawn button, pickup of both original remote drops and normal reload with both robots' inventories and links intact. Fixed unintended robot revival. A native check passed safe body return, robot removal, preservation of the other robot and both remotes, and the original equipped tool's drop, normal reload and pickup.
-- Added Assembly Dock, Fleet Remote and deployment-unit recipes.
-- Added robot deployment, owner-bound remotes, exclusive links and a paginated fleet page.
-- Added the native control adapter, release, owner robot listing and nearby lost-link recovery.
-- Added persistent fleet records and robot-owned native inventory bindings.
-- Reused original robot/equipment models, 14 animation clips and generated audio.
-- Connected original servo feedback and tool/use motion to native robot actions.
-- Added original-entity checks, destroyed-robot roster cleanup and a controlled-robot world-transfer guard.
-- Stopped delayed actor output after release to protect the returned body's inventory view.
-- Kept robot saves in world entity storage and cleared temporary control state before loading a saved robot.
-- Kept robot heartbeat and map channels on the operator's existing connection, and aligned the Dock interaction box with its model.
-- Replaced temporary player subclasses with native components, initialized player collision state, and retained each UI acknowledgement's original page manager. Native views, window handling and manual return have passed on both linked robots.
-- Kept the temporary control facade out of chunk snapshots while retaining robot-owned data in native entity storage. A real tool survived active saving, controlled disconnect and normal reload in the correct robot; other lifecycle paths remain pending.
-- Added the player guide and original Optimus Link branding.
-
-Walking, looking and jumping remain under verification. Operator death, the operator’s world-change exit and the controlled-robot transfer guard have passed focused native checks. Release control before changing worlds. This is not a public release.
+This is a private development candidate. See [Compatibility and backups](compatibility.md) for remaining animation, listening and multiplayer limits.
 
 ## 0.1.x — authoring stage
 

@@ -2,48 +2,52 @@
 
 ## The Assembly Dock recipe is missing
 
-Confirm the gameplay JAR is enabled for this world, the server is 0.7.2 and only one Optimus Link version is installed. Look in the base Workbench's Crafting category. The older model-only test plugin does not provide the gameplay recipes.
+Enable the gameplay JAR for this world, use Hytale 0.7.2 and keep only one Optimus Link gameplay version installed. Look in the base Workbench's **Crafting** category. The older model-only plugin does not provide these recipes.
 
 ## Deployment is refused
 
-Aim at nearby ground with enough standing space for the robot. Stay within 5 blocks and keep the deployment unit in the same held slot until the action completes. A failed deployment should leave the item intact; report any item loss before continuing.
+Aim at nearby ground with clear standing space. Stay within 5 blocks and keep the deployment unit in its held slot until the action completes. A refused deployment keeps the unit. If an item disappears without a robot being deployed, keep the affected save and report the issue.
 
 ## A robot will not link
 
-It must be yours, loaded and within 5 blocks. A robot already linked to another remote must first be unlinked using that remote or [recovered by its owner](inventory.md). A remote belonging to another operator or another world will refuse use.
+It must belong to you, be loaded and be within 5 blocks. Unlink a robot from its old remote before linking another, or use [owner recovery](inventory.md#replace-a-lost-remote). A remote bound to another player or world refuses use.
 
-Copied robot identities are unsupported. If duplicate copies of one bound remote are in your inventory, keep only one before using that remote; the mod refuses use and does not delete either item.
+Administrative identity cloning is unsupported. If duplicate copies of a bound remote are in your inventory, keep one before using it; refusal does not delete either copy.
 
-## Assume control is unavailable or fails
+## Assume control fails
 
-Move your body within 32 blocks of the loaded robot and release any existing session. Hold the same remote used to open the page. Reopen the roster if you changed held items or its contents changed.
+Move your body within 32 blocks of the loaded robot, release any existing session and hold the same remote used to open the roster. Reopen the page after changing held items.
 
-The possession adapter is experimental. Native checks showed a clear robot view, its own inventory and successful return to the operator. Mining, pickup, placement, hotbar/storage transfers and a tool with mined dirt surviving controlled disconnect and normal reload have passed. Chest use with empty hands or a held tool and transfers in both directions have also passed. Walking, looking, jumping and the remaining failure exits are unverified. Press **1** to return through the fixed release slot. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
+The release control needs an empty slot 1. An existing item moves to a free robot hotbar or storage slot; if both are full, free one slot before assuming control.
 
-## A robot is unavailable after changing worlds
+## The camera, movement or body animation looks wrong
 
-Release control before changing worlds. An earlier development build could lose a robot when the operator changed worlds during control. The repair has passed a focused native check and subsequent normal reload; upgrading does not recreate an entity already lost by the older build. If affected, disconnect normally and retain the failed save and exact JAR. Restore a matching known-good world/player backup rather than cloning a robot or repeatedly trying recovery commands.
+Select **Release Control in slot 1** or use `/optimus-release`. If normal play does not return, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Avoid further transfers through an unstable inventory view.
+
+The current build prevents the parked body from mirroring robot walk/run animations. See [Compatibility](compatibility.md#current-support-status) for other input and multiplayer limits.
+
+## A robot is missing after changing worlds
+
+Return to its original world and move closer so its chunk can load. This version does not migrate fleets between worlds.
+
+Earlier candidates had a world-change defect. Updating does not recreate an entity already lost by an older build. Retain the affected save and restore a matching known-good world/player/JAR backup instead of cloning a robot or repeatedly using recovery commands.
 
 ## I lost the remote
 
-Use `/optimus-list`, approach your parked robot and use `/optimus-recover ROBOT_ID`. The [recovery guide](inventory.md) gives the full sequence and its current verification status.
+Use `/optimus-list`, approach your parked robot and run `/optimus-recover ROBOT_ID`. Follow the [full recovery sequence](inventory.md#replace-a-lost-remote) to link a replacement remote.
 
-## I died while controlling a robot
+## I died during control
 
-Control should return to your body and show the normal Respawn screen. Your world's death loss rules still apply to the operator's items. In the focused native check, both original remotes dropped and could be picked up again; both robots retained their equipment and links through normal reload.
+Body death returns control to the normal Respawn screen. The world's death-loss rules still apply to your physical possessions and remote. Robot death instead removes that robot from the roster and drops its contents. Release Control never becomes a drop.
 
-An earlier development candidate closed the respawn page prematurely. Update to the supplied candidate containing the respawn-page repair. If the page still fails, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Robot destruction is a separate case: control returns to the healthy operator, the robot leaves its roster and its contents drop in the world. A focused native check passed removal, original-tool drop, normal reload and pickup. An earlier candidate revived the robot instead; use the supplied candidate containing the robot-death repair.
+Earlier candidates could close the respawn page or revive a destroyed robot incorrectly. Use the current supplied build; if either fault recurs, disconnect normally and keep the matching save and JAR for diagnosis.
 
 ## My inventory looks wrong
 
-Release control first: the robot and operator intentionally show different inventories. If either loses or duplicates items, stop using the candidate and keep a paired world/player backup. Inventory handling, chest transfers and normal reload have passed; the remaining failure exits are still open.
+Release control first: the robot and operator have separate inventories. Real equipment uses slots 2–9 during control because slot 1 is reserved. If items are lost or duplicated, stop transfers and retain a paired backup.
 
-The pocket-crafting window-close error has been repaired and retested on both robots. If `Window id 0 is invalid!` appears on an older candidate, update to the current build. This window fix does not establish every crafting or container interaction.
+If an older candidate reports `Window id 0 is invalid!`, update to the current build, which repairs pocket-window routing.
 
-## Reporting an issue
+## Report an issue
 
-Accounts with repository access can use [Optimus Link issues](https://github.com/jkswoods/optimus-link/issues). Include the mod/server versions, what action failed and whether it happened before or after reload. Remove personal names, server addresses and unrelated data from shared captures or logs.
-
-## Cannot assume control with a full robot inventory
-
-Release Control reserves hotbar slot 1. If that slot contains an item and every other robot hotbar and storage slot is full, free one slot before assuming control. Existing items are preserved.
+Accounts with access can use [Optimus Link issues](https://github.com/jkswoods/optimus-link/issues). Include mod/server versions, the failed action and whether it happened before or after reload. Remove personal names, server addresses and unrelated data from shared captures or logs.

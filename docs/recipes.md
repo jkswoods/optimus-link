@@ -1,6 +1,6 @@
 # Crafting and progression
 
-These quantities come from the current 0.2.0-dev recipe assets. They pass server asset loading; native crafting verification is pending. Each recipe produces **one** item.
+Each 0.2.0-dev recipe produces **one** item. Start with an Assembly Dock, then craft remotes and deployment units in its Robotics category.
 
 | Result | Crafting station | Ingredients | Craft time |
 | --- | --- | --- | --- |

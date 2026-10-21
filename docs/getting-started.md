@@ -1,29 +1,32 @@
 # Your first session
 
-Crafting, deployment and linking have native test evidence. Robot mining, pickup, placement, hotbar/storage transfers and persistence through controlled disconnect and normal reload have also been exercised. Robots have also opened a chest with empty hands or a held tool and transferred items in both directions. Walking, looking, jumping and the remaining failure exits still need gameplay verification. The operator’s world-change exit has also passed a focused save/reload check. Release control before changing worlds as part of your normal play routine.
+Start in a disposable test world using the [current development build](installation.md). The [compatibility page](compatibility.md) lists the remaining playtest limits.
 
 ## Make the equipment
 
-Gather wood and obtain Iron Bars, Copper Bars and Light Leather through the base game's processing routes. [Crafting](recipes.md) gives exact quantities and material sources.
+Gather wood, Iron Bars, Copper Bars and Light Leather. The [crafting guide](recipes.md) lists quantities and the base-game material routes.
 
-At a Workbench, craft one **Optimus Assembly Dock**. Place it with standing room nearby, open it and select the Robotics category. Craft a **Fleet Remote** and an **Optimus Deployment Unit**. A useful first fleet has two deployment units and one remote.
+At a Workbench, craft one **Optimus Assembly Dock**. Place it with standing room nearby, open it and select **Robotics**. Craft one **Fleet Remote** and **two Optimus Deployment Units** for a first fleet of two robots.
 
-![Native development workshop with a Workbench, storage Chest, Optimus Assembly Dock and deployed robot](assets/native/workshop.jpg)
+![Native workshop with a Workbench, storage Chest, Optimus Assembly Dock and deployed robot](assets/native/workshop.jpg)
 
-*Native development-world capture: Workbench on the left, storage Chest in the centre, Assembly Dock on the right and a deployed Optimus behind them.*
+*Workbench on the left, storage Chest in the centre, Assembly Dock on the right and a deployed Optimus behind them.*
 
 ## Deploy and link
 
-Hold the deployment unit, aim at clear ground within 5 blocks and use the item's secondary action. Deployment creates one robot and consumes one unit. Blocked or out-of-reach deployment should refuse without charging you.
+1. Hold a deployment unit and aim at clear ground within 5 blocks.
+2. Use the item's secondary action to deploy one robot. Successful deployment consumes one unit; a refused placement keeps it.
+3. Hold the Fleet Remote and use its secondary action while looking at your robot within 5 blocks. First use binds the remote to you and this world.
+4. Deploy the second robot and link it using the same remote. Both appear in its roster.
 
-Hold the Fleet Remote and use its secondary action while looking at your robot within 5 blocks. First use binds the remote to you and the current world. Linking adds the robot to its roster. Repeat with your second robot to put both on the same remote.
-
-A robot already linked to a remote must be unlinked before another remote can link it. See [Fleet and controls](fleet.md).
+A robot already linked to another remote must be unlinked first. [Fleet and controls](fleet.md) explains switching links.
 
 ## Take control and return
 
-Use the remote to open its roster. Choose **Assume control** beside a nearby robot. Your operator body stays behind and can be hurt; choose a safe location first. Control is limited to 32 blocks from that body in this development version.
+Use the remote to open its roster and choose **Assume control** beside a loaded robot within 32 blocks of your body. Choose a safe place for your body: it remains exposed while you are away.
 
-Use your normal movement, look, jump and item controls. Open the inventory to equip the robot from its own storage. Press **1** to release control and return to your body before walking away or leaving the world. `/optimus-release` remains available as a fallback.
+Open the inventory to equip the robot from its own storage. Hotbar **slots 2–9** hold equipment; **slot 1 always provides Release Control** during possession. Select slot 1 using your hotbar bindings, normally **1**, to return to your body. `/optimus-release` is also available.
 
-Return to the remote and assume the other robot. Its inventory is independent. [Inventory and recovery](inventory.md) explains how to keep track of your equipment and replace a lost remote.
+Use the normal movement, look, jump and item bindings while testing the robot. Keep within 32 blocks of your body, and release control before leaving the world. Return to the remote and assume the other robot to switch loadouts. Each keeps its own equipment and storage.
+
+See [Inventory and recovery](inventory.md) if you lose a remote or need space for the release control.

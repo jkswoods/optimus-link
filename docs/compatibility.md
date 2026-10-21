@@ -1,17 +1,23 @@
 # Compatibility and backups
 
-This development build targets Hytale 0.7.2 and Java 25. Other server versions, other mods and a real second player have not been verified. Do not use this candidate in an important world.
+Version **0.2.0-dev** targets Hytale **0.7.2** and Java **25**. Use a disposable test world. Other server versions and cross-mod compatibility have not been verified.
 
-Robots have stable identities. Native world data stores ownership, remote links and roster records; native robot components store inventory and equipment. Bound items also carry remote identity metadata. A native test preserved two robots, their links and separate inventories through controlled disconnect and normal reload, including a real tool and mined dirt stored in one robot. Placed support blocks also persisted. A separate focused chunk-unload check has passed. The operator’s world-change exit has also passed a focused native check, with the original robots, inventories and links preserved through a subsequent normal reload. A native transfer request on the controlled robot was blocked with both robots and their inventories retained in the original world. Operator death, the normal Respawn screen and pickup of the original remote drops have also passed a focused check and subsequent normal reload. Robot destruction has also passed a focused native check: safe return, roster removal, preservation of the other robot and both remotes, and the original equipped tool's drop, normal reload and pickup. Release control before changing worlds.
+## Current support status
+
+Crafting, deployment, exclusive remote links, separate robot inventories, tool actions, chest transfers and normal save/reload have native test coverage. The current build also corrects the inventory icons and provides the protected slot 1 release control.
+
+Some animation transitions, human sound listening and actual second-client play remain unverified. Multiplayer contention, recovery and sound audiences therefore remain outside confirmed support.
+
+Focused checks have exercised manual/range returns, disconnect, unload, world-change handling, operator respawn and robot destruction. These are development checks, not a guarantee against every crash or mod conflict. Release control before changing worlds. Robots and bound remotes stay in their original world; fleet migration is unavailable.
 
 ## Make a paired backup
 
-Release control, save the world normally and disconnect. Copy both the world's data and its corresponding player data, and keep the exact Optimus Link JAR used with them. Preserve that set before upgrades or removal. A world-only rollback can disagree with the player's bound items.
+Release control, save normally and disconnect. Copy the world's data and its corresponding player data together, and keep the exact Optimus Link JAR used with them. Retain this set before upgrades or removal. Restoring only the world can disagree with the player's bound items.
 
-The 0.1.x authoring plugin was a model test tool. Its test items and scenes are not a supported save migration to this gameplay candidate. Use a new world for 0.2.0-dev.
+The 0.1.x authoring plugin was a model test tool. Its test scenes and items do not have a supported migration to this gameplay candidate. Use a new world for 0.2.0-dev.
 
-## Multiplayer scope
+## Distribution and multiplayer
 
-The authority rejects cross-owner links and concurrent control in focused tests. Genuine second-client interaction, contention, disconnect recovery and sound audiences remain unverified. Server permissions are intended to remain those of the real operator.
+The private repository and locally supplied development package are the available channels. There is no public release download or selected redistribution license.
 
-No public production release or redistribution license has been selected. The private repository and locally supplied development package are the available development channels.
+The server checks ownership and prevents concurrent control in automated tests. Genuine second-client play is still pending; report its results separately from single-player behavior.
