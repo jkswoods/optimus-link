@@ -12,7 +12,7 @@ Use **Unlink** in the original remote's roster to free a parked robot for anothe
 
 ![Fleet Remote showing two Optimus robots linked to the same remote, with separate control and unlink buttons](assets/native/fleet-two-robots.jpg)
 
-An actual development-build roster after linking two robots to one remote. Robot control and save/reload remain under verification.
+An actual development-build roster after linking two robots to one remote. Basic inventory handling, manual return and a nonempty inventory through controlled disconnect and normal reload have native evidence. Movement and world actions remain under verification.
 
 [Open the roster image at full size](assets/native/fleet-two-robots.jpg).
 
@@ -29,7 +29,7 @@ Choose **Assume control** beside a loaded robot within 32 blocks of your body. Y
 | List your robots in this world | `/optimus-list` |
 | Recover a lost remote link | `/optimus-recover ROBOT_ID` while within 5 blocks of the parked robot |
 
-Mining, placement, interactions and inventory use are intended to pass the game's server checks. These paths are not yet accepted from a real client in the development build.
+Native pickup and transfers between a robot's hotbar and storage have passed. Mining, placement and interactions with world containers while controlled remain under gameplay verification.
 
 ## Safe exits
 

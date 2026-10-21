@@ -2,6 +2,7 @@
 
 ## 0.2.0-dev — in development
 
+- Corrected the original robot's empty hand sockets to the native held-item axis; in-game grip verification is pending.
 - Added Assembly Dock, Fleet Remote and deployment-unit recipes.
 - Added robot deployment, owner-bound remotes, exclusive links and a paginated fleet page.
 - Added the native control adapter, release, owner robot listing and nearby lost-link recovery.
@@ -12,11 +13,11 @@
 - Stopped delayed actor output after release to protect the returned body's inventory view.
 - Kept robot saves in world entity storage and cleared temporary control state before loading a saved robot.
 - Kept robot heartbeat and map channels on the operator's existing connection, and aligned the Dock interaction box with its model.
-- Replaced temporary player subclasses with native components, initialized player collision state, and retained each UI acknowledgement's original page manager. Native control and save acceptance remain pending.
-- Kept the temporary control facade out of chunk snapshots while retaining robot-owned data in native entity storage. Native lifecycle verification remains pending.
+- Replaced temporary player subclasses with native components, initialized player collision state, and retained each UI acknowledgement's original page manager. Native views, window handling and manual return have passed on both linked robots.
+- Kept the temporary control facade out of chunk snapshots while retaining robot-owned data in native entity storage. A real tool survived active saving, controlled disconnect and normal reload in the correct robot; other lifecycle paths remain pending.
 - Added the player guide and original Optimus Link branding.
 
-Gameplay, safe exits, ordinary reload and current-build screenshots remain under verification. This is not a public release.
+Movement, mining, placement, the remaining safe exits and hand/tool alignment remain under verification. This is not a public release.
 
 ## 0.1.x — authoring stage
 

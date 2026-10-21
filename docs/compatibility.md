@@ -2,7 +2,7 @@
 
 This development build targets Hytale 0.7.2 and Java 25. Other server versions, other mods and a real second player have not been verified. Do not use this candidate in an important world.
 
-Robots have stable identities. Native world data stores ownership, remote links and roster records; native robot components store inventory and equipment. Bound items also carry remote identity metadata. Normal save/reload of the playable system is still pending verification.
+Robots have stable identities. Native world data stores ownership, remote links and roster records; native robot components store inventory and equipment. Bound items also carry remote identity metadata. A native test preserved two robots, their links and separate inventories through controlled disconnect and normal reload, including a real tool stored in one robot. This does not establish the remaining death, destruction, unload or world-transfer paths.
 
 ## Make a paired backup
 

@@ -1,6 +1,6 @@
 # Your first session
 
-Crafting, deployment and linking have native test evidence. Player-style robot actions and inventory transfers remain under gameplay verification.
+Crafting, deployment and linking have native test evidence. Native pickup, robot hotbar/storage transfers and a tool's persistence through controlled disconnect and normal reload have also been exercised. Movement, mining, placement and the remaining failure exits still need gameplay verification.
 
 ## Make the equipment
 

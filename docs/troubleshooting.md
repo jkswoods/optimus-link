@@ -18,7 +18,7 @@ Copied robot identities are unsupported. If duplicate copies of one bound remote
 
 Move your body within 32 blocks of the loaded robot and release any existing session. Hold the same remote used to open the page. Reopen the roster if you changed held items or its contents changed.
 
-The possession adapter is experimental. The latest native test showed a clear robot view, its own inventory and successful return to the operator. Ordinary movement and item actions remain unverified. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
+The possession adapter is experimental. The latest native test showed a clear robot view, its own inventory and successful return to the operator. Native pickup, hotbar/storage transfers and a tool surviving controlled disconnect and normal reload have passed. Movement, mining, placement and the remaining failure exits are unverified. If the view or controls fail, use `/optimus-release`. If that does not restore normal play, disconnect normally and retain the paired backup and exact JAR for diagnosis. Do not continue moving or transferring items through an unstable session.
 
 ## I lost the remote
 
@@ -26,9 +26,9 @@ Use `/optimus-list`, approach your parked robot and use `/optimus-recover ROBOT_
 
 ## My inventory looks wrong
 
-Release control first: the robot and operator intentionally show different inventories. If either loses or duplicates items, stop using the candidate and keep a paired world/player backup. Inventory and reload acceptance is still open.
+Release control first: the robot and operator intentionally show different inventories. If either loses or duplicates items, stop using the candidate and keep a paired world/player backup. Basic inventory handling and normal reload have passed; the remaining failure exits and world-container transfers while controlled are still open.
 
-The latest installed test build raised `Window id 0 is invalid!` when closing the robot's pocket-crafting inventory. The opening request reached the operator's window manager while the close reached the robot's. A routing repair is in source and awaits native retesting. Inventory rendering alone does not establish working crafting or transfers.
+The pocket-crafting window-close error has been repaired and retested on both robots. If `Window id 0 is invalid!` appears on an older candidate, update to the current build. Inventory rendering alone does not establish working crafting or transfers through world containers.
 
 ## Reporting an issue
 

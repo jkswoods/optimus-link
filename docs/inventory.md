@@ -1,8 +1,8 @@
 # Inventory and recovery
 
-Every robot uses its own native inventory components. Taking control attaches the controls to those existing containers; it does not copy the operator's inventory. Native inventory behavior and normal reload remain under verification in 0.2.0-dev.
+Every robot uses its own native inventory components. Taking control attaches the controls to those existing containers; it does not copy the operator's inventory. Native pickup and hotbar/storage transfers have been exercised with a real tool. It remained with the correct robot through controlled disconnect and normal reload; the other robot and operator kept their separate inventories.
 
-The implementation supplies 36 storage slots, a 9 slot hotbar and the native equipment containers. Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory.
+The implementation supplies 36 storage slots, a 9 slot hotbar and the native equipment containers. Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory. The current grip alignment correction still needs an in-game fit check. Mining, placement, transfers through world containers while controlled and the remaining failure exits are under verification.
 
 ## Replace a lost remote
 
