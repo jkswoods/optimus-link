@@ -2,7 +2,7 @@
 
 Every robot uses its own native inventory components. Taking control attaches the controls to those existing containers; it does not copy the operator's inventory. Native pickup and hotbar/storage transfers have been exercised with a real tool and mined dirt. They remained with the correct robot through controlled disconnect and normal reload; the other robot and operator kept their separate inventories.
 
-The implementation supplies 36 storage slots, a 9 slot hotbar and the native equipment containers. Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory. The corrected pickaxe grip, ordinary mining and placement have passed native checks. Transfers through world containers while controlled and the remaining failure exits are under verification.
+The implementation supplies 36 storage slots, a 9 slot hotbar and the native equipment containers. Equip tools using the robot's inventory after assuming control. Releasing control leaves its equipment with the robot and returns you to your body inventory. The corrected pickaxe grip, ordinary mining and placement have passed native checks. Robots have opened a chest using the normal Interact action, with empty hands or a held pickaxe, and transferred tools and blocks through its real inventory in both directions. Chest contents and robot storage survived controlled disconnect and normal reload. Failure exits remain under verification, including a chunk-unload defect under repair.
 
 ![First-person robot view holding a crude pickaxe upright in its white hand](assets/native/robot-held-pickaxe.jpg)
 

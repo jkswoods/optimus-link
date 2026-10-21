@@ -5,6 +5,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
+import com.hypixel.hytale.builtin.audio.components.ForcedMusicTracker;
 import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains;
@@ -89,7 +90,7 @@ final class NativeControl {
     private static final class Feedback { Long lastServo;boolean transferRestoreQueued,savepointAttached; }
     private record Control(FleetRegistry.Session token,FleetRegistry fleet,PlayerRef operator,Ref<EntityStore> body,
         Ref<EntityStore> robot,Player actor,ActorHandler handler,InteractionManager previousInteractions,PlayerInput previousInput,
-        CollisionResultComponent previousCollisions,EntityViewer viewer,EntityViewer previousRobotViewer,Feedback feedback) {}
+        CollisionResultComponent previousCollisions,ForcedMusicTracker previousMusic,EntityViewer viewer,EntityViewer previousRobotViewer,Feedback feedback) {}
 
     /** Native handler table also covers ChannelConnection paths which bypass inbound packet adapters. */
     static void install(PlayerRef operator) {
@@ -193,7 +194,8 @@ final class NativeControl {
         catch(RuntimeException failure) { actor.getWorldMapTracker().unregisterEvents();throw failure; }
         handler.output=new ControlOutputScope.Lifetime(token.token());
         var oldCollisions=store.getComponent(robot,CollisionResultComponent.getComponentType());
-        var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,oldCollisions,viewer,previousViewer,new Feedback());
+        var oldMusic=store.getComponent(robot,ForcedMusicTracker.getComponentType());
+        var control=new Control(token,fleet,operator,body,robot,actor,handler,oldManager,oldInput,oldCollisions,oldMusic,viewer,previousViewer,new Feedback());
         try {
             RobotSavepoints.attach(robot);
             control.feedback().savepointAttached=true;
@@ -216,6 +218,9 @@ final class NativeControl {
             store.ensureComponent(robot,MovementStatesComponent.getComponentType());
             store.ensureComponent(robot,UniqueItemUsagesComponent.getComponentType());
             store.ensureComponent(robot,BreathingComponent.getComponentType());
+            // ForcedMusicSystems.PlayerAdded is a HolderSystem. Its removal callback also
+            // runs for the temporary PlayerRef, so it needs the normal native tracker.
+            store.ensureComponent(robot,ForcedMusicTracker.getComponentType());
             store.putComponent(robot,PlayerRef.getComponentType(),actorRef);
             // PlayerRefAddedSystem briefly indexes the action context by that UUID. Keep the
             // real body as the sole world/Universe connection entry. Native untrack uses
@@ -315,6 +320,7 @@ final class NativeControl {
                 RobotSavepoints.restoreInteractions(c.robot());
                 if(store.getComponent(c.robot(),Player.getComponentType())==c.actor())store.removeComponent(c.robot(),Player.getComponentType());
                 if(store.getComponent(c.robot(),PlayerRef.getComponentType())==c.handler().getPlayerRef())store.removeComponent(c.robot(),PlayerRef.getComponentType());
+                if(c.previousMusic()==null)store.tryRemoveComponent(c.robot(),ForcedMusicTracker.getComponentType());else store.putComponent(c.robot(),ForcedMusicTracker.getComponentType(),c.previousMusic());
                 if(c.previousRobotViewer()==null)store.tryRemoveComponent(c.robot(),EntityViewer.getComponentType());else store.putComponent(c.robot(),EntityViewer.getComponentType(),c.previousRobotViewer());
                 restoreViewer(c);
                 if(c.previousInput()==null)store.tryRemoveComponent(c.robot(),PlayerInput.getComponentType());else store.putComponent(c.robot(),PlayerInput.getComponentType(),c.previousInput());

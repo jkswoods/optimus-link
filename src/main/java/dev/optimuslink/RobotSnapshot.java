@@ -25,7 +25,8 @@ final class RobotSnapshot {
         var cls=type.getTypeClass();
         return cls!=Player.class&&cls!=PlayerRef.class&&cls!=NonSerialized.class&&cls!=PlayerInput.class
             &&cls!=PlayerSettings.class&&cls!=EntityViewer.class&&cls!=InteractionManager.class
-            &&cls!=CameraManager.class&&cls!=MovementManager.class&&cls!=CollisionResultComponent.class;
+            &&cls!=CameraManager.class&&cls!=MovementManager.class&&cls!=CollisionResultComponent.class
+            &&cls!=com.hypixel.hytale.builtin.audio.components.ForcedMusicTracker.class;
     }
     static Holder<EntityStore> capture(Ref<EntityStore> robot) {
         var store=robot.getStore();store.assertThread();var clean=EntityStore.REGISTRY.newHolder();var archetype=store.getArchetype(robot);

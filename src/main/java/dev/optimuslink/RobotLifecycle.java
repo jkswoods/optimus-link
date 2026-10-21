@@ -41,6 +41,7 @@ final class RobotLifecycle extends RefSystem<EntityStore> {
             remove(holder,CameraManager.getComponentType());remove(holder,MovementManager.getComponentType());
             remove(holder,PlayerSettings.getComponentType());
             remove(holder,com.hypixel.hytale.server.core.modules.entity.component.CollisionResultComponent.getComponentType());
+            remove(holder,com.hypixel.hytale.builtin.audio.components.ForcedMusicTracker.getComponentType());
         }
         @Override public void onEntityRemoved(Holder<EntityStore> holder,RemoveReason reason,Store<EntityStore> store) {
             if(reason==RemoveReason.UNLOAD)NativeControl.preserveBlockedTransfer(holder,store);
