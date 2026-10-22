@@ -1,6 +1,6 @@
 # Configuration
 
-Version 0.2.2-dev has no player configuration file or configurable power system. Its current limits are:
+Version 0.2.3-dev has no player configuration file or configurable power system. Its current limits are:
 
 | Setting | Current behavior |
 | --- | --- |

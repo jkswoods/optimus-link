@@ -23,7 +23,7 @@ import java.util.*;
 public final class ActorActionStateTest {
     private static int assertions;
     private static void check(boolean condition,String message) { assertions++;if(!condition)throw new AssertionError(message); }
-    private static Field field(Class<?> type,String name) throws Exception { var field=type.getDeclaredField(name);field.setAccessible(true);return field; }
+    private static Field field(Class<?> type,String name) throws ReflectiveOperationException { var field=type.getDeclaredField(name);field.setAccessible(true);return field; }
     public static void main(String[] args) throws Exception {
         com.hypixel.hytale.server.core.Options.parse(new String[]{"--bare"});
         var unsafe=field(Class.forName("sun.misc.Unsafe"),"theUnsafe").get(null);
@@ -77,6 +77,7 @@ public final class ActorActionStateTest {
             RobotSavepoints.playerInteractions(robot);
             check("fixture_player_use".equals(context.getRootInteractionId(InteractionType.Use)),"possessed native context resolves ordinary player Use");
             check("fixture_tool_use".equals(heldContext.getRootInteractionId(InteractionType.Use)),"possessed native context resolves the held tool's ordinary Use");
+            hotbarSwitch(robot,store,allocate,unsafe);
             check("fixture_death".equals(store.getComponent(robot,bindingType).getInteractionId(InteractionType.Death)),"NPC death interaction is preserved while controlled");
             check("*UseNPC".equals(original.getInteractionId(InteractionType.Use)),"original NPC binding is not mutated");
             var wire=ClientActorView.interactions(store.getComponent(robot,bindingType),key->key.equals("fixture_death")?41:Integer.MIN_VALUE);
@@ -99,6 +100,43 @@ public final class ActorActionStateTest {
             points.remove(id);if(store!=null)store.shutdown();assetMapField.set(null,previousMap);
             OptimusLinkPlugin.robotType=previousIdentity;instance.set(null,null);
         }
+    }
+    private static void hotbarSwitch(Ref<EntityStore> robot,Store<EntityStore> store,
+            java.lang.reflect.Method allocate,Object unsafe) throws Exception {
+        var entityClass=com.hypixel.hytale.server.core.modules.entity.EntityModule.class;
+        var instance=field(entityClass,"instance");check(instance.get(null)==null,"hotbar fixture cannot replace a running entity module");
+        var entityModule=allocate.invoke(unsafe,entityClass);var registry=EntityStore.REGISTRY;
+        var hotbarType=registry.registerComponent(InventoryComponent.Hotbar.class,InventoryComponent.Hotbar::new);
+        field(entityClass,"hotbarInventoryComponentType").set(entityModule,hotbarType);
+        field(entityClass,"utilityInventoryComponentType").set(entityModule,registry.registerComponent(InventoryComponent.Utility.class,InventoryComponent.Utility::new));
+        field(entityClass,"armorInventoryComponentType").set(entityModule,registry.registerComponent(InventoryComponent.Armor.class,InventoryComponent.Armor::new));
+        field(entityClass,"toolInventoryComponentType").set(entityModule,registry.registerComponent(InventoryComponent.Tool.class,InventoryComponent.Tool::new));
+        instance.set(null,entityModule);
+        try {
+            var hotbar=new InventoryComponent.Hotbar(new SimpleItemContainer((short)9),(byte)0);store.putComponent(robot,hotbarType,hotbar);
+            var manager=new com.hypixel.hytale.server.core.entity.InteractionManager(null,new com.hypixel.hytale.server.core.modules.interaction.InteractionSimulationHandler());
+            var context=InteractionContext.class.getDeclaredConstructor(com.hypixel.hytale.server.core.entity.InteractionManager.class,Ref.class,int.class,
+                com.hypixel.hytale.server.core.inventory.container.ItemContainer.class,byte.class,ItemStack.class);context.setAccessible(true);
+            var tick=com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.ChangeActiveSlotInteraction.class.getDeclaredMethod("tick0",boolean.class,float.class,
+                InteractionType.class,InteractionContext.class,com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler.class);tick.setAccessible(true);
+            var click=new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain();click.activeHotbarSlot=0;click.itemInHandId=RobotReleaseControl.ITEM;
+            click.interactionType=InteractionType.SwapFrom;click.data=new com.hypixel.hytale.protocol.InteractionChainData();click.data.targetSlot=2;
+            var packet=new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains(new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[]{click});
+            check(RobotReleaseControl.withoutVirtualActions(packet)==null,"old unconditional virtual filter reproduces the missing hotbar switch");
+            var translated=(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains)RobotReleaseControl.forRobot(packet);
+            store.forEachChunk(hotbarType,(chunk,commands)-> {
+                try {
+                    field(com.hypixel.hytale.server.core.entity.InteractionManager.class,"commandBuffer").set(manager,commands);
+                    var ctx=context.newInstance(manager,robot,-1,hotbar.getInventory(),(byte)0,null);
+                    field(InteractionContext.class,"entry").set(ctx,new com.hypixel.hytale.server.core.entity.InteractionEntry(0,0,0));
+                    ctx.getMetaStore().putMetaObject(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.TARGET_SLOT,translated.updates[0].data.targetSlot);
+                    tick.invoke(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.ChangeActiveSlotInteraction.DEFAULT_INTERACTION,true,0f,InteractionType.SwapFrom,ctx,null);
+                    check(hotbar.getActiveSlot()==2,"actual native ChangeActiveSlot commits the robot's switch away from reserved slot one");
+                    check("fixture_player_use".equals(ctx.getRootInteractionId(InteractionType.Use)),"F after native selection resolves player Use without the NPC override");
+                } catch(ReflectiveOperationException ex) { throw new RuntimeException(ex); }
+            });
+            check(ItemStack.isEmpty(hotbar.getInventory().getItemStack((short)0)),"native switching never creates a physical release token");
+        } finally { instance.set(null,null); }
     }
     private static final class Wire extends PacketHandler {
         final List<ToClientPacket> packets=new ArrayList<>();

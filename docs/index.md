@@ -6,7 +6,7 @@ Craft humanoid robots, link them to a Fleet Remote and take control of one at a 
 
 Each robot belongs to its deploying player and links to one remote. A remote can manage several robots through its roster. Your body stays behind, exposed to normal damage while you control a robot.
 
-> **Compatibility candidate:** 0.2.2-dev targets Hytale **0.7.3** and Java **25**. In-game validation is in progress; this candidate is not released yet. Use a disposable test world. Some animation transitions remain under review. Multiplayer and sound listening checks are also pending. See [Compatibility and backups](compatibility.md) for the current support limits.
+> **Compatibility candidate:** 0.2.3-dev targets Hytale **0.7.3** and Java **25**. In-game validation is in progress; this candidate is not released yet. Use a disposable test world. Some animation transitions remain under review. Multiplayer and sound listening checks are also pending. See [Compatibility and backups](compatibility.md) for the current support limits.
 
 ## Start a fleet
 

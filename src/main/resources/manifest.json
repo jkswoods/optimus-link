@@ -1,7 +1,7 @@
 {
   "Group": "OptimusLink",
   "Name": "OptimusLink",
-  "Version": "0.2.2-dev",
+  "Version": "0.2.3-dev",
   "Description": "Craftable Optimus robot fleets and remote control; development build.",
   "ServerVersion": "=0.7.3",
   "Main": "dev.optimuslink.OptimusLinkPlugin",

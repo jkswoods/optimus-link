@@ -60,6 +60,33 @@ final class RobotReleaseControl {
         }
         return packet;
     }
+    /** The button occupies an empty server slot. Preserve native switching and F/Use
+     * against that empty hand, rather than losing SwapFrom and trapping selection here. */
+    static ToServerPacket forRobot(ToServerPacket packet) {
+        if(packet instanceof com.hypixel.hytale.protocol.packets.player.MouseInteraction p&&ITEM.equals(p.itemInHandId)) {
+            if(p.activeSlot!=0||p.mouseButton!=null&&p.mouseButton.mouseButtonType==com.hypixel.hytale.protocol.MouseButtonType.Right)return null;
+            var emptyHand=new com.hypixel.hytale.protocol.packets.player.MouseInteraction(p);
+            emptyHand.itemInHandId=null;return emptyHand;
+        }
+        if(packet instanceof com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains p&&p.updates!=null) {
+            var normal=new java.util.ArrayList<com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain>();
+            boolean changed=false;
+            for(var chain:p.updates) {
+                if(chain==null||!ITEM.equals(chain.itemInHandId)) { normal.add(chain);continue; }
+                changed=true;
+                if(chain.activeHotbarSlot!=0)continue;
+                if(chain.interactionType!=com.hypixel.hytale.protocol.InteractionType.SwapFrom
+                        &&chain.interactionType!=com.hypixel.hytale.protocol.InteractionType.Use
+                        &&chain.interactionType!=com.hypixel.hytale.protocol.InteractionType.Pick
+                        &&chain.interactionType!=com.hypixel.hytale.protocol.InteractionType.Ability3)continue;
+                var emptyHand=new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain(chain);
+                emptyHand.itemInHandId=null;normal.add(emptyHand);
+            }
+            return !changed?packet:normal.isEmpty()?null:new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains(
+                normal.toArray(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[]::new));
+        }
+        return withoutVirtualActions(packet);
+    }
     private static boolean slot(int section,int slot) { return section==-1&&slot==0; }
     static boolean blocked(ToServerPacket packet) {
         if(packet instanceof MoveItemStack p)return slot(p.fromSectionId,p.fromSlotId)||slot(p.toSectionId,p.toSlotId);

@@ -21,6 +21,18 @@ public final class ActorHandlerTest {
     private static void check(boolean condition,String message) {
         assertions++;if(!condition)throw new AssertionError(message);
     }
+    /** Client crash invariant: after removal, an entity's first update must include its model. */
+    private static void requireModelsFirst(List<ToClientPacket> packets) {
+        var modeled=new java.util.HashSet<Integer>();
+        for(var packet:packets)if(packet instanceof com.hypixel.hytale.protocol.packets.entities.EntityUpdates entities) {
+            if(entities.removed!=null)for(int id:entities.removed)modeled.remove(id);
+            if(entities.updates!=null)for(var entity:entities.updates) {
+                if(entity.updates!=null)for(var component:entity.updates)
+                    if(component instanceof com.hypixel.hytale.protocol.ModelUpdate)modeled.add(entity.networkId);
+                if(!modeled.contains(entity.networkId))throw new IllegalStateException("Model missing before entity update: "+entity.networkId);
+            }
+        }
+    }
     public static void main(String[] args) throws Exception {
         // The handler constructor asks ServerManager only for its sub-handler factory list.
         // Bypass plugin/server startup for that empty test registry, leaving both actual
@@ -70,14 +82,24 @@ public final class ActorHandlerTest {
         var previous=new com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>(null,2);
         viewer.sent.put(previous,40);viewer.visible.add(previous);
         viewer.updates.put(previous,new com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems.EntityUpdate());
-        ClientActorView.switchLocal(viewer,previous,40,target,41,actor);
+        var self=new com.hypixel.hytale.protocol.packets.entities.EntityUpdates(null,new com.hypixel.hytale.protocol.EntityUpdate[]{
+            new com.hypixel.hytale.protocol.EntityUpdate(41,null,new com.hypixel.hytale.protocol.ComponentUpdate[]{
+                new com.hypixel.hytale.protocol.ModelUpdate(new com.hypixel.hytale.protocol.Model(),1),new com.hypixel.hytale.protocol.PlayerSkinUpdate((com.hypixel.hytale.protocol.PlayerSkin)null)})});
+        ClientActorView.switchLocal(viewer,previous,40,target,41,actor,()->actor.writeNoCache(self));
+        var bindings=new com.hypixel.hytale.protocol.packets.entities.EntityUpdates(null,new com.hypixel.hytale.protocol.EntityUpdate[]{
+            new com.hypixel.hytale.protocol.EntityUpdate(41,null,new com.hypixel.hytale.protocol.ComponentUpdate[]{new com.hypixel.hytale.protocol.InteractionsUpdate()})});
+        requireModelsFirst(List.of(sent.get(0),sent.get(1),self,bindings));
+        check(true,"handoff reconstructs the model before later local interaction updates");
+        try { requireModelsFirst(List.of(sent.get(0),sent.get(1),bindings,self));throw new AssertionError("old return order accepted a model-less entity"); }
+        catch(IllegalStateException expected) { check(expected.getMessage().contains("Model missing"),"old deferred self-spawn order reproduces the client crash invariant"); }
         check(!viewer.sent.containsKey(previous)&&!viewer.visible.contains(previous)&&!viewer.updates.containsKey(previous),"old local actor must be recreated without its local animation controller");
         check(!viewer.sent.containsKey(target)&&!viewer.visible.contains(target)&&!viewer.updates.containsKey(target),"local handoff forgets all cached remote state for only the target");
         check(viewer.sent.getInt(unrelated)==42&&viewer.visible.contains(unrelated)&&viewer.updates.get(unrelated)==otherUpdate,"unrelated native tracking identity and pending updates survive handoff");
-        check(sent.size()==2&&sent.getFirst() instanceof com.hypixel.hytale.protocol.packets.entities.EntityUpdates,"old target remote entity is removed before assigning local identity");
+        check(sent.size()==3&&sent.getFirst() instanceof com.hypixel.hytale.protocol.packets.entities.EntityUpdates,"old target remote entity is removed before assigning local identity");
         var removed=(com.hypixel.hytale.protocol.packets.entities.EntityUpdates)sent.removeFirst();
         check(java.util.Arrays.equals(removed.removed,new int[]{40,41})&&removed.updates==null,"both previous local and target remote representations retire before the handoff");
         check(sent.removeFirst() instanceof com.hypixel.hytale.protocol.packets.player.SetClientId id&&id.clientId==41,"native local identity follows target removal on the same connection");
+        check(sent.removeFirst()==self,"a complete self spawn immediately follows identity before any interaction-only update");
         var transferred=ClientActorView.forWorldTransfer(viewer,real);
         check(transferred!=viewer&&transferred.viewRadiusBlocks==viewer.viewRadiusBlocks,"destination viewer preserves the actual view radius without sharing the source viewer");
         check(transferred.packetReceiver==real,"destination body viewer uses the authenticated transport");
