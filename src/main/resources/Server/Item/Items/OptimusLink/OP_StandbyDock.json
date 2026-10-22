@@ -85,6 +85,9 @@
       ]
     },
     "PhysicalMaterialId": "Metal",
-    "BlockSoundSetId": "Metal"
+    "BlockSoundSetId": "Metal",
+    "PlacementSettings": {
+      "BlockPreviewVisibility": "AlwaysVisible"
+    }
   }
 }

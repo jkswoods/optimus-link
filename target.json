@@ -1,7 +1,7 @@
 {
-  "hytale": "0.7.2",
-  "server_sha256": "23f71f03763422ce7c04df191db49cd0e7d87d43b12baad75c43fdc202410aff",
+  "hytale": "0.7.3",
+  "server_sha256": "7b62da38b99af1b3a790edbda54f7eee34d8e2955c14505cf87deb5f7cbed9bb",
   "java_release": 25,
-  "version": "0.2.0-dev",
-  "archive_date": "2026-10-20T00:00:00Z"
+  "version": "0.2.3-dev",
+  "archive_date": "2026-10-21T00:00:00Z"
 }

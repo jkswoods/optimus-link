@@ -19,28 +19,34 @@ import java.util.UUID;
 /** Three visible rows with pagination; the model's three lines are not a fleet size limit. */
 final class FleetPage extends InteractiveCustomUIPage<FleetPage.Action> {
     static final class Action {
-        String action="",nonce="";
+        String action="",nonce="",name="";
         static final BuilderCodec<Action> CODEC=BuilderCodec.builder(Action.class,Action::new)
             .append(new KeyedCodec<>("Action",Codec.STRING),(a,v)->a.action=v,a->a.action).add()
-            .append(new KeyedCodec<>("Nonce",Codec.STRING),(a,v)->a.nonce=v,a->a.nonce).add().build();
+            .append(new KeyedCodec<>("Nonce",Codec.STRING),(a,v)->a.nonce=v,a->a.nonce).add()
+            .append(new KeyedCodec<>("@Name",Codec.STRING),(a,v)->a.name=v,a->a.name).add().build();
     }
     private final UUID remote;
-    private final int page;
+    private int page;
     private final String nonce=UUID.randomUUID().toString();
-    private final String message;
+    private String message;
     private boolean dismissed;
     FleetPage(PlayerRef operator,UUID remote,int page,String message) { super(operator,CustomPageLifetime.CanDismiss,Action.CODEC);this.remote=remote;this.page=Math.max(0,page);this.message=message; }
     @Override public void build(Ref<EntityStore> ref,UICommandBuilder c,UIEventBuilder e,Store<EntityStore> store) {
         c.append("Pages/OptimusLink/Fleet.ui");var fleet=OptimusLinkPlugin.state(store).fleet();var roster=fleet.roster(playerRef.getUuid(),remote);
+        page=Math.min(page,Math.max(0,(roster.size()-1)/3));
         c.set("#Summary.Text",roster.size()+" ROBOTS LINKED  |  ONE ACTIVE AT A TIME");
         c.set("#Page.Text","Page "+(page+1)+" / "+Math.max(1,(roster.size()+2)/3));
+        c.set("#Previous.Disabled",page==0);c.set("#Next.Disabled",page>=Math.max(0,(roster.size()-1)/3));
         c.set("#Message.Text",message.isEmpty()?"Aim at one of your robots and use this remote to link it. Your body stays exposed while controlling a robot.":message);
         for(int i=0;i<3;i++) {
             int index=page*3+i;c.set("#Row"+i+".Visible",index<roster.size());if(index>=roster.size())continue;
             var robot=roster.get(index);var nativeRef=store.getExternalData().getRefFromUUID(robot.entity());
-            c.set("#Name"+i+".Text","OPTIMUS "+robot.id().toString().substring(0,8).toUpperCase(java.util.Locale.ROOT));
+            c.set("#Name"+i+".Text",robot.displayName());
+            c.set("#RenameInput"+i+".Value",robot.name());
             c.set("#Status"+i+".Text",nativeRef==null||!nativeRef.isValid()?"Unloaded — move closer":"Parked — inventory kept separate");
             bind(e,"#Assume"+i,"Assume:"+robot.id());bind(e,"#Unlink"+i,"Unlink:"+robot.id());
+            e.addEventBinding(CustomUIEventBindingType.Activating,"#Rename"+i,
+                EventData.of("Action","Rename:"+robot.id()).append("Nonce",nonce).append("@Name","#RenameInput"+i+".Value"),false);
         }
         bind(e,"#Previous","Previous");bind(e,"#Next","Next");bind(e,"#Close","Close");
     }
@@ -55,19 +61,32 @@ final class FleetPage extends InteractiveCustomUIPage<FleetPage.Action> {
             var fleet=OptimusLinkPlugin.state(store).fleet();
             if(action.action.equals("Close")) { dismissed=true;close();return; }
             if(action.action.startsWith("Assume:")) {
-                var robot=UUID.fromString(action.action.substring(7));dismissed=true;close();NativeControl.begin(playerRef,remote,robot);return;
+                var robot=UUID.fromString(action.action.substring(7));
+                // Acquisition can refuse (range, unloaded, inventory). Keep this page usable.
+                NativeControl.begin(playerRef,remote,robot);dismissed=true;return;
             }
             if(action.action.startsWith("Unlink:")) {
                 var robot=UUID.fromString(action.action.substring(7));boolean changed=fleet.unlink(playerRef.getUuid(),remote,robot);
-                if(changed)NativeFleet.soundPrivate(playerRef,"OP_Remote_Link_Inventory");reopen(ref,store,page,"Robot unlinked. Its inventory is unchanged.");return;
+                if(changed)NativeFleet.soundPrivate(playerRef,"OP_Remote_Link_Inventory");refresh(page,"Robot unlinked. Its inventory is unchanged.");return;
+            }
+            if(action.action.startsWith("Rename:")) {
+                var robot=UUID.fromString(action.action.substring(7));
+                if(fleet.rename(playerRef.getUuid(),remote,robot,action.name))NativeFleet.soundPrivate(playerRef,"OP_Remote_Link_Inventory");
+                NativeFleet.updateName(store,fleet.robot(robot));
+                refresh(page,"Robot name saved. Leave the name blank to restore its default.");return;
             }
             int pages=Math.max(1,(fleet.roster(playerRef.getUuid(),remote).size()+2)/3);
-            if(action.action.equals("Next"))reopen(ref,store,Math.min(page+1,pages-1),"");
-            else if(action.action.equals("Previous"))reopen(ref,store,Math.max(0,page-1),"");
-        } catch(IllegalArgumentException|IllegalStateException ex) { reopen(ref,store,page,ex.getMessage()); }
+            if(action.action.equals("Next"))refresh(Math.min(page+1,pages-1),"");
+            else if(action.action.equals("Previous"))refresh(Math.max(0,page-1),"");
+        } catch(IllegalArgumentException|IllegalStateException ex) {
+            if(player.getPageManager().getCustomPage()==this)refresh(page,ex.getMessage());
+            else { dismissed=true;player.getPageManager().openCustomPage(ref,store,new FleetPage(playerRef,remote,page,ex.getMessage())); }
+        }
     }
-    private void reopen(Ref<EntityStore> ref,Store<EntityStore> store,int next,String text) {
-        dismissed=true;close();var player=store.getComponent(ref,Player.getComponentType());
-        if(player!=null)player.getPageManager().openCustomPage(ref,store,new FleetPage(playerRef,remote,next,text));
+    private void refresh(int next,String text) {
+        page=next;message=text==null?"Action refused.":text;
+        // Native rebuild updates this page and has exactly one acknowledgement. A close
+        // followed by an initial open creates a second lifetime and stranded receipts.
+        rebuild();
     }
 }

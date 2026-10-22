@@ -11,5 +11,14 @@
   "Categories": [],
   "Model": "Items/OptimusLink/OP_Remote.blockymodel",
   "Texture": "Items/OptimusLink/OP_Remote.png",
-  "PlayerAnimationsId": "Item"
+  "PlayerAnimationsId": "Item",
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "Simple"
+        }
+      ]
+    }
+  }
 }

@@ -15,6 +15,6 @@ final class ListCommand extends AbstractPlayerCommand {
     @Override protected void execute(CommandContext context,Store<EntityStore> store,Ref<EntityStore> ref,PlayerRef operator,World world) {
         var robots=OptimusLinkPlugin.state(store).fleet().ownedRobots(operator.getUuid());
         operator.sendMessage(Message.raw("Your Optimus robots in this world: "+robots.size()));
-        for(var robot:robots)operator.sendMessage(Message.raw(robot.id()+" — "+(robot.remote()==null?"unlinked":"linked")));
+        for(var robot:robots)operator.sendMessage(Message.raw(robot.displayName()+" — "+robot.id()+" — "+(robot.remote()==null?"unlinked":"linked")));
     }
 }

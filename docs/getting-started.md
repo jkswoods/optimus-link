@@ -23,10 +23,10 @@ A robot already linked to another remote must be unlinked first. [Fleet and cont
 
 ## Take control and return
 
-Use the remote to open its roster and choose **Assume control** beside a loaded robot within 32 blocks of your body. Choose a safe place for your body: it remains exposed while you are away.
+Use the remote to open its roster and choose **Assume control** beside a loaded robot within 128 blocks of your body. Choose a safe place for your body: it remains exposed while you are away.
 
-Open the inventory to equip the robot from its own storage. Hotbar **slots 2–9** hold equipment; **slot 1 always provides Release Control** during possession. Select slot 1 using your hotbar bindings, normally **1**, to return to your body. `/optimus-release` is also available.
+Open the inventory to equip the robot from its own storage. Hotbar **slots 2–9** hold equipment; **slot 1 always provides Release Control** during possession. Select slot 1 using your hotbar bindings, normally **1**, then right-click to return to your body. Selecting or scrolling onto slot 1 alone keeps you in control. `/optimus-release` is also available.
 
-Use the normal movement, look, jump and item bindings while testing the robot. Keep within 32 blocks of your body, and release control before leaving the world. Return to the remote and assume the other robot to switch loadouts. Each keeps its own equipment and storage.
+Use the normal movement, look, jump and item bindings while testing the robot. Keep within 128 blocks of your body, and release control before leaving the world. Return to the remote and assume the other robot to switch loadouts. Each keeps its own equipment and storage.
 
 See [Inventory and recovery](inventory.md) if you lose a remote or need space for the release control.

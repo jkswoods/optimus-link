@@ -4,7 +4,7 @@ Each robot keeps its own **36 storage slots**, native equipment containers and *
 
 ## Release control
 
-During possession, **slot 1 is permanently reserved for Release Control**. Select it with your hotbar bindings, normally **1**, to return to your body. Slots **2–9** hold real equipment. The virtual control cannot be moved or dropped, including on death.
+During possession, **slot 1 is permanently reserved for Release Control**. Select it with your hotbar bindings, normally **1**, then right-click to return to your body. Selecting it alone keeps control active. Slots **2–9** hold real equipment. The virtual control cannot be moved or dropped, including on death.
 
 If slot 1 already contains an item, that item moves to a free robot hotbar or storage slot with its quantity, durability and metadata preserved. If neither has room, free one slot before assuming control.
 

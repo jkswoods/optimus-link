@@ -1,12 +1,12 @@
 # Configuration
 
-Version 0.2.0-dev has no player configuration file or configurable power system. Its current limits are:
+Version 0.2.3-dev has no player configuration file or configurable power system. Its current limits are:
 
 | Setting | Current behavior |
 | --- | --- |
 | Deployment and linking reach | 5 blocks |
 | Lost-link recovery reach | 5 blocks |
-| Control range | 32 blocks from the operator body |
+| Control range | 128 blocks from the operator body |
 | Active control | One robot per operator |
 | Roster page | Three robots; additional robots use pagination |
 | Ownership | Deploying player; no ownership-transfer feature |

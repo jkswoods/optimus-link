@@ -51,7 +51,14 @@ final class RobotLifecycle extends RefSystem<EntityStore> {
         }
     }
     @Override public Query<EntityStore> getQuery() { return OptimusLinkPlugin.robotType; }
-    @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer) {}
+    @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer) {
+        var identity=buffer.getComponent(ref,OptimusLinkPlugin.robotType);var uuid=buffer.getComponent(ref,UUIDComponent.getComponentType());
+        if(identity==null||uuid==null)return;
+        var record=OptimusLinkPlugin.state(store).fleet().findRobot(identity.id).orElse(null);
+        if(record!=null&&record.entity().equals(uuid.getUuid()))buffer.putComponent(ref,
+            com.hypixel.hytale.server.core.entity.nameplate.Nameplate.getComponentType(),
+            new com.hypixel.hytale.server.core.entity.nameplate.Nameplate(record.displayName()));
+    }
     @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer) {
         if(reason!=RemoveReason.REMOVE)return;
         var identity=buffer.getComponent(ref,OptimusLinkPlugin.robotType);var uuid=buffer.getComponent(ref,UUIDComponent.getComponentType());

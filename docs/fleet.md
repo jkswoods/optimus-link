@@ -6,15 +6,19 @@ A Fleet Remote holds links to several robots. Each robot can link to **one remot
 
 Use the remote's secondary action while aiming at one of your robots within 5 blocks. The remote binds to its first user and world. Trading it does not transfer ownership or allow another player to control your robots.
 
-The roster shows three robots per page; use **Previous** and **Next** to see the rest. Choose **Assume control** beside a loaded robot within 32 blocks of your body. Release your current robot before selecting another.
+The roster shows three robots per page; use **Previous** and **Next** to see the rest. Navigation is disabled at the first and last page. Choose **Assume control** beside a loaded robot within 128 blocks of your body. Release your current robot before selecting another.
 
 Use **Unlink** on a parked robot to free it for another remote. Ownership, equipment and storage stay with the robot. If the old remote is lost, follow [nearby link recovery](inventory.md#replace-a-lost-remote).
 
 ![Fleet Remote with two linked Optimus robots and separate control and unlink buttons](assets/native/fleet-two-robots.jpg)
 
-*The roster separates each robot's control and unlink actions. Three visible rows are a page size, rather than a fleet limit.*
+*Earlier roster, before the name fields added in 0.2.2-dev. Three visible rows are a page size, rather than a fleet limit.*
 
 [View the roster at full size](assets/native/fleet-two-robots.jpg).
+
+## Name your robots
+
+Enter a name beside a linked robot and choose **Save**. Names accept up to 24 letters, numbers, spaces, apostrophes, hyphens or underscores. A blank name restores its default short ID. Names stay with the robot after unlinking, relinking and reloading; they do not change ownership or inventory.
 
 ## Control a robot
 
@@ -25,11 +29,11 @@ Your body stays in the world under normal damage rules. The robot uses your exis
 | Walk, look and jump | Your normal game bindings |
 | Mine, place and use equipment | Your normal item actions with the robot's held item |
 | Equip tools and move items | Your normal inventory binding |
-| Return to your body | Select **Release Control in slot 1**, normally **1**, or use `/optimus-release` |
+| Return to your body | Select **Release Control in slot 1**, normally **1**, then right-click; or use `/optimus-release` |
 | List your robots in this world | `/optimus-list` |
 | Revoke a lost remote link | `/optimus-recover ROBOT_ID` beside your parked robot |
 
-Equip tools and blocks in **slots 2–9**. Open chests and transfer items using the usual inventory controls. Keep within 32 blocks of your body.
+Equip tools and blocks in **slots 2–9**. Open chests and transfer items using the usual inventory controls. Keep within 128 blocks of your body. A robot must already be loaded to assume it; the remote does not load distant chunks.
 
 ![Earlier robot view after mining and collecting dirt](assets/native/robot-mining-pickup.png)
 
@@ -39,7 +43,7 @@ Some animation transitions remain under playtest review. Check [current support 
 
 ## End control safely
 
-Select slot 1 to return before walking away or changing worlds. Control also ends if the connection closes, the body or robot dies, the robot unloads, authority becomes invalid, or the robot exceeds control range.
+Select slot 1 and right-click to return before walking away or changing worlds. Scrolling onto slot 1 alone keeps control active. Control also ends if the connection closes, the body or robot dies, the robot unloads, authority becomes invalid, or the robot exceeds control range.
 
 If your body dies, use the normal Respawn screen; your world's death-loss rules apply. If a robot dies, it leaves the roster and its possessions become world drops. The virtual Release Control button never becomes a drop. Robot destruction does not refund a deployment unit.
 

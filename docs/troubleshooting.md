@@ -2,7 +2,7 @@
 
 ## The Assembly Dock recipe is missing
 
-Enable the gameplay JAR for this world, use Hytale 0.7.2 and keep only one Optimus Link gameplay version installed. Look in the base Workbench's **Crafting** category. The older model-only plugin does not provide these recipes.
+Enable the gameplay JAR for this world, use the Hytale version matching your Optimus Link JAR and keep only one Optimus Link gameplay version installed. Look in the base Workbench's **Crafting** category. The older model-only plugin does not provide these recipes.
 
 ## Deployment is refused
 
@@ -16,13 +16,13 @@ Administrative identity cloning is unsupported. If duplicate copies of a bound r
 
 ## Assume control fails
 
-Move your body within 32 blocks of the loaded robot, release any existing session and hold the same remote used to open the roster. Reopen the page after changing held items.
+Move your body within 128 blocks of the loaded robot, release any existing session and hold the same remote used to open the roster. Reopen the page after changing held items.
 
 The release control needs an empty slot 1. An existing item moves to a free robot hotbar or storage slot; if both are full, free one slot before assuming control.
 
 ## The camera, movement or body animation looks wrong
 
-Select **Release Control in slot 1** or use `/optimus-release`. If normal play does not return, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Avoid further transfers through an unstable inventory view.
+Select **Release Control in slot 1** and right-click, or use `/optimus-release`. If normal play does not return, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Avoid further transfers through an unstable inventory view.
 
 The current build prevents the parked body from mirroring robot walk/run animations. See [Compatibility](compatibility.md#current-support-status) for other input and multiplayer limits.
 

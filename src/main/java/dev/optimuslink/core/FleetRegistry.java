@@ -34,9 +34,18 @@ public final class FleetRegistry {
     public record Remote(UUID id, UUID owner) {
         public Remote { Objects.requireNonNull(id); Objects.requireNonNull(owner); }
     }
-    public record Robot(UUID id, UUID owner, UUID world, UUID entity, UUID remote) {
-        public Robot { Objects.requireNonNull(id); Objects.requireNonNull(owner); Objects.requireNonNull(world); Objects.requireNonNull(entity); }
-        Robot linkedTo(UUID next) { return new Robot(id,owner,world,entity,next); }
+    public record Robot(UUID id, UUID owner, UUID world, UUID entity, UUID remote, String name) {
+        public Robot { Objects.requireNonNull(id); Objects.requireNonNull(owner); Objects.requireNonNull(world); Objects.requireNonNull(entity);name=validName(name); }
+        public Robot(UUID id,UUID owner,UUID world,UUID entity,UUID remote) { this(id,owner,world,entity,remote,""); }
+        Robot linkedTo(UUID next) { return new Robot(id,owner,world,entity,next,name); }
+        public String displayName() { return name.isEmpty()?"OPTIMUS "+id.toString().substring(0,8).toUpperCase(java.util.Locale.ROOT):name; }
+    }
+    public static final int NAME_LIMIT=24;
+    private static String validName(String input) {
+        var name=input==null?"":input.strip();
+        if(name.codePointCount(0,name.length())>NAME_LIMIT||name.codePoints().anyMatch(c->!Character.isLetterOrDigit(c)&&c!=' '&&c!='-'&&c!='_'&&c!='\''))
+            throw new IllegalArgumentException("Use up to 24 letters, numbers, spaces, apostrophes, hyphens or underscores for a robot name.");
+        return name;
     }
     public record Session(UUID token, UUID operator, UUID robot) {}
     public record Ended(Session session, Exit reason) {}
@@ -70,6 +79,14 @@ public final class FleetRegistry {
         if(!remoteId.equals(robot.remote()))throw new Denied(Refusal.NOT_LINKED);
         if(byRobot.containsKey(robot.id()))throw new Denied(Refusal.ROBOT_BUSY);
         robots.put(robot.id(),robot.linkedTo(null));revision++;return true;
+    }
+    /** Rename only a parked robot linked to the remote the operator is holding. */
+    public synchronized boolean rename(UUID operator,UUID remoteId,UUID robotId,String name) {
+        ownedRemote(operator,remoteId);var robot=ownedRobot(operator,robotId);
+        if(!remoteId.equals(robot.remote()))throw new Denied(Refusal.NOT_LINKED);
+        if(byRobot.containsKey(robotId))throw new Denied(Refusal.ROBOT_BUSY);
+        var next=validName(name);if(next.equals(robot.name()))return false;
+        robots.put(robotId,new Robot(robot.id(),robot.owner(),robot.world(),robot.entity(),robot.remote(),next));revision++;return true;
     }
     /** Explicit owner recovery for a lost remote; never changes ownership or inventory. */
     public synchronized boolean recover(UUID operator,UUID robotId) {

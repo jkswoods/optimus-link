@@ -40,8 +40,52 @@ final class RobotReleaseControl {
     static void release(InventoryComponent.Hotbar hotbar) {
         if(hotbar!=null)for(var action:FilterActionType.values())hotbar.getInventory().setSlotFilter(action,(short)0,null);
     }
-    static boolean selected(ToServerPacket packet) {
-        return packet instanceof SetActiveSlot slot&&slot.inventorySectionId==-1&&slot.activeSlot==0;
+    static boolean activated(ToServerPacket packet,int authoritativeSlot) {
+        if(authoritativeSlot!=0)return false;
+        if(packet instanceof com.hypixel.hytale.protocol.packets.player.MouseInteraction p)
+            return p.activeSlot==0&&ITEM.equals(p.itemInHandId)&&p.mouseButton!=null
+                &&p.mouseButton.mouseButtonType==com.hypixel.hytale.protocol.MouseButtonType.Right
+                &&p.mouseButton.state==com.hypixel.hytale.protocol.MouseButtonState.Pressed;
+        if(packet instanceof com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains p&&p.updates!=null)
+            for(var chain:p.updates)if(chain!=null&&chain.initial&&chain.forkedId==null&&chain.activeHotbarSlot==0
+                    &&ITEM.equals(chain.itemInHandId)&&chain.interactionType==com.hypixel.hytale.protocol.InteractionType.Secondary)return true;
+        return false;
+    }
+    /** A projected item has no native stack: never replay its late graphs on the body. */
+    static ToServerPacket withoutVirtualActions(ToServerPacket packet) {
+        if(packet instanceof com.hypixel.hytale.protocol.packets.player.MouseInteraction p&&ITEM.equals(p.itemInHandId))return null;
+        if(packet instanceof com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains p&&p.updates!=null) {
+            var real=java.util.Arrays.stream(p.updates).filter(c->c==null||!ITEM.equals(c.itemInHandId)).toArray(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[]::new);
+            if(real.length!=p.updates.length)return real.length==0?null:new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains(real);
+        }
+        return packet;
+    }
+    /** The button occupies an empty server slot. Preserve native switching and F/Use
+     * against that empty hand, rather than losing SwapFrom and trapping selection here. */
+    static ToServerPacket forRobot(ToServerPacket packet) {
+        if(packet instanceof com.hypixel.hytale.protocol.packets.player.MouseInteraction p&&ITEM.equals(p.itemInHandId)) {
+            if(p.activeSlot!=0||p.mouseButton!=null&&p.mouseButton.mouseButtonType==com.hypixel.hytale.protocol.MouseButtonType.Right)return null;
+            var emptyHand=new com.hypixel.hytale.protocol.packets.player.MouseInteraction(p);
+            emptyHand.itemInHandId=null;return emptyHand;
+        }
+        if(packet instanceof com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains p&&p.updates!=null) {
+            var normal=new java.util.ArrayList<com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain>();
+            boolean changed=false;
+            for(var chain:p.updates) {
+                if(chain==null||!ITEM.equals(chain.itemInHandId)) { normal.add(chain);continue; }
+                changed=true;
+                if(chain.activeHotbarSlot!=0)continue;
+                if(chain.interactionType!=com.hypixel.hytale.protocol.InteractionType.SwapFrom
+                        &&chain.interactionType!=com.hypixel.hytale.protocol.InteractionType.Use
+                        &&chain.interactionType!=com.hypixel.hytale.protocol.InteractionType.Pick
+                        &&chain.interactionType!=com.hypixel.hytale.protocol.InteractionType.Ability3)continue;
+                var emptyHand=new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain(chain);
+                emptyHand.itemInHandId=null;normal.add(emptyHand);
+            }
+            return !changed?packet:normal.isEmpty()?null:new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains(
+                normal.toArray(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[]::new));
+        }
+        return withoutVirtualActions(packet);
     }
     private static boolean slot(int section,int slot) { return section==-1&&slot==0; }
     static boolean blocked(ToServerPacket packet) {
@@ -50,10 +94,13 @@ final class RobotReleaseControl {
         if(packet instanceof DropItemStack p)return slot(p.inventorySectionId,p.slotId);
         // Bulk rewrites can bypass normal per-slot input filters.
         if(packet instanceof InventoryAction p)return p.inventorySectionId==-1||p.inventorySectionId==-9;
-        return packet instanceof SetCreativeItem||packet instanceof DropCreativeItem||packet instanceof SmartGiveCreativeItem
-            ||packet instanceof SwitchHotbarBlockSet||packet instanceof com.hypixel.hytale.protocol.packets.player.LoadHotbar
+        if(packet instanceof SetCreativeItem p)return slot(p.inventorySectionId,p.slotId)||virtual(p.item);
+        if(packet instanceof SmartGiveCreativeItem p)return virtual(p.item);
+        if(packet instanceof DropCreativeItem p)return virtual(p.item);
+        return packet instanceof SwitchHotbarBlockSet||packet instanceof com.hypixel.hytale.protocol.packets.player.LoadHotbar
             ||packet instanceof com.hypixel.hytale.protocol.packets.player.SaveHotbar;
     }
+    private static boolean virtual(com.hypixel.hytale.protocol.ItemQuantity item) { return item!=null&&ITEM.equals(item.itemId); }
     static ToClientPacket project(ToClientPacket packet) {
         if(!(packet instanceof UpdatePlayerInventory original)||original.hotbar==null)return packet;
         // Never mutate the native packet/cache: only this connection sees the virtual button.

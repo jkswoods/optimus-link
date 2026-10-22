@@ -63,7 +63,6 @@ final class NativeControl {
     };
     static void installOutputFilter() { PacketAdapters.registerOutbound(BODY_OUTPUT); }
     static void removeOutputFilter() { PacketAdapters.deregisterOutbound(BODY_OUTPUT); }
-    private static final int RANGE_SQUARED=32*32;
     private static final List<Class<? extends ToServerPacket>> ROUTED=List.of(
         ClientMovement.class,SyncInteractionChains.class,
         com.hypixel.hytale.protocol.packets.player.MouseInteraction.class,
@@ -146,8 +145,9 @@ final class NativeControl {
         if(routePageEvent(operator,packet))return;
         var control=ACTIVE.get(operator.getUuid());
         if(control==null) {
-            if(packet instanceof SyncInteractionChains sync)real.handle(sync);
-            else fallback.accept(packet);
+            var normal=RobotReleaseControl.withoutVirtualActions(packet);if(normal==null)return;
+            if(normal instanceof SyncInteractionChains sync)real.handle(sync);
+            else fallback.accept(normal);
             return;
         }
         if(control.operator()!=operator||control.operator().getPacketHandler()!=real)return;
@@ -157,9 +157,19 @@ final class NativeControl {
         world.execute(()-> {
             if(ACTIVE.get(operator.getUuid())!=control)return;
             if(!valid(control)) { end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);return; }
-            if(RobotReleaseControl.selected(packet)) { end(operator.getUuid(),FleetRegistry.Exit.MANUAL);return; }
+            if(RobotReleaseControl.activated(packet,0)) {
+                // The native slot handler also queues onto World.execute. Let a preceding
+                // selection commit before checking which slot the operator actually holds.
+                world.execute(()-> {
+                    if(ACTIVE.get(operator.getUuid())!=control||!valid(control))return;
+                    var hotbar=robot.getStore().getComponent(robot,com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.getComponentType());
+                    if(RobotReleaseControl.activated(packet,hotbar==null?-1:hotbar.getActiveSlot()))end(operator.getUuid(),FleetRegistry.Exit.MANUAL);
+                });
+                return;
+            }
             if(RobotReleaseControl.blocked(packet)) { RobotInventory.refreshClient(robot);return; }
-            control.handler().accept(packet);
+            var normal=RobotReleaseControl.forRobot(packet);if(normal==null)return;
+            control.handler().accept(normal);
             if(packet instanceof ClientMovement movement&&movement.teleportAck!=null)
                 LOGGER.atInfo().log("Optimus pose acknowledgement robot=%s wire=%s position=%s pending=%s",control.token().robot(),movement.teleportAck.teleportId,movement.absolutePosition,control.handler().getPlayerRef().getTeleportAckTracker());
         });
@@ -170,7 +180,7 @@ final class NativeControl {
         var robot=store.getExternalData().getRefFromUUID(record.entity());
         if(robot==null||!robot.isValid())throw new IllegalStateException("Optimus is not loaded. Move closer before assuming control.");
         var bodyTransform=store.getComponent(body,TransformComponent.getComponentType());var robotTransform=store.getComponent(robot,TransformComponent.getComponentType());
-        if(bodyTransform==null||robotTransform==null||bodyTransform.getPosition().distanceSquared(robotTransform.getPosition())>RANGE_SQUARED)throw new IllegalStateException("Optimus must be within 32 blocks of your body.");
+        if(bodyTransform==null||robotTransform==null||!ControlRange.contains(bodyTransform.getPosition().distanceSquared(robotTransform.getPosition())))throw new IllegalStateException("Optimus must be within "+ControlRange.BLOCKS+" blocks of your body.");
         var identity=store.getComponent(robot,OptimusLinkPlugin.robotType);
         if(identity==null||!robotId.equals(identity.id))throw new IllegalStateException("Robot identity no longer matches the roster.");
         if(store.getComponent(robot,Player.getComponentType())!=null)throw new IllegalStateException("Optimus is already controlled.");
@@ -217,7 +227,9 @@ final class NativeControl {
             store.removeComponent(body,EntityViewer.getComponentType());
             store.putComponent(robot,EntityViewer.getComponentType(),viewer);
             store.ensureComponent(robot,CameraManager.getComponentType());
-            store.ensureComponent(robot,PlayerSettings.getComponentType());
+            var settings=store.getComponent(body,PlayerSettings.getComponentType());
+            if(settings==null)store.ensureComponent(robot,PlayerSettings.getComponentType());
+            else store.putComponent(robot,PlayerSettings.getComponentType(),settings);
             // PlayerCollisionResultAddSystem is a HolderSystem: adding Player to an existing NPC
             // does not run it. Apply the same native settings before any movement packet can tick.
             var collisions=new CollisionResultComponent();
@@ -230,6 +242,9 @@ final class NativeControl {
             // ForcedMusicSystems.PlayerAdded is a HolderSystem. Its removal callback also
             // runs for the temporary PlayerRef, so it needs the normal native tracker.
             store.ensureComponent(robot,ForcedMusicTracker.getComponentType());
+            // The native CraftingHolderSystem only runs when an entity enters the store.
+            // OpenBenchPageInteraction refuses silently without this robot-owned manager.
+            RobotCrafting.prepare(robot);
             store.putComponent(robot,PlayerRef.getComponentType(),actorRef);
             // PlayerRefAddedSystem briefly indexes the action context by that UUID. Keep the
             // real body as the sole world/Universe connection entry. Native untrack uses
@@ -242,9 +257,11 @@ final class NativeControl {
             store.ensureComponent(robot,MovementManager.getComponentType());
             ACTIVE.put(operator.getUuid(),control);
             Player.setGameMode(robot,store.getComponent(body,Player.getComponentType()).getGameMode(),store);
+            var bodyPage=store.getComponent(body,Player.getComponentType()).getPageManager();
+            if(bodyPage.getCustomPage() instanceof FleetPage)bodyPage.closePage(body,store);
             synchronizePose(actorRef,robot,viewer,body);
             RobotInventory.refreshClient(robot);
-            operator.sendMessage(Message.raw("Controlling Optimus. Your body remains exposed. Press 1 to return, or use /optimus-release. Control range 32 blocks."));
+            operator.sendMessage(Message.raw("Controlling "+record.displayName()+". Your body remains exposed. Select slot 1 and right-click to return, or use /optimus-release. Control range "+ControlRange.BLOCKS+" blocks."));
             NativeFleet.soundPrivate(operator,"OP_Remote_Link_Inventory");
         } catch(RuntimeException ex) {
             ACTIVE.put(operator.getUuid(),control);end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);throw ex;
@@ -262,11 +279,13 @@ final class NativeControl {
         var head=store.getComponent(target,HeadRotation.getComponentType());
         int networkId=store.getComponent(target,NetworkId.getComponentType()).getId();
         var previousNetwork=previous!=null&&previous.isValid()&&previous.getStore()==store?store.getComponent(previous,NetworkId.getComponentType()):null;
-        ClientActorView.switchLocal(viewer,previous,previousNetwork==null?-1:previousNetwork.getId(),target,networkId,context.getPacketHandler());
-        // PlayerSpawnedSystem ran when Player was added, before this ID change. Publish
-        // the full self state again after the old remote object has been removed.
-        // On return, restoreViewer publishes the body's self state after deferred cleanup.
-        if(store.getComponent(target,EntityViewer.getComponentType())!=null)PlayerSystems.PlayerSpawnedSystem.sendPlayerSelf(target,store);
+        if(store.getComponent(target,EntityViewer.getComponentType())!=viewer)
+            throw new IllegalStateException("Restore the target viewer before switching local identity.");
+        ClientActorView.switchLocal(viewer,previous,previousNetwork==null?-1:previousNetwork.getId(),target,networkId,context.getPacketHandler(),
+            ()->PlayerSystems.PlayerSpawnedSystem.sendPlayerSelf(target,store));
+        // Native self-spawn omits Interactions, and remote tracking excludes the local
+        // entity. Explicitly replace its old NPC bindings for use/placement prediction.
+        ClientActorView.sendInteractions(networkId,store.getComponent(target,com.hypixel.hytale.server.core.modules.interaction.Interactions.getComponentType()),context.getPacketHandler());
         context.getPacketHandler().write(new SetServerCamera(ClientCameraView.FirstPerson,false,null));
         // Changing the local entity ID does not replace the client's predicted position.
         // The native teleport queue holds movement until the client acknowledges this pose.
@@ -306,7 +325,7 @@ final class NativeControl {
         var store=c.robot().getStore();var a=store.getComponent(c.body(),TransformComponent.getComponentType());var b=store.getComponent(c.robot(),TransformComponent.getComponentType());
         if(!alive(store,c.body()))return FleetRegistry.Exit.OPERATOR_DEATH;
         if(!alive(store,c.robot()))return FleetRegistry.Exit.ROBOT_DEATH;
-        return a!=null&&b!=null&&a.getPosition().distanceSquared(b.getPosition())<=RANGE_SQUARED?null:FleetRegistry.Exit.INVALID_AUTHORITY;
+        return a!=null&&b!=null&&ControlRange.contains(a.getPosition().distanceSquared(b.getPosition()))?null:FleetRegistry.Exit.INVALID_AUTHORITY;
     }
     private static boolean alive(Store<EntityStore> store,Ref<EntityStore> ref) {
         var stats=store.getComponent(ref,EntityStatMap.getComponentType());if(stats==null)return false;
@@ -337,7 +356,7 @@ final class NativeControl {
             }
             // Native queued callbacks run before the deferred component cleanup.
             store.getExternalData().getWorld().execute(()-> {
-                if(!c.robot().isValid())return;
+                if(!c.robot().isValid()) { restoreViewer(c);finishReturn(c,reason);return; }
                 RobotSavepoints.restoreInteractions(c.robot());
                 if(store.getComponent(c.robot(),Player.getComponentType())==c.actor())store.removeComponent(c.robot(),Player.getComponentType());
                 if(store.getComponent(c.robot(),PlayerRef.getComponentType())==c.handler().getPlayerRef())store.removeComponent(c.robot(),PlayerRef.getComponentType());
@@ -351,13 +370,17 @@ final class NativeControl {
                     RobotSavepoints.releaseToLive(c.token().robot());
                 }
                 var velocity=store.getComponent(c.robot(),Velocity.getComponentType());if(velocity!=null)velocity.setZero();
+                finishReturn(c,reason);
             });
-        } else restoreViewer(c);
+        } else { restoreViewer(c);finishReturn(c,reason); }
         c.handler().output.retire();
-        if(c.body().isValid()) {
+    }
+    private static void finishReturn(Control c,FleetRegistry.Exit reason) {
+        if(c.body().isValid()&&c.operator().getReference()==c.body()) {
             var player=c.body().getStore().getComponent(c.body(),Player.getComponentType());
             if(player!=null&&c.operator().getPacketHandler().stillActive()) {
                 synchronizePose(c.operator(),c.body(),c.viewer(),c.robot());
+                RobotInventory.refreshClient(c.body());
                 Player.setGameMode(c.body(),player.getGameMode(),c.body().getStore());
                 c.operator().sendMessage(Message.raw("Returned to your body: "+reason.name().toLowerCase(Locale.ROOT)));
                 if(reason==FleetRegistry.Exit.MANUAL)NativeFleet.soundPrivate(c.operator(),"OP_Remote_Link_Inventory");
@@ -375,8 +398,6 @@ final class NativeControl {
     private static void restoreViewer(Control c) {
         if(!c.body().isValid()||c.operator().getReference()!=c.body())return;
         var store=c.body().getStore();store.putComponent(c.body(),EntityViewer.getComponentType(),c.viewer());
-        RobotInventory.refreshClient(c.body());
-        PlayerSystems.PlayerSpawnedSystem.sendPlayerSelf(c.body(),store);
     }
     static void disconnected(PlayerRef operator) {
         var c=ACTIVE.get(operator.getUuid());if(c!=null&&c.operator()==operator)requestEnd(c,FleetRegistry.Exit.DISCONNECT);
@@ -433,12 +454,6 @@ final class NativeControl {
                 boolean local=c.body().isValid()?c.body().getStore()==store:c.robot().isValid()?c.robot().getStore()==store:true;
                 if(local) {
                     var reason=invalidReason(c);
-                    if(reason==null) {
-                        // Native interactions can commit a selection without sending a
-                        // standalone SetActiveSlot packet. Observe the authoritative slot.
-                        var hotbar=store.getComponent(c.robot(),com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.getComponentType());
-                        if(hotbar!=null&&hotbar.getActiveSlot()==0)reason=FleetRegistry.Exit.MANUAL;
-                    }
                     if(reason!=null)requestEnd(c,reason);
                 }
             }
