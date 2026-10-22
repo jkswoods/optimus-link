@@ -40,8 +40,25 @@ final class RobotReleaseControl {
     static void release(InventoryComponent.Hotbar hotbar) {
         if(hotbar!=null)for(var action:FilterActionType.values())hotbar.getInventory().setSlotFilter(action,(short)0,null);
     }
-    static boolean selected(ToServerPacket packet) {
-        return packet instanceof SetActiveSlot slot&&slot.inventorySectionId==-1&&slot.activeSlot==0;
+    static boolean activated(ToServerPacket packet,int authoritativeSlot) {
+        if(authoritativeSlot!=0)return false;
+        if(packet instanceof com.hypixel.hytale.protocol.packets.player.MouseInteraction p)
+            return p.activeSlot==0&&ITEM.equals(p.itemInHandId)&&p.mouseButton!=null
+                &&p.mouseButton.mouseButtonType==com.hypixel.hytale.protocol.MouseButtonType.Right
+                &&p.mouseButton.state==com.hypixel.hytale.protocol.MouseButtonState.Pressed;
+        if(packet instanceof com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains p&&p.updates!=null)
+            for(var chain:p.updates)if(chain!=null&&chain.initial&&chain.forkedId==null&&chain.activeHotbarSlot==0
+                    &&ITEM.equals(chain.itemInHandId)&&chain.interactionType==com.hypixel.hytale.protocol.InteractionType.Secondary)return true;
+        return false;
+    }
+    /** A projected item has no native stack: never replay its late graphs on the body. */
+    static ToServerPacket withoutVirtualActions(ToServerPacket packet) {
+        if(packet instanceof com.hypixel.hytale.protocol.packets.player.MouseInteraction p&&ITEM.equals(p.itemInHandId))return null;
+        if(packet instanceof com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains p&&p.updates!=null) {
+            var real=java.util.Arrays.stream(p.updates).filter(c->c==null||!ITEM.equals(c.itemInHandId)).toArray(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[]::new);
+            if(real.length!=p.updates.length)return real.length==0?null:new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains(real);
+        }
+        return packet;
     }
     private static boolean slot(int section,int slot) { return section==-1&&slot==0; }
     static boolean blocked(ToServerPacket packet) {

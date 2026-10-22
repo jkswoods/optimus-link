@@ -1,6 +1,6 @@
 # Optimus Link
 
-Craft humanoid robots, link several to a Fleet Remote and control one at a time in Hytale. Each robot keeps its own equipment and storage. Select **Release Control in hotbar slot 1** to return to your body; the control cannot be moved or dropped on death.
+Craft humanoid robots, link several to a Fleet Remote and control one at a time in Hytale. Each robot keeps its own equipment and storage. Select **Release Control in hotbar slot 1**, then right-click to return to your body; the control cannot be moved or dropped on death.
 
 This **0.2.2-dev compatibility candidate** targets **Hytale 0.7.3 / Java 25**. In-game validation is in progress; the public 0.2.0-dev release remains the Hytale 0.7.2 build. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](docs/compatibility.md) before testing.
 

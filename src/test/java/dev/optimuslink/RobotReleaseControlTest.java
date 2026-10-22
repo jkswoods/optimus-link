@@ -56,8 +56,34 @@ public final class RobotReleaseControlTest {
         check(hotbar.getInventory().toPacket().equals(fullHotbar)&&storage.getInventory().toPacket().equals(fullStorage),"refused reservation preserves every original item");
     }
     private static void packets() {
-        check(RobotReleaseControl.selected(new SetActiveSlot(-1,0)),"selecting hotbar slot one releases control");
-        check(!RobotReleaseControl.selected(new SetActiveSlot(-1,1))&&!RobotReleaseControl.selected(new SetActiveSlot(-5,0)),"other hotbar and equipment selection stays normal");
+        check(!RobotReleaseControl.activated(new SetActiveSlot(-1,0),0),"scrolling or pressing 1 selects the release button without ending control");
+        check(!RobotReleaseControl.activated(new SetActiveSlot(-1,1),1)&&!RobotReleaseControl.activated(new SetActiveSlot(-5,0),0),"ordinary hotbar and equipment selection cannot release control");
+        var click=new com.hypixel.hytale.protocol.packets.player.MouseInteraction();click.activeSlot=0;click.itemInHandId=RobotReleaseControl.ITEM;
+        click.mouseButton=new MouseButtonEvent(MouseButtonType.Right,MouseButtonState.Pressed,(byte)1);
+        check(RobotReleaseControl.activated(click,0),"right-clicking the selected virtual control returns to the operator");
+        check(!RobotReleaseControl.activated(click,1),"a stale click cannot release a robot holding ordinary equipment");
+        click.mouseButton.state=MouseButtonState.Released;
+        check(!RobotReleaseControl.activated(click,0),"releasing the mouse button is not an activation");
+        click.mouseButton.state=MouseButtonState.Pressed;click.mouseButton.mouseButtonType=MouseButtonType.Left;
+        check(!RobotReleaseControl.activated(click,0),"left-clicking the button does not release control");
+        click.mouseButton.mouseButtonType=MouseButtonType.Right;click.itemInHandId="Soil_Dirt";
+        check(!RobotReleaseControl.activated(click,0),"right-clicking a real item is not a return request");
+        check(RobotReleaseControl.withoutVirtualActions(click)==click,"ordinary mouse input passes through unchanged");
+        click.itemInHandId=RobotReleaseControl.ITEM;
+        check(RobotReleaseControl.withoutVirtualActions(click)==null,"late virtual mouse input cannot trigger the returned operator's held remote");
+        var chain=new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain();chain.activeHotbarSlot=0;
+        chain.itemInHandId=RobotReleaseControl.ITEM;chain.initial=true;chain.interactionType=InteractionType.Secondary;
+        var sync=new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains(new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[]{chain});
+        check(RobotReleaseControl.activated(sync,0),"native secondary-action binding can activate the selected control");
+        chain.initial=false;check(!RobotReleaseControl.activated(sync,0),"a continuation is not a fresh release action");
+        chain.initial=true;chain.interactionType=InteractionType.Primary;
+        check(!RobotReleaseControl.activated(sync,0),"primary interaction chains do not release");
+        check(RobotReleaseControl.withoutVirtualActions(sync)==null,"a virtual graph never enters native empty-slot interaction simulation");
+        var real=new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain();real.itemInHandId="Soil_Dirt";
+        sync.updates=new com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain[]{chain,real};
+        var filtered=(com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains)RobotReleaseControl.withoutVirtualActions(sync);
+        check(filtered!=sync&&filtered.updates.length==1&&filtered.updates[0]==real,"retiring virtual actions preserves unrelated native graph identity");
+        check(sync.updates.length==2&&sync.updates[0]==chain,"filtering does not mutate the original packet");
         check(RobotReleaseControl.blocked(new MoveItemStack(-1,0,1,-2,0)),"cannot drag control to storage");
         check(RobotReleaseControl.blocked(new MoveItemStack(-2,0,1,-1,0)),"cannot replace control with a real item");
         check(RobotReleaseControl.blocked(new SmartMoveItemStack(-1,0,1,SmartMoveType.EquipOrMergeStack)),"cannot quick-move control");

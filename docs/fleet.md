@@ -29,7 +29,7 @@ Your body stays in the world under normal damage rules. The robot uses your exis
 | Walk, look and jump | Your normal game bindings |
 | Mine, place and use equipment | Your normal item actions with the robot's held item |
 | Equip tools and move items | Your normal inventory binding |
-| Return to your body | Select **Release Control in slot 1**, normally **1**, or use `/optimus-release` |
+| Return to your body | Select **Release Control in slot 1**, normally **1**, then right-click; or use `/optimus-release` |
 | List your robots in this world | `/optimus-list` |
 | Revoke a lost remote link | `/optimus-recover ROBOT_ID` beside your parked robot |
 
@@ -43,7 +43,7 @@ Some animation transitions remain under playtest review. Check [current support 
 
 ## End control safely
 
-Select slot 1 to return before walking away or changing worlds. Control also ends if the connection closes, the body or robot dies, the robot unloads, authority becomes invalid, or the robot exceeds control range.
+Select slot 1 and right-click to return before walking away or changing worlds. Scrolling onto slot 1 alone keeps control active. Control also ends if the connection closes, the body or robot dies, the robot unloads, authority becomes invalid, or the robot exceeds control range.
 
 If your body dies, use the normal Respawn screen; your world's death-loss rules apply. If a robot dies, it leaves the roster and its possessions become world drops. The virtual Release Control button never becomes a drop. Robot destruction does not refund a deployment unit.
 

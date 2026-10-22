@@ -2,7 +2,7 @@
 
 ![Optimus Link — Your fleet. Your control.](assets/brand/banner.png)
 
-Craft humanoid robots, link them to a Fleet Remote and take control of one at a time. Give each robot its own tools and storage, then return to your body by selecting **Release Control in hotbar slot 1**.
+Craft humanoid robots, link them to a Fleet Remote and take control of one at a time. Give each robot its own tools and storage, then return to your body by selecting **Release Control in hotbar slot 1** and right-clicking.
 
 Each robot belongs to its deploying player and links to one remote. A remote can manage several robots through its roster. Your body stays behind, exposed to normal damage while you control a robot.
 

@@ -145,8 +145,9 @@ final class NativeControl {
         if(routePageEvent(operator,packet))return;
         var control=ACTIVE.get(operator.getUuid());
         if(control==null) {
-            if(packet instanceof SyncInteractionChains sync)real.handle(sync);
-            else fallback.accept(packet);
+            var normal=RobotReleaseControl.withoutVirtualActions(packet);if(normal==null)return;
+            if(normal instanceof SyncInteractionChains sync)real.handle(sync);
+            else fallback.accept(normal);
             return;
         }
         if(control.operator()!=operator||control.operator().getPacketHandler()!=real)return;
@@ -156,9 +157,19 @@ final class NativeControl {
         world.execute(()-> {
             if(ACTIVE.get(operator.getUuid())!=control)return;
             if(!valid(control)) { end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);return; }
-            if(RobotReleaseControl.selected(packet)) { end(operator.getUuid(),FleetRegistry.Exit.MANUAL);return; }
+            if(RobotReleaseControl.activated(packet,0)) {
+                // The native slot handler also queues onto World.execute. Let a preceding
+                // selection commit before checking which slot the operator actually holds.
+                world.execute(()-> {
+                    if(ACTIVE.get(operator.getUuid())!=control||!valid(control))return;
+                    var hotbar=robot.getStore().getComponent(robot,com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.getComponentType());
+                    if(RobotReleaseControl.activated(packet,hotbar==null?-1:hotbar.getActiveSlot()))end(operator.getUuid(),FleetRegistry.Exit.MANUAL);
+                });
+                return;
+            }
             if(RobotReleaseControl.blocked(packet)) { RobotInventory.refreshClient(robot);return; }
-            control.handler().accept(packet);
+            var normal=RobotReleaseControl.withoutVirtualActions(packet);if(normal==null)return;
+            control.handler().accept(normal);
             if(packet instanceof ClientMovement movement&&movement.teleportAck!=null)
                 LOGGER.atInfo().log("Optimus pose acknowledgement robot=%s wire=%s position=%s pending=%s",control.token().robot(),movement.teleportAck.teleportId,movement.absolutePosition,control.handler().getPlayerRef().getTeleportAckTracker());
         });
@@ -250,7 +261,7 @@ final class NativeControl {
             if(bodyPage.getCustomPage() instanceof FleetPage)bodyPage.closePage(body,store);
             synchronizePose(actorRef,robot,viewer,body);
             RobotInventory.refreshClient(robot);
-            operator.sendMessage(Message.raw("Controlling "+record.displayName()+". Your body remains exposed. Press 1 to return, or use /optimus-release. Control range "+ControlRange.BLOCKS+" blocks."));
+            operator.sendMessage(Message.raw("Controlling "+record.displayName()+". Your body remains exposed. Select slot 1 and right-click to return, or use /optimus-release. Control range "+ControlRange.BLOCKS+" blocks."));
             NativeFleet.soundPrivate(operator,"OP_Remote_Link_Inventory");
         } catch(RuntimeException ex) {
             ACTIVE.put(operator.getUuid(),control);end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);throw ex;
@@ -442,12 +453,6 @@ final class NativeControl {
                 boolean local=c.body().isValid()?c.body().getStore()==store:c.robot().isValid()?c.robot().getStore()==store:true;
                 if(local) {
                     var reason=invalidReason(c);
-                    if(reason==null) {
-                        // Native interactions can commit a selection without sending a
-                        // standalone SetActiveSlot packet. Observe the authoritative slot.
-                        var hotbar=store.getComponent(c.robot(),com.hypixel.hytale.server.core.inventory.InventoryComponent.Hotbar.getComponentType());
-                        if(hotbar!=null&&hotbar.getActiveSlot()==0)reason=FleetRegistry.Exit.MANUAL;
-                    }
                     if(reason!=null)requestEnd(c,reason);
                 }
             }

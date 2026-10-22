@@ -11,6 +11,7 @@ Development candidate for Hytale 0.7.3; in-game retesting is pending.
 - Allow creative blocks in ordinary robot slots while keeping Release Control protected.
 - Refresh local interaction bindings on control handoff and show an Assembly Dock placement preview.
 - Update Fleet pagination in place and disable navigation at its boundaries.
+- Require right-clicking Release Control after selecting slot 1, so scrolling onto it does not release by accident.
 
 ## 0.2.1-dev — Hytale 0.7.3 compatibility
 

@@ -22,7 +22,7 @@ The release control needs an empty slot 1. An existing item moves to a free robo
 
 ## The camera, movement or body animation looks wrong
 
-Select **Release Control in slot 1** or use `/optimus-release`. If normal play does not return, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Avoid further transfers through an unstable inventory view.
+Select **Release Control in slot 1** and right-click, or use `/optimus-release`. If normal play does not return, disconnect normally and retain the paired world/player data and exact JAR for diagnosis. Avoid further transfers through an unstable inventory view.
 
 The current build prevents the parked body from mirroring robot walk/run animations. See [Compatibility](compatibility.md#current-support-status) for other input and multiplayer limits.
 

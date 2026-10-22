@@ -22,4 +22,4 @@ The output is `build/OptimusLink-0.2.2-dev.jar`, with `build/SHA256SUMS.txt`. Th
 
 ## Remove or upgrade
 
-Select Release Control in slot 1 or use `/optimus-release`, save normally, disconnect and retain a paired world/player backup before replacing or removing the JAR. Removal can make mod entities and items unavailable. Restore the matching backup and JAR if returning to that version. See [Compatibility and backups](compatibility.md).
+Select Release Control in slot 1 and right-click, or use `/optimus-release`, save normally, disconnect and retain a paired world/player backup before replacing or removing the JAR. Removal can make mod entities and items unavailable. Restore the matching backup and JAR if returning to that version. See [Compatibility and backups](compatibility.md).
