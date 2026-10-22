@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.2-dev — robot controls and fleet fixes
+
+Development candidate for Hytale 0.7.3; in-game retesting is pending.
+
+- Match the standard player standing height and camera height.
+- Extend control to 128 blocks from your body, with loaded-robot and world checks retained.
+- Save names for linked robots through the Fleet Remote.
+- Initialize robot crafting so native workbenches can open.
+- Allow creative blocks in ordinary robot slots while keeping Release Control protected.
+- Refresh local interaction bindings on control handoff and show an Assembly Dock placement preview.
+- Update Fleet pagination in place and disable navigation at its boundaries.
+
 ## 0.2.1-dev — Hytale 0.7.3 compatibility
 
 - Targets Hytale 0.7.3 with the matching pinned server dependency.

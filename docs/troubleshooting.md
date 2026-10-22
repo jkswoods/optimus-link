@@ -16,7 +16,7 @@ Administrative identity cloning is unsupported. If duplicate copies of a bound r
 
 ## Assume control fails
 
-Move your body within 32 blocks of the loaded robot, release any existing session and hold the same remote used to open the roster. Reopen the page after changing held items.
+Move your body within 128 blocks of the loaded robot, release any existing session and hold the same remote used to open the roster. Reopen the page after changing held items.
 
 The release control needs an empty slot 1. An existing item moves to a free robot hotbar or storage slot; if both are full, free one slot before assuming control.
 

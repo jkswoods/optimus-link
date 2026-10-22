@@ -33,6 +33,14 @@ final class NativeFleet {
     static final KeyedCodec<UUID> HOME_WORLD=new KeyedCodec<>("OptimusWorld",Codec.UUID_BINARY);
     private static final java.util.Map<UUID,Long> LAST_FEEDBACK=new ConcurrentHashMap<>();
     private NativeFleet() {}
+    static void updateName(com.hypixel.hytale.component.Store<EntityStore> store,dev.optimuslink.core.FleetRegistry.Robot robot) {
+        var ref=store.getExternalData().getRefFromUUID(robot.entity());
+        if(ref==null||!ref.isValid())return;
+        var identity=store.getComponent(ref,OptimusLinkPlugin.robotType);
+        if(identity!=null&&identity.id.equals(robot.id()))store.putComponent(ref,
+            com.hypixel.hytale.server.core.entity.nameplate.Nameplate.getComponentType(),
+            new com.hypixel.hytale.server.core.entity.nameplate.Nameplate(robot.displayName()));
+    }
     static void deploy(Ref<EntityStore> operatorRef,PlayerRef operator,ItemContainer heldContainer,short slot,ItemStack held,BlockPosition target) {
         if(target==null)throw new IllegalArgumentException("Aim at clear ground to deploy Optimus.");
         var store=operatorRef.getStore();var world=store.getExternalData().getWorld();

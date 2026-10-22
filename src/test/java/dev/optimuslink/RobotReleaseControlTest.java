@@ -64,6 +64,16 @@ public final class RobotReleaseControlTest {
         check(RobotReleaseControl.blocked(new DropItemStack(-1,0,1)),"cannot drop control");
         check(!RobotReleaseControl.blocked(new DropItemStack(-1,1,1)),"real robot possessions retain normal drop behavior");
         check(!RobotReleaseControl.blocked(new MoveItemStack(-2,0,1,-1,1)),"normal real-item transfers remain usable");
+        var block=new ItemQuantity("Soil_Dirt",10);
+        check(!RobotReleaseControl.blocked(new SetCreativeItem(-1,1,block,true)),"creative blocks can enter real robot hotbar slots");
+        check(!RobotReleaseControl.blocked(new SetCreativeItem(-2,0,block,true)),"creative blocks can enter robot storage");
+        check(RobotReleaseControl.blocked(new SetCreativeItem(-1,0,block,true)),"creative insertion cannot replace the release button");
+        check(!RobotReleaseControl.blocked(new SmartGiveCreativeItem(block,SmartMoveType.EquipOrMergeStack)),"creative quick-give uses normal native slot filters");
+        check(!RobotReleaseControl.blocked(new DropCreativeItem(block)),"ordinary creative dropping retains native permission checks");
+        var virtual=new ItemQuantity(RobotReleaseControl.ITEM,1);
+        check(RobotReleaseControl.blocked(new SetCreativeItem(-2,0,virtual,true)),"virtual token cannot be made physical in storage");
+        check(RobotReleaseControl.blocked(new SmartGiveCreativeItem(virtual,SmartMoveType.EquipOrMergeStack)),"quick-give cannot fabricate a release token");
+        check(RobotReleaseControl.blocked(new DropCreativeItem(virtual)),"creative dropping cannot fabricate a release token");
         check(RobotReleaseControl.blocked(new com.hypixel.hytale.protocol.packets.player.LoadHotbar()),"bulk hotbar loading cannot overwrite the reserved slot");
         check(RobotReleaseControl.blocked(new com.hypixel.hytale.protocol.packets.player.SaveHotbar()),"virtual control cannot enter a saved creative hotbar");
     }

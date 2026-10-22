@@ -50,10 +50,13 @@ final class RobotReleaseControl {
         if(packet instanceof DropItemStack p)return slot(p.inventorySectionId,p.slotId);
         // Bulk rewrites can bypass normal per-slot input filters.
         if(packet instanceof InventoryAction p)return p.inventorySectionId==-1||p.inventorySectionId==-9;
-        return packet instanceof SetCreativeItem||packet instanceof DropCreativeItem||packet instanceof SmartGiveCreativeItem
-            ||packet instanceof SwitchHotbarBlockSet||packet instanceof com.hypixel.hytale.protocol.packets.player.LoadHotbar
+        if(packet instanceof SetCreativeItem p)return slot(p.inventorySectionId,p.slotId)||virtual(p.item);
+        if(packet instanceof SmartGiveCreativeItem p)return virtual(p.item);
+        if(packet instanceof DropCreativeItem p)return virtual(p.item);
+        return packet instanceof SwitchHotbarBlockSet||packet instanceof com.hypixel.hytale.protocol.packets.player.LoadHotbar
             ||packet instanceof com.hypixel.hytale.protocol.packets.player.SaveHotbar;
     }
+    private static boolean virtual(com.hypixel.hytale.protocol.ItemQuantity item) { return item!=null&&ITEM.equals(item.itemId); }
     static ToClientPacket project(ToClientPacket packet) {
         if(!(packet instanceof UpdatePlayerInventory original)||original.hotbar==null)return packet;
         // Never mutate the native packet/cache: only this connection sees the virtual button.

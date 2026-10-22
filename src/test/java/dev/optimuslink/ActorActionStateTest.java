@@ -79,6 +79,11 @@ public final class ActorActionStateTest {
             check("fixture_tool_use".equals(heldContext.getRootInteractionId(InteractionType.Use)),"possessed native context resolves the held tool's ordinary Use");
             check("fixture_death".equals(store.getComponent(robot,bindingType).getInteractionId(InteractionType.Death)),"NPC death interaction is preserved while controlled");
             check("*UseNPC".equals(original.getInteractionId(InteractionType.Use)),"original NPC binding is not mutated");
+            var wire=ClientActorView.interactions(store.getComponent(robot,bindingType),key->key.equals("fixture_death")?41:Integer.MIN_VALUE);
+            check(!wire.interactions.containsKey(InteractionType.Use),"local actor wire removes the old NPC Use override");
+            check(wire.interactions.get(InteractionType.Death)==41&&!wire.overrideAll,"local actor wire preserves death binding and ordinary held-block prediction");
+            var returned=ClientActorView.interactions(null,key->Integer.MIN_VALUE);
+            check(returned.interactions.isEmpty()&&!returned.overrideAll,"returning to an ordinary player clears any stale NPC local bindings");
             var saved=RobotSnapshot.capture(robot);
             check("*UseNPC".equals(saved.getComponent(bindingType).getInteractionId(InteractionType.Use)),"periodic native snapshot retains the parked NPC binding");
             check("fixture_player_use".equals(context.getRootInteractionId(InteractionType.Use)),"snapshot does not change the live controlled action");

@@ -24,4 +24,18 @@ final class ClientActorView {
         output.writeNoCache(new EntityUpdates(previousId<0?new int[]{networkId}:new int[]{previousId,networkId},null));
         output.writeNoCache(new SetClientId(networkId));
     }
+    static com.hypixel.hytale.protocol.InteractionsUpdate interactions(
+            com.hypixel.hytale.server.core.modules.interaction.Interactions bindings,
+            java.util.function.ToIntFunction<String> index) {
+        var ids=new java.util.EnumMap<com.hypixel.hytale.protocol.InteractionType,Integer>(com.hypixel.hytale.protocol.InteractionType.class);
+        if(bindings!=null)bindings.getInteractions().forEach((type,id)-> {
+            int value=index.applyAsInt(id);if(value!=Integer.MIN_VALUE)ids.put(type,value);
+        });
+        return new com.hypixel.hytale.protocol.InteractionsUpdate(ids,bindings==null?null:bindings.getInteractionHint(),bindings!=null&&bindings.isOverrideAll());
+    }
+    static void sendInteractions(int networkId,com.hypixel.hytale.server.core.modules.interaction.Interactions bindings,PacketHandler output) {
+        var update=interactions(bindings,id->com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction.getAssetMap().getIndex(id));
+        output.writeNoCache(new EntityUpdates(null,new com.hypixel.hytale.protocol.EntityUpdate[]{
+            new com.hypixel.hytale.protocol.EntityUpdate(networkId,null,new com.hypixel.hytale.protocol.ComponentUpdate[]{update})}));
+    }
 }
