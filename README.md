@@ -1,10 +1,36 @@
 # Optimus Link
 
-Craft humanoid robots, link several to a Fleet Remote and control one at a time in Hytale. Each robot keeps its own equipment and storage. Select **Release Control in hotbar slot 1**, then right-click to return to your body; the control cannot be moved or dropped on death.
+[Player guide](https://jkswoods.github.io/optimus-link/) · [Development releases](https://github.com/jkswoods/optimus-link/releases)
+
+![Optimus Link — Your fleet. Your control.](docs/assets/brand/banner.png)
+
+**Your fleet. Your control.** Craft humanoid robots, link several to a Fleet Remote and control one at a time in Hytale. Each robot keeps its own equipment and storage.
+
+![Workbench, storage Chest, Optimus Assembly Dock and deployed robot in Hytale](docs/assets/native/workshop.jpg)
+
+*Build your first fleet: Workbench on the left, storage in the centre, Assembly Dock on the right and a deployed robot behind them.*
+
+- Craft the Assembly Dock, Fleet Remote and robot deployment units.
+- Link several robots to one remote and choose which to control.
+- Walk, look, jump, mine, place and use equipment through your robot.
+- Keep separate tools, equipment and storage on every robot.
+- Return to your body with **Release Control in hotbar slot 1**, then right-click; the control cannot be moved or dropped on death.
+
+[Install](docs/installation.md) · [Your first session](docs/getting-started.md) · [Recipes](docs/recipes.md) · [Fleet controls](docs/fleet.md) · [Screenshots](docs/gallery.md)
+
+## Choose your robot
+
+![Fleet Remote roster showing two linked robots with control and unlink buttons](docs/assets/native/fleet-two-robots.jpg)
+
+*The Fleet Remote lets you select a linked robot. This earlier roster predates the name fields introduced in 0.2.2-dev; three rows per page are a page size, not a fleet limit.*
+
+The [player guide](https://jkswoods.github.io/optimus-link/) covers [inventories and recovery](docs/inventory.md) and [troubleshooting](docs/troubleshooting.md). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
+
+## Development status
 
 This **0.2.3-dev compatibility candidate** targets **Hytale 0.7.3 / Java 25**. In-game validation is in progress; the public 0.2.0-dev release remains the Hytale 0.7.2 build. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](docs/compatibility.md) before testing.
 
-[Download the prerelease](https://github.com/jkswoods/optimus-link/releases) and read the [online player guide](https://jkswoods.github.io/optimus-link/). Start with [installation](docs/installation.md) and [your first session](docs/getting-started.md). The guide covers [recipes](docs/recipes.md), [fleet controls](docs/fleet.md), [inventories and recovery](docs/inventory.md) and [troubleshooting](docs/troubleshooting.md). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
+The banner is original mod artwork. Screenshots are native development captures; they do not certify the pending 0.7.3 compatibility retest.
 
 ## Build
 
