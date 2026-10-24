@@ -4,7 +4,7 @@
 
 ![Optimus Link — Your fleet. Your control.](docs/assets/brand/banner.png)
 
-**Your fleet. Your control.** Craft humanoid robots, link several to a Fleet Remote and control one at a time in Hytale. Each robot keeps its own equipment and storage.
+Craft humanoid robots, link them to a Fleet Remote and control them one at a time, each with its own tools and inventory.
 
 ![Workbench, storage Chest, Optimus Assembly Dock and deployed robot in Hytale](docs/assets/native/workshop.jpg)
 
@@ -28,9 +28,9 @@ The [player guide](https://jkswoods.github.io/optimus-link/) covers [inventories
 
 ## Development status
 
-This **0.2.3-dev compatibility candidate** targets **Hytale 0.7.3 / Java 25**. In-game validation is in progress; the public 0.2.0-dev release remains the Hytale 0.7.2 build. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](docs/compatibility.md) before testing.
+This **0.2.3-dev compatibility candidate** targets **Hytale 0.7.3 / Java 25**, with singleplayer confirmation of the control-return fixes. The public GitHub 0.2.0-dev download remains the Hytale 0.7.2 build. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](docs/compatibility.md) before testing.
 
-The banner is original mod artwork. Screenshots are native development captures; they do not certify the pending 0.7.3 compatibility retest.
+The banner is original mod artwork. Screenshots are native development captures; older captures do not establish acceptance of later animation or multiplayer changes.
 
 ## Build
 

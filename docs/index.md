@@ -2,11 +2,17 @@
 
 ![Optimus Link — Your fleet. Your control.](assets/brand/banner.png)
 
-Craft humanoid robots, link them to a Fleet Remote and take control of one at a time. Give each robot its own tools and storage, then return to your body by selecting **Release Control in hotbar slot 1** and right-clicking.
+Craft humanoid robots, link them to a Fleet Remote and control them one at a time, each with its own tools and inventory.
 
-Each robot belongs to its deploying player and links to one remote. A remote can manage several robots through its roster. Your body stays behind, exposed to normal damage while you control a robot.
+![Workbench, storage Chest, Assembly Dock and deployed Optimus in Hytale](assets/native/workshop.jpg)
 
-> **Compatibility candidate:** 0.2.3-dev targets Hytale **0.7.3** and Java **25**. In-game validation is in progress; this candidate is not released yet. Use a disposable test world. Some animation transitions remain under review. Multiplayer and sound listening checks are also pending. See [Compatibility and backups](compatibility.md) for the current support limits.
+*Native development workshop. This earlier capture illustrates the equipment layout; newer controls are described in the guide.*
+
+<div class="mod-actions"><a class="mod-button" href="installation/">Choose the right build</a><a class="mod-button mod-button-secondary" href="getting-started/">Start your first fleet</a></div>
+
+<div class="mod-status"><strong>0.2.3-dev · Hytale 0.7.3 · Java 25</strong><br>The control-return fixes have singleplayer confirmation. The downloadable GitHub prerelease is still 0.2.0-dev for Hytale 0.7.2; do not install it for 0.7.3. Real second-client play, sound listening and some animation transitions remain under review. See <a href="compatibility/">compatibility and backups</a>.</div>
+
+Each robot belongs to its deploying player and links to one remote. A remote can manage several robots through its roster. Your body stays behind, exposed to normal damage while you control a robot. Select <strong>Release Control in hotbar slot 1</strong>, then right-click to return.
 
 ## Start a fleet
 

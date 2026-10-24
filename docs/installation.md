@@ -1,9 +1,9 @@
 # Installation
 
-Version **0.2.3-dev** targets Hytale **0.7.3**. The compatibility candidate is awaiting in-game validation and has not been released yet. Use a disposable test world and check the [current support limits](compatibility.md#current-support-status).
+Version **0.2.3-dev** targets Hytale **0.7.3**. Its control-return corrections have singleplayer confirmation, but GitHub Releases still provides the older 0.2.0-dev / Hytale 0.7.2 build. Use a disposable test world and check the [current support limits](compatibility.md#current-support-status).
 
 1. Close the world normally and back up its world data and player data together.
-2. Once available, download `OptimusLink-0.2.3-dev.jar` from [GitHub Releases](https://github.com/jkswoods/optimus-link/releases). During compatibility testing, use only the candidate supplied for that test. The candidate ZIP contains the same JAR and an offline copy of this guide; install the JAR, not the ZIP.
+2. Use only the `OptimusLink-0.2.3-dev.jar` candidate supplied for your 0.7.3 test. The current [GitHub download](https://github.com/jkswoods/optimus-link/releases) is for 0.7.2 and is not a substitute. The candidate ZIP contains the same JAR and an offline copy of this guide; install the JAR, not the ZIP.
 3. Put the JAR in the `Mods` directory within your Hytale `UserData` folder. Keep one Optimus Link gameplay JAR installed. Remove the older Optimus authoring test plugin from this test setup.
 4. Start Hytale, enable Optimus Link for your disposable world and enter it. The server plugin includes the required asset pack.
 5. Check the Workbench crafting list for **Optimus Assembly Dock**, then follow [First session](getting-started.md).
