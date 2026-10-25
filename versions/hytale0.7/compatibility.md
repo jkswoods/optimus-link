@@ -4,16 +4,11 @@ title: "Compatibility and backups"
 
 # Compatibility and backups {#compatibility-and-backups}
 
-Version **0.2.3-dev** targets Hytale **0.7.3** and Java **25**. Use a disposable test world. Other server versions and cross-mod compatibility have not been verified.
+This guide covers the **Hytale 0.7** support branch with Java **25**. Use a disposable test world. Other server versions and cross-mod compatibility have not been verified.
 
 ## Version matching {#version-matching}
 
-| Optimus Link | Hytale | Availability |
-| --- | --- | --- |
-| 0.2.3-dev | 0.7.3 | Control-return and hotbar corrections confirmed in singleplayer |
-| 0.2.2-dev | 0.7.3 | Earlier test candidate; release crash and interaction failures reported |
-| 0.2.1-dev | 0.7.3 | Earlier compatibility candidate; robot interaction and Fleet UI issues reported |
-| 0.2.0-dev | 0.7.2 | [Previous prerelease](https://github.com/jkswoods/optimus-link/releases/tag/v0.2.0-dev) |
+Use the `hytale0.7` support branch and choose a download whose manifest requirements include your exact game patch. The branch declares `>=0.7.3 <0.8.0`; native checks and older screenshot evidence are described separately below.
 
 Use the JAR for your game version. Save normally and retain the matching world/player/JAR backup before upgrading. If you need to return to 0.7.2, restore the entire matching backup; replacing only the JAR can mix incompatible save versions.
 
@@ -29,10 +24,10 @@ Focused checks have exercised manual/range returns, disconnect, unload, world-ch
 
 Release control, save normally and disconnect. Copy the world's data and its corresponding player data together, and keep the exact Optimus Link JAR used with them. Retain this set before upgrades or removal. Restoring only the world can disagree with the player's bound items.
 
-The 0.1.x authoring plugin was a model test tool. Its test scenes and items do not have a supported migration to this gameplay candidate. Use a new world for 0.2.3-dev.
+The earlier model-authoring plugin was a test tool. Its scenes and items have no supported migration to the gameplay mod. Use a new test world when moving from that tool.
 
 ## Distribution and multiplayer {#distribution-and-multiplayer}
 
-Use the [GitHub prerelease](https://github.com/jkswoods/optimus-link/releases) for released builds and their offline guides. The GitHub Releases page still distributes 0.2.0-dev for 0.7.2; it does not provide the 0.7.3 candidate. The [source repository](https://github.com/jkswoods/optimus-link) is public. This remains an experimental development build; no redistribution license has been selected.
+Use [GitHub releases](https://github.com/jkswoods/optimus-link/releases) to select a file whose compatibility includes your installed Hytale version. Availability and included changes are recorded with that file. The [source repository](https://github.com/jkswoods/optimus-link/tree/hytale0.7) provides the Hytale support branch. This remains experimental; no redistribution license has been selected.
 
 The server checks ownership and prevents concurrent control in automated tests. Genuine second-client play is still pending; report its results separately from single-player behavior.

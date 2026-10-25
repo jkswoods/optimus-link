@@ -14,7 +14,7 @@ Craft humanoid robots, link them to a Fleet Remote and control them one at a tim
 
 <div class="mod-actions"><a class="mod-button" href="installation/">Choose the right build</a><a class="mod-button mod-button-secondary" href="getting-started/">Start your first fleet</a></div>
 
-<div class="mod-status"><strong>0.2.3-dev · Hytale 0.7.3 · Java 25</strong><br>The control-return fixes have singleplayer confirmation. The downloadable GitHub prerelease is still 0.2.0-dev for Hytale 0.7.2; do not install it for 0.7.3. Real second-client play, sound listening and some animation transitions remain under review. See <a href="compatibility/">compatibility and backups</a>.</div>
+<div class="mod-status"><strong>Hytale 0.7 guide · Java 25</strong><br>The control-return fixes have singleplayer confirmation. Select a download whose declared compatibility includes your exact game patch. Real second-client play, sound listening and some animation transitions remain under review. See <a href="compatibility/">compatibility and backups</a>.</div>
 
 Each robot belongs to its deploying player and links to one remote. A remote can manage several robots through its roster. Your body stays behind, exposed to normal damage while you control a robot. Select <strong>Release Control in hotbar slot 1</strong>, then right-click to return.
 

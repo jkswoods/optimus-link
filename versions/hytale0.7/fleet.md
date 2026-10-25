@@ -16,7 +16,7 @@ Use **Unlink** on a parked robot to free it for another remote. Ownership, equip
 
 ![Fleet Remote with two linked Optimus robots and separate control and unlink buttons](/assets/hytale0.7/native/fleet-two-robots.jpg)
 
-*Earlier roster, before the name fields added in 0.2.2-dev. Three visible rows are a page size, rather than a fleet limit.*
+*Earlier roster, before robot-name fields were added. Three visible rows are a page size, rather than a fleet limit.*
 
 [View the roster at full size](/assets/hytale0.7/native/fleet-two-robots.jpg).
 

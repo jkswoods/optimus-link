@@ -4,7 +4,7 @@ title: "Configuration"
 
 # Configuration {#configuration}
 
-Version 0.2.3-dev has no player configuration file or configurable power system. Its current limits are:
+The Hytale 0.7 support branch has no player configuration file or configurable power system. Its current limits are:
 
 | Setting | Current behavior |
 | --- | --- |

@@ -1,10 +1,12 @@
 ---
-title: "Changelog"
+title: "Support-line changes"
 ---
 
-# Changelog {#changelog}
+# Support-line changes {#changelog}
 
-## 0.2.3-dev — control return and interaction corrections {#023-dev-control-return-and-interaction-corrections}
+Changes described here belong to the **Hytale 0.7 support line**. Download availability, numbered release history and the changes included in a particular file are recorded on [GitHub releases](https://github.com/jkswoods/optimus-link/releases).
+
+## Control return and interaction corrections {#023-dev-control-return-and-interaction-corrections}
 
 Development candidate for Hytale 0.7.3; the corrected build still needs an in-game retest.
 
@@ -13,7 +15,7 @@ Development candidate for Hytale 0.7.3; the corrected build still needs an in-ga
 - Keep F/Use available with the button selected, through the robot's native empty-hand interaction.
 - Keep slot 1 protected and right-click release separate from ordinary interaction.
 
-## 0.2.2-dev — robot controls and fleet fixes {#022-dev-robot-controls-and-fleet-fixes}
+## Robot controls and fleet fixes {#022-dev-robot-controls-and-fleet-fixes}
 
 Earlier test candidate: a return-to-body crash and blocked interaction after selecting slot 1 were reported. Use the corrected candidate for further testing.
 
@@ -26,13 +28,13 @@ Earlier test candidate: a return-to-body crash and blocked interaction after sel
 - Update Fleet pagination in place and disable navigation at its boundaries.
 - Require right-clicking Release Control after selecting slot 1, so scrolling onto it does not release by accident.
 
-## 0.2.1-dev — Hytale 0.7.3 compatibility {#021-dev-hytale-073-compatibility}
+## Hytale 0.7.3 compatibility {#021-dev-hytale-073-compatibility}
 
 - Targets Hytale 0.7.3 with the matching pinned server dependency.
 - Keeps the existing robot control, recipes, models, animations and sound families.
-- Retains 0.2.0-dev as the separate Hytale 0.7.2 build. Keep a matching world/player/JAR backup before upgrading.
+- Keep a matching world/player/JAR backup when moving from earlier Hytale patches.
 
-## 0.2.0-dev {#020-dev}
+## Core fleet gameplay {#020-dev}
 
 - Craft an Optimus Assembly Dock, Fleet Remote and robot deployment units.
 - Deploy owner-bound robots and link several to one remote. Each robot links to one remote at a time.
@@ -52,6 +54,6 @@ Earlier test candidate: a return-to-body crash and blocked interaction after sel
 
 This is an experimental development prerelease. See [Compatibility and backups](compatibility.md) for remaining animation, listening and multiplayer limits.
 
-## 0.1.x — authoring stage {#01x-authoring-stage}
+## Model-authoring background {#01x-authoring-stage}
 
 Created the robot and three equipment models, textures, animations, previews and generated sound families. This stage supplied the artwork for the gameplay mod; it was not a playable remote-control release.
