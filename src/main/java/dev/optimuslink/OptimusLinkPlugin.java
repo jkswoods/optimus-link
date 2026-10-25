@@ -7,15 +7,20 @@ import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 /** Gameplay integration entrypoint. The fleet authority never stores or copies player inventory. */
 public final class OptimusLinkPlugin extends JavaPlugin {
     static ResourceType<EntityStore,FleetWorldState> stateType;
     static ComponentType<EntityStore,RobotIdentity> robotType;
+    static ComponentType<ChunkStore,OptimiumStamp> optimiumStampType;
     public OptimusLinkPlugin(JavaPluginInit init) { super(init); }
     @Override protected void setup() {
         stateType=getEntityStoreRegistry().registerResource(FleetWorldState.class,"OptimusFleetV1",FleetWorldState.CODEC);
         robotType=getEntityStoreRegistry().registerComponent(RobotIdentity.class,"OptimusRobotV1",RobotIdentity.CODEC);
+        optimiumStampType=getChunkStoreRegistry().registerComponent(OptimiumStamp.class,"OptimusOreGenerationV1",OptimiumStamp.CODEC);
+        getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.ChunkPreLoadProcessEvent.class,OptimiumGeneration::column);
+        getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.ChunkSectionPreLoadProcessEvent.class,OptimiumGeneration::section);
         getCodecRegistry(Interaction.CODEC).register("OP_FleetItem",FleetItemInteraction.class,FleetItemInteraction.CODEC);
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent.class,event->{
             var ref=event.getPlayerRef();var operator=ref.getStore().getComponent(ref,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());

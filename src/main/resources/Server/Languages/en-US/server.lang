@@ -8,3 +8,11 @@ benchCategories.OP_Robotics=Robotics
 npcRoles.OP_Optimus_Robot.name=Optimus Robot
 items.OP_ReleaseControl.name=Release Control
 items.OP_ReleaseControl.description=Select slot 1, then right-click to return to your body. This permanent control cannot be moved or dropped.
+
+# Optimium material family
+items.OP_OptimiumOre_Stone.name = Optimium Ore
+items.OP_OptimiumOre_Stone.description = A dense metallic deposit found in newly explored underground stone. Mine for raw Optimium.
+items.OP_RawOptimium.name = Raw Optimium
+items.OP_RawOptimium.description = Smelt in a Furnace to obtain an Optimium Ingot.
+items.OP_OptimiumIngot.name = Optimium Ingot
+items.OP_OptimiumIngot.description = Refined Optimium metal, ready for robotics crafting.

@@ -1,0 +1,6 @@
+{
+  "SoundEvents": {
+    "Drag": "OP_Optimium_Handle_Inventory",
+    "Drop": "OP_Optimium_Handle_Inventory"
+  }
+}

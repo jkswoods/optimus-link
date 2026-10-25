@@ -1,0 +1,44 @@
+{
+  "MaxStack": 100,
+  "Quality": "Common",
+  "DropOnDeath": true,
+  "ItemSoundSetId": "OP_OptimiumMaterial",
+  "PlayerAnimationsId": "Item",
+  "TranslationProperties": {
+    "Name": "server.items.OP_OptimiumIngot.name",
+    "Description": "server.items.OP_OptimiumIngot.description"
+  },
+  "Icon": "Icons/ItemsGenerated/OptimusLink_Optimium_ingot.png",
+  "Model": "Items/OptimusLink/OP_OptimiumIngot.blockymodel",
+  "Texture": "Items/OptimusLink/OP_OptimiumIngot.png",
+  "Categories": [
+    "Items"
+  ],
+  "Tags": {
+    "Type": [
+      "Ingredient"
+    ],
+    "Family": [
+      "Optimium"
+    ]
+  },
+  "ItemEntity": {
+    "ParticleSystemId": null
+  },
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "OP_RawOptimium",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Processing",
+        "Id": "Furnace"
+      }
+    ],
+    "OutputQuantity": 1,
+    "TimeSeconds": 14
+  }
+}

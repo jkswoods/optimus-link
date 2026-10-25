@@ -1,0 +1,6 @@
+{
+  "Parent": "Ore",
+  "SoundEvents": {
+    "Break": "OP_Optimium_Break_World"
+  }
+}

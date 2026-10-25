@@ -65,3 +65,7 @@ See [the contribution guide](CONTRIBUTING.md) for feature and bug-fix PR targets
 Maintainers handle forward/back ports, and support-branch PRs require owner approval.
 
 The player guide follows the Hytale support line and is updated independently of mod releases. Select downloads by their game compatibility and read the selected file’s release notes for included changes and artifact checksums.
+
+## Optimium development
+
+The development source adds small Optimium veins to newly generated ordinary underground stone, raw ore drops and a one-to-one Furnace recipe for Optimium Ingots. Existing explored chunks and robotics crafting costs are preserved. Normal terrain generation and saved-terrain reload checks pass; client appearance, icons, mining, furnace interaction and human listening checks are pending. This addition has not been published as a new release.

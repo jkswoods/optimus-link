@@ -1,0 +1,72 @@
+{
+  "MaxStack": 25,
+  "Quality": "Common",
+  "DropOnDeath": true,
+  "ItemSoundSetId": "OP_OptimiumMaterial",
+  "PlayerAnimationsId": "Block",
+  "TranslationProperties": {
+    "Name": "server.items.OP_OptimiumOre_Stone.name",
+    "Description": "server.items.OP_OptimiumOre_Stone.description"
+  },
+  "Icon": "Icons/ItemsGenerated/OptimusLink_Optimium_ore.png",
+  "Categories": [
+    "Blocks.Ores"
+  ],
+  "SubCategory": "Ore",
+  "Tags": {
+    "Type": [
+      "Ore"
+    ],
+    "Family": [
+      "Optimium"
+    ]
+  },
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "CubeWithModel",
+    "CustomModel": "Blocks/OptimusLink/OP_OptimiumOre_Outcrops.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/OptimusLink/OP_OptimiumOre_Outcrops.png",
+        "Weight": 1
+      }
+    ],
+    "Textures": [
+      {
+        "All": "Blocks/OptimusLink/OP_OptimiumHost.png",
+        "Weight": 1
+      }
+    ],
+    "Group": "Stone",
+    "RandomRotation": "YawStep90",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "OreIron",
+        "DropList": {
+          "Container": {
+            "Type": "Multiple",
+            "Containers": [
+              {
+                "Type": "Single",
+                "Item": {
+                  "ItemId": "OP_RawOptimium"
+                }
+              },
+              {
+                "Type": "Single",
+                "Item": {
+                  "ItemId": "Rock_Stone_Cobble"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "BlockSoundSetId": "OP_OptimiumOre",
+    "PhysicalMaterialId": "Stone",
+    "BlockParticleSetId": "Ore",
+    "ParticleColor": "#77363e",
+    "TextureComputedColor": "#7D827C"
+  }
+}

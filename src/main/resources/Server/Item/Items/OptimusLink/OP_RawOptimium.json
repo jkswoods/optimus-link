@@ -1,0 +1,28 @@
+{
+  "MaxStack": 25,
+  "Quality": "Common",
+  "DropOnDeath": true,
+  "ItemSoundSetId": "OP_OptimiumMaterial",
+  "PlayerAnimationsId": "Block",
+  "TranslationProperties": {
+    "Name": "server.items.OP_RawOptimium.name",
+    "Description": "server.items.OP_RawOptimium.description"
+  },
+  "Icon": "Icons/ItemsGenerated/OptimusLink_Optimium_raw.png",
+  "Model": "Items/OptimusLink/OP_RawOptimium.blockymodel",
+  "Texture": "Items/OptimusLink/OP_RawOptimium.png",
+  "Categories": [
+    "Items"
+  ],
+  "Tags": {
+    "Type": [
+      "Ore"
+    ],
+    "Family": [
+      "Optimium"
+    ]
+  },
+  "ItemEntity": {
+    "ParticleSystemId": null
+  }
+}
