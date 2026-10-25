@@ -69,14 +69,13 @@
                 "x": 17.0,
                 "y": 11.0,
                 "z": 14.0
-              },
-              "isStaticBox": true
+              }
             },
             "textureLayout": {
               "front": {
                 "offset": {
-                  "x": 96,
-                  "y": 0
+                  "x": 1,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -86,8 +85,8 @@
               },
               "back": {
                 "offset": {
-                  "x": 96,
-                  "y": 0
+                  "x": 20,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -97,8 +96,8 @@
               },
               "right": {
                 "offset": {
-                  "x": 96,
-                  "y": 0
+                  "x": 39,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -108,8 +107,8 @@
               },
               "left": {
                 "offset": {
-                  "x": 96,
-                  "y": 0
+                  "x": 55,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -119,8 +118,8 @@
               },
               "top": {
                 "offset": {
-                  "x": 96,
-                  "y": 0
+                  "x": 71,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -130,8 +129,8 @@
               },
               "bottom": {
                 "offset": {
-                  "x": 96,
-                  "y": 0
+                  "x": 90,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -150,9 +149,9 @@
           "id": "3",
           "name": "Raw0",
           "position": {
-            "x": -6.0,
-            "y": 12.0,
-            "z": 1.0
+            "x": -7.138554,
+            "y": 9.1459167,
+            "z": 0.3068887
           },
           "orientation": {
             "x": 0.12818033872260304,
@@ -169,22 +168,21 @@
             },
             "stretch": {
               "x": 1.0,
-              "y": 1.0,
+              "y": 0.98,
               "z": 1.0
             },
             "settings": {
               "size": {
                 "x": 9.0,
-                "y": 21.0,
+                "y": 15.0,
                 "z": 8.0
-              },
-              "isStaticBox": true
+              }
             },
             "textureLayout": {
               "front": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 109,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -194,8 +192,8 @@
               },
               "back": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 120,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -205,8 +203,8 @@
               },
               "right": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 131,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -216,8 +214,8 @@
               },
               "left": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 141,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -227,8 +225,8 @@
               },
               "top": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 151,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -238,8 +236,8 @@
               },
               "bottom": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 162,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -251,16 +249,16 @@
             "unwrapMode": "custom",
             "visible": true,
             "doubleSided": false,
-            "shadingMode": "standard"
+            "shadingMode": "reflective"
           }
         },
         {
           "id": "4",
-          "name": "Raw0_fracture",
+          "name": "Raw0_shoulder",
           "position": {
-            "x": -2.0674705,
-            "y": 21.8579131,
-            "z": 3.3939844
+            "x": -3.0388197,
+            "y": 18.6117603,
+            "z": 2.3136728
           },
           "orientation": {
             "x": 0.12818033872260304,
@@ -276,23 +274,450 @@
               "z": 0.0
             },
             "stretch": {
-              "x": 1.0,
+              "x": 0.9675,
+              "y": 1.05,
+              "z": 0.96
+            },
+            "settings": {
+              "size": {
+                "x": 8.0,
+                "y": 6.0,
+                "z": 7.0
+              }
+            },
+            "textureLayout": {
+              "front": {
+                "offset": {
+                  "x": 173,
+                  "y": 1
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "back": {
+                "offset": {
+                  "x": 183,
+                  "y": 1
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "right": {
+                "offset": {
+                  "x": 193,
+                  "y": 1
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "left": {
+                "offset": {
+                  "x": 202,
+                  "y": 1
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "top": {
+                "offset": {
+                  "x": 211,
+                  "y": 1
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "bottom": {
+                "offset": {
+                  "x": 221,
+                  "y": 1
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              }
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "reflective"
+          }
+        },
+        {
+          "id": "5",
+          "name": "Raw0_fracture",
+          "position": {
+            "x": -1.7629163,
+            "y": 21.8101457,
+            "z": 3.0903976
+          },
+          "orientation": {
+            "x": 0.12818033872260304,
+            "y": 0.08385064231536006,
+            "z": -0.17475899604152847,
+            "w": 0.9726243693486285
+          },
+          "shape": {
+            "type": "box",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "stretch": {
+              "x": 0.9675,
               "y": 0.76,
+              "z": 0.96
+            },
+            "settings": {
+              "size": {
+                "x": 8.0,
+                "y": 1.0,
+                "z": 7.0
+              }
+            },
+            "textureLayout": {
+              "front": {
+                "offset": {
+                  "x": 231,
+                  "y": 1
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "back": {
+                "offset": {
+                  "x": 241,
+                  "y": 1
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "right": {
+                "offset": {
+                  "x": 1,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "left": {
+                "offset": {
+                  "x": 10,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "top": {
+                "offset": {
+                  "x": 19,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "bottom": {
+                "offset": {
+                  "x": 29,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              }
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "reflective"
+          }
+        },
+        {
+          "id": "6",
+          "name": "Raw1",
+          "position": {
+            "x": 6.9671457,
+            "y": 7.9844377,
+            "z": 3.2542394
+          },
+          "orientation": {
+            "x": -0.09669409635872606,
+            "y": 0.17468219248753827,
+            "z": 0.20675471588820393,
+            "w": 0.9578041923144333
+          },
+          "shape": {
+            "type": "box",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "stretch": {
+              "x": 1.0,
+              "y": 1.05,
               "z": 1.0
+            },
+            "settings": {
+              "size": {
+                "x": 10.0,
+                "y": 10.0,
+                "z": 8.0
+              }
+            },
+            "textureLayout": {
+              "front": {
+                "offset": {
+                  "x": 39,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "back": {
+                "offset": {
+                  "x": 51,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "right": {
+                "offset": {
+                  "x": 63,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "left": {
+                "offset": {
+                  "x": 73,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "top": {
+                "offset": {
+                  "x": 83,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "bottom": {
+                "offset": {
+                  "x": 95,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              }
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "reflective"
+          }
+        },
+        {
+          "id": "7",
+          "name": "Raw1_shoulder",
+          "position": {
+            "x": 4.0140043,
+            "y": 14.7861,
+            "z": 2.0360666
+          },
+          "orientation": {
+            "x": -0.09669409635872606,
+            "y": 0.17468219248753827,
+            "z": 0.20675471588820393,
+            "w": 0.9578041923144333
+          },
+          "shape": {
+            "type": "box",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "stretch": {
+              "x": 0.9555556,
+              "y": 1.125,
+              "z": 0.96
+            },
+            "settings": {
+              "size": {
+                "x": 9.0,
+                "y": 4.0,
+                "z": 7.0
+              }
+            },
+            "textureLayout": {
+              "front": {
+                "offset": {
+                  "x": 107,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "back": {
+                "offset": {
+                  "x": 118,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "right": {
+                "offset": {
+                  "x": 129,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "left": {
+                "offset": {
+                  "x": 138,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "top": {
+                "offset": {
+                  "x": 147,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "bottom": {
+                "offset": {
+                  "x": 158,
+                  "y": 18
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              }
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "reflective"
+          }
+        },
+        {
+          "id": "8",
+          "name": "Raw1_fracture",
+          "position": {
+            "x": 2.8835184,
+            "y": 17.1420684,
+            "z": 1.738889
+          },
+          "orientation": {
+            "x": -0.09669409635872606,
+            "y": 0.17468219248753827,
+            "z": 0.20675471588820393,
+            "w": 0.9578041923144333
+          },
+          "shape": {
+            "type": "box",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "stretch": {
+              "x": 0.9555556,
+              "y": 0.76,
+              "z": 0.96
             },
             "settings": {
               "size": {
                 "x": 9.0,
                 "y": 1.0,
-                "z": 8.0
-              },
-              "isStaticBox": true
+                "z": 7.0
+              }
             },
             "textureLayout": {
               "front": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 169,
+                  "y": 18
                 },
                 "mirror": {
                   "x": false,
@@ -302,8 +727,8 @@
               },
               "back": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 180,
+                  "y": 18
                 },
                 "mirror": {
                   "x": false,
@@ -313,8 +738,8 @@
               },
               "right": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 191,
+                  "y": 18
                 },
                 "mirror": {
                   "x": false,
@@ -324,8 +749,8 @@
               },
               "left": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 200,
+                  "y": 18
                 },
                 "mirror": {
                   "x": false,
@@ -335,8 +760,8 @@
               },
               "top": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 209,
+                  "y": 18
                 },
                 "mirror": {
                   "x": false,
@@ -346,8 +771,8 @@
               },
               "bottom": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 220,
+                  "y": 18
                 },
                 "mirror": {
                   "x": false,
@@ -359,232 +784,16 @@
             "unwrapMode": "custom",
             "visible": true,
             "doubleSided": false,
-            "shadingMode": "standard"
+            "shadingMode": "reflective"
           }
         },
         {
-          "id": "5",
-          "name": "Raw1",
-          "position": {
-            "x": 6.0,
-            "y": 10.0,
-            "z": 3.0
-          },
-          "orientation": {
-            "x": -0.09669409635872606,
-            "y": 0.17468219248753827,
-            "z": 0.20675471588820393,
-            "w": 0.9578041923144333
-          },
-          "shape": {
-            "type": "box",
-            "offset": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "stretch": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "settings": {
-              "size": {
-                "x": 10.0,
-                "y": 15.0,
-                "z": 8.0
-              },
-              "isStaticBox": true
-            },
-            "textureLayout": {
-              "front": {
-                "offset": {
-                  "x": 0,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "back": {
-                "offset": {
-                  "x": 0,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "right": {
-                "offset": {
-                  "x": 0,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "left": {
-                "offset": {
-                  "x": 0,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "top": {
-                "offset": {
-                  "x": 0,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "bottom": {
-                "offset": {
-                  "x": 0,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              }
-            },
-            "unwrapMode": "custom",
-            "visible": true,
-            "doubleSided": false,
-            "shadingMode": "standard"
-          }
-        },
-        {
-          "id": "6",
-          "name": "Raw1_fracture",
-          "position": {
-            "x": 2.6128408,
-            "y": 17.0589472,
-            "z": 2.1095971
-          },
-          "orientation": {
-            "x": -0.09669409635872606,
-            "y": 0.17468219248753827,
-            "z": 0.20675471588820393,
-            "w": 0.9578041923144333
-          },
-          "shape": {
-            "type": "box",
-            "offset": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "stretch": {
-              "x": 1.0,
-              "y": 0.76,
-              "z": 1.0
-            },
-            "settings": {
-              "size": {
-                "x": 10.0,
-                "y": 1.0,
-                "z": 8.0
-              },
-              "isStaticBox": true
-            },
-            "textureLayout": {
-              "front": {
-                "offset": {
-                  "x": 32,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "back": {
-                "offset": {
-                  "x": 32,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "right": {
-                "offset": {
-                  "x": 32,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "left": {
-                "offset": {
-                  "x": 32,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "top": {
-                "offset": {
-                  "x": 32,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              },
-              "bottom": {
-                "offset": {
-                  "x": 32,
-                  "y": 0
-                },
-                "mirror": {
-                  "x": false,
-                  "y": false
-                },
-                "angle": 0
-              }
-            },
-            "unwrapMode": "custom",
-            "visible": true,
-            "doubleSided": false,
-            "shadingMode": "standard"
-          }
-        },
-        {
-          "id": "7",
+          "id": "9",
           "name": "Raw2",
           "position": {
-            "x": 1.0,
-            "y": 13.0,
-            "z": -5.0
+            "x": 1.6547192,
+            "y": 10.6430453,
+            "z": -5.7201439
           },
           "orientation": {
             "x": 0.15824318294547404,
@@ -601,22 +810,21 @@
             },
             "stretch": {
               "x": 1.0,
-              "y": 1.0,
+              "y": 0.9916667,
               "z": 1.0
             },
             "settings": {
               "size": {
                 "x": 8.0,
-                "y": 17.0,
+                "y": 12.0,
                 "z": 7.0
-              },
-              "isStaticBox": true
+              }
             },
             "textureLayout": {
               "front": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 231,
+                  "y": 18
                 },
                 "mirror": {
                   "x": false,
@@ -626,8 +834,8 @@
               },
               "back": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 241,
+                  "y": 18
                 },
                 "mirror": {
                   "x": false,
@@ -637,8 +845,8 @@
               },
               "right": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 1,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -648,8 +856,8 @@
               },
               "left": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 10,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -659,8 +867,8 @@
               },
               "top": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 19,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -670,8 +878,8 @@
               },
               "bottom": {
                 "offset": {
-                  "x": 0,
-                  "y": 0
+                  "x": 29,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -683,16 +891,16 @@
             "unwrapMode": "custom",
             "visible": true,
             "doubleSided": false,
-            "shadingMode": "standard"
+            "shadingMode": "reflective"
           }
         },
         {
-          "id": "8",
-          "name": "Raw2_fracture",
+          "id": "10",
+          "name": "Raw2_shoulder",
           "position": {
-            "x": -1.2799633,
-            "y": 21.2077482,
-            "z": -2.4922047
+            "x": -0.184954,
+            "y": 18.628727,
+            "z": -3.4308232
           },
           "orientation": {
             "x": 0.15824318294547404,
@@ -708,23 +916,22 @@
               "z": 0.0
             },
             "stretch": {
-              "x": 1.0,
-              "y": 0.76,
-              "z": 1.0
+              "x": 0.9828571,
+              "y": 1.02,
+              "z": 0.98
             },
             "settings": {
               "size": {
-                "x": 8.0,
-                "y": 1.0,
-                "z": 7.0
-              },
-              "isStaticBox": true
+                "x": 7.0,
+                "y": 5.0,
+                "z": 6.0
+              }
             },
             "textureLayout": {
               "front": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 39,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -734,8 +941,8 @@
               },
               "back": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 48,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -745,8 +952,8 @@
               },
               "right": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 57,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -756,8 +963,8 @@
               },
               "left": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 65,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -767,8 +974,8 @@
               },
               "top": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 73,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -778,8 +985,8 @@
               },
               "bottom": {
                 "offset": {
-                  "x": 32,
-                  "y": 0
+                  "x": 82,
+                  "y": 32
                 },
                 "mirror": {
                   "x": false,
@@ -791,7 +998,114 @@
             "unwrapMode": "custom",
             "visible": true,
             "doubleSided": false,
-            "shadingMode": "standard"
+            "shadingMode": "reflective"
+          }
+        },
+        {
+          "id": "11",
+          "name": "Raw2_fracture",
+          "position": {
+            "x": -0.9372392,
+            "y": 21.3369142,
+            "z": -2.6033637
+          },
+          "orientation": {
+            "x": 0.15824318294547404,
+            "y": -0.1144524541344781,
+            "z": 0.11318618114790945,
+            "w": 0.9741912641730232
+          },
+          "shape": {
+            "type": "box",
+            "offset": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "stretch": {
+              "x": 0.9828571,
+              "y": 0.76,
+              "z": 0.98
+            },
+            "settings": {
+              "size": {
+                "x": 7.0,
+                "y": 1.0,
+                "z": 6.0
+              }
+            },
+            "textureLayout": {
+              "front": {
+                "offset": {
+                  "x": 91,
+                  "y": 32
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "back": {
+                "offset": {
+                  "x": 100,
+                  "y": 32
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "right": {
+                "offset": {
+                  "x": 109,
+                  "y": 32
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "left": {
+                "offset": {
+                  "x": 117,
+                  "y": 32
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "top": {
+                "offset": {
+                  "x": 125,
+                  "y": 32
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              },
+              "bottom": {
+                "offset": {
+                  "x": 134,
+                  "y": 32
+                },
+                "mirror": {
+                  "x": false,
+                  "y": false
+                },
+                "angle": 0
+              }
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "reflective"
           }
         }
       ]

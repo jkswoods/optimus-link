@@ -33,7 +33,7 @@
     ],
     "Textures": [
       {
-        "All": "Blocks/OptimusLink/OP_OptimiumHost.png",
+        "All": "BlockTextures/Rock_Stone.png",
         "Weight": 1
       }
     ],

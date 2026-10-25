@@ -69,14 +69,13 @@
                 "x": 29.0,
                 "y": 6.0,
                 "z": 12.0
-              },
-              "isStaticBox": true
+              }
             },
             "textureLayout": {
               "front": {
                 "offset": {
-                  "x": 32,
-                  "y": 32
+                  "x": 1,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -87,7 +86,7 @@
               "back": {
                 "offset": {
                   "x": 32,
-                  "y": 32
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -97,8 +96,8 @@
               },
               "right": {
                 "offset": {
-                  "x": 32,
-                  "y": 32
+                  "x": 63,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -108,8 +107,8 @@
               },
               "left": {
                 "offset": {
-                  "x": 32,
-                  "y": 32
+                  "x": 77,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -119,8 +118,8 @@
               },
               "top": {
                 "offset": {
-                  "x": 32,
-                  "y": 32
+                  "x": 91,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -130,8 +129,8 @@
               },
               "bottom": {
                 "offset": {
-                  "x": 32,
-                  "y": 32
+                  "x": 122,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -143,7 +142,7 @@
             "unwrapMode": "custom",
             "visible": true,
             "doubleSided": false,
-            "shadingMode": "standard"
+            "shadingMode": "reflective"
           }
         },
         {
@@ -177,14 +176,13 @@
                 "x": 26.0,
                 "y": 1.0,
                 "z": 10.0
-              },
-              "isStaticBox": true
+              }
             },
             "textureLayout": {
               "front": {
                 "offset": {
-                  "x": 64,
-                  "y": 32
+                  "x": 153,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -194,8 +192,8 @@
               },
               "back": {
                 "offset": {
-                  "x": 64,
-                  "y": 32
+                  "x": 181,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -205,8 +203,8 @@
               },
               "right": {
                 "offset": {
-                  "x": 64,
-                  "y": 32
+                  "x": 209,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -216,8 +214,8 @@
               },
               "left": {
                 "offset": {
-                  "x": 64,
-                  "y": 32
+                  "x": 221,
+                  "y": 1
                 },
                 "mirror": {
                   "x": false,
@@ -227,8 +225,8 @@
               },
               "top": {
                 "offset": {
-                  "x": 64,
-                  "y": 32
+                  "x": 1,
+                  "y": 15
                 },
                 "mirror": {
                   "x": false,
@@ -238,8 +236,8 @@
               },
               "bottom": {
                 "offset": {
-                  "x": 64,
-                  "y": 32
+                  "x": 29,
+                  "y": 15
                 },
                 "mirror": {
                   "x": false,
@@ -251,7 +249,7 @@
             "unwrapMode": "custom",
             "visible": true,
             "doubleSided": false,
-            "shadingMode": "standard"
+            "shadingMode": "reflective"
           }
         },
         {
@@ -285,14 +283,13 @@
                 "x": 26.0,
                 "y": 1.0,
                 "z": 10.0
-              },
-              "isStaticBox": true
+              }
             },
             "textureLayout": {
               "front": {
                 "offset": {
-                  "x": 96,
-                  "y": 32
+                  "x": 57,
+                  "y": 15
                 },
                 "mirror": {
                   "x": false,
@@ -302,8 +299,8 @@
               },
               "back": {
                 "offset": {
-                  "x": 96,
-                  "y": 32
+                  "x": 85,
+                  "y": 15
                 },
                 "mirror": {
                   "x": false,
@@ -313,8 +310,8 @@
               },
               "right": {
                 "offset": {
-                  "x": 96,
-                  "y": 32
+                  "x": 113,
+                  "y": 15
                 },
                 "mirror": {
                   "x": false,
@@ -324,8 +321,8 @@
               },
               "left": {
                 "offset": {
-                  "x": 96,
-                  "y": 32
+                  "x": 125,
+                  "y": 15
                 },
                 "mirror": {
                   "x": false,
@@ -335,8 +332,8 @@
               },
               "top": {
                 "offset": {
-                  "x": 96,
-                  "y": 32
+                  "x": 137,
+                  "y": 15
                 },
                 "mirror": {
                   "x": false,
@@ -346,8 +343,8 @@
               },
               "bottom": {
                 "offset": {
-                  "x": 96,
-                  "y": 32
+                  "x": 165,
+                  "y": 15
                 },
                 "mirror": {
                   "x": false,
@@ -359,7 +356,7 @@
             "unwrapMode": "custom",
             "visible": true,
             "doubleSided": false,
-            "shadingMode": "standard"
+            "shadingMode": "reflective"
           }
         }
       ]
