@@ -24,4 +24,4 @@ The ore, raw material and refined ingot have separate inventory icons. Raw Optim
 
 This development addition introduces the material and its natural acquisition route. Existing Assembly Dock, Fleet Remote and Deployment Unit crafting costs are unchanged. Further robotics recipes can use the ingot in later updates.
 
-Automatic generation in a fresh normal world and unchanged saved terrain across reload have passed the isolated native-server checks. In-game appearance, inventory icons, physical mining and furnace interaction still need the client checks. This page is prepared locally and is not a new public release announcement.
+Native gameplay checks cover mining, Furnace processing, inventory icons and saved ingots across reload. The revised ore and ingot appearance has been reviewed in game beside native Hytale materials. Sound listening, the revised Furnace icon view and broader walking/clearance checks remain open. This page describes the local development addition.
