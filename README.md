@@ -22,13 +22,13 @@ Craft humanoid robots, link them to a Fleet Remote and control them one at a tim
 
 ![Fleet Remote roster showing two linked robots with control and unlink buttons](docs/assets/native/fleet-two-robots.jpg)
 
-*The Fleet Remote lets you select a linked robot. This earlier roster predates the name fields introduced in 0.2.2-dev; three rows per page are a page size, not a fleet limit.*
+*The Fleet Remote lets you select a linked robot. This earlier roster predates the robot-name fields; three rows per page are a page size, not a fleet limit.*
 
 The [player guide](https://jkswoods.github.io/optimus-link/) covers [inventories and recovery](https://jkswoods.github.io/optimus-link/hytale0.7/inventory/) and [troubleshooting](https://jkswoods.github.io/optimus-link/hytale0.7/troubleshooting/). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
 
 ## Development status
 
-This **0.2.3-dev compatibility candidate** targets **Hytale 0.7.3 / Java 25**, with singleplayer confirmation of the control-return fixes. The public GitHub 0.2.0-dev download remains the Hytale 0.7.2 build. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](https://jkswoods.github.io/optimus-link/hytale0.7/compatibility/) before testing.
+This **Hytale 0.7 support branch** uses **Java 25**, with singleplayer confirmation of the control-return fixes. Choose downloads by their exact game-patch requirements. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](https://jkswoods.github.io/optimus-link/hytale0.7/compatibility/) before testing.
 
 The banner is original mod artwork. Screenshots are native development captures; older captures do not establish acceptance of later animation or multiplayer changes.
 
@@ -40,7 +40,7 @@ Use your own server JAR and JDK 25. The dependency fingerprint must match `targe
 python3 tools/build.py --server PATH_TO_HYTALE_SERVER_JAR --jdk PATH_TO_JDK_25 --test
 ```
 
-The output is `build/OptimusLink-0.2.3-dev.jar`. Focused tests cover authority, inventory preservation, safe exits and native transport behavior. They do not replace gameplay verification.
+The build prints the mod JAR filename under `build/`. Focused tests cover authority, inventory preservation, safe exits and native transport behavior. They do not replace gameplay verification.
 
 ## Documentation
 
@@ -60,3 +60,5 @@ Current source targets Hytale `>=0.7.3 <0.8.0` and uses the `hytale0.7` support 
 
 See [the contribution guide](CONTRIBUTING.md) for feature and bug-fix PR targets.
 Maintainers handle forward/back ports, and support-branch PRs require owner approval.
+
+The player guide follows the Hytale support line and is updated independently of mod releases. Select downloads by their game compatibility and read the selected file’s release notes for included changes and artifact checksums.
