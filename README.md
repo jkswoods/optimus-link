@@ -16,7 +16,7 @@ Craft humanoid robots, link them to a Fleet Remote and control them one at a tim
 - Keep separate tools, equipment and storage on every robot.
 - Return to your body with **Release Control in hotbar slot 1**, then right-click; the control cannot be moved or dropped on death.
 
-[Install](docs/installation.md) · [Your first session](docs/getting-started.md) · [Recipes](docs/recipes.md) · [Fleet controls](docs/fleet.md) · [Screenshots](docs/gallery.md)
+[Install](https://jkswoods.github.io/optimus-link/hytale0.7/installation/) · [Your first session](https://jkswoods.github.io/optimus-link/hytale0.7/getting-started/) · [Recipes](https://jkswoods.github.io/optimus-link/hytale0.7/recipes/) · [Fleet controls](https://jkswoods.github.io/optimus-link/hytale0.7/fleet/) · [Screenshots](https://jkswoods.github.io/optimus-link/hytale0.7/gallery/)
 
 ## Choose your robot
 
@@ -24,11 +24,11 @@ Craft humanoid robots, link them to a Fleet Remote and control them one at a tim
 
 *The Fleet Remote lets you select a linked robot. This earlier roster predates the name fields introduced in 0.2.2-dev; three rows per page are a page size, not a fleet limit.*
 
-The [player guide](https://jkswoods.github.io/optimus-link/) covers [inventories and recovery](docs/inventory.md) and [troubleshooting](docs/troubleshooting.md). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
+The [player guide](https://jkswoods.github.io/optimus-link/) covers [inventories and recovery](https://jkswoods.github.io/optimus-link/hytale0.7/inventory/) and [troubleshooting](https://jkswoods.github.io/optimus-link/hytale0.7/troubleshooting/). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
 
 ## Development status
 
-This **0.2.3-dev compatibility candidate** targets **Hytale 0.7.3 / Java 25**, with singleplayer confirmation of the control-return fixes. The public GitHub 0.2.0-dev download remains the Hytale 0.7.2 build. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](docs/compatibility.md) before testing.
+This **0.2.3-dev compatibility candidate** targets **Hytale 0.7.3 / Java 25**, with singleplayer confirmation of the control-return fixes. The public GitHub 0.2.0-dev download remains the Hytale 0.7.2 build. Use a disposable test world. Some animation transitions, human sound listening and actual second-client play remain under review. See [compatibility and backups](https://jkswoods.github.io/optimus-link/hytale0.7/compatibility/) before testing.
 
 The banner is original mod artwork. Screenshots are native development captures; older captures do not establish acceptance of later animation or multiplayer changes.
 
@@ -42,15 +42,11 @@ python3 tools/build.py --server PATH_TO_HYTALE_SERVER_JAR --jdk PATH_TO_JDK_25 -
 
 The output is `build/OptimusLink-0.2.3-dev.jar`. Focused tests cover authority, inventory preservation, safe exits and native transport behavior. They do not replace gameplay verification.
 
-## Build the guide and development package
+## Documentation
 
-```sh
-python -m pip install -r requirements-docs.txt
-python tools/build_docs.py
-python3 tools/package.py --jar build/OptimusLink-0.2.3-dev.jar
-```
+The [versioned player guide](https://jkswoods.github.io/optimus-link/) is maintained on the separate [`docs` branch](https://github.com/jkswoods/optimus-link/tree/docs). In that checkout, run `npm ci --ignore-scripts`, `npm run build` and `npm run check`. Select `docs` when manually dispatching its Pages workflow.
 
-The guide helper uses the archive epoch in `target.json` for reproducible output. Packaging includes the JAR, built player guide and checksums. It does not install, upload or publish the mod.
+To create a development bundle, supply the separately built guide with `python3 tools/package.py --jar BUILD.jar --site PATH_TO_DOCS_SITE`.
 
 Original models, animations and connected ElevenLabs audio are included. The operator's body remains exposed under normal world damage rules while controlling a robot.
 
@@ -58,4 +54,9 @@ No redistribution license has been selected. This independent fan mod is not aff
 
 ## Compatibility and builds
 
-Current source targets Hytale `>=0.7.3 <0.8.0` and uses the `hytale0.7` support branch. See [build and release instructions](docs/build-and-release.md) for the SDK pin, candidate checks, versioned filenames and CurseForge workflow.
+Current source targets Hytale `>=0.7.3 <0.8.0` and uses the `hytale0.7` support branch. See [build and release instructions](https://jkswoods.github.io/optimus-link/hytale0.7/build-and-release/) for the SDK pin, candidate checks, versioned filenames and CurseForge workflow.
+
+## Contributing
+
+See [the contribution guide](CONTRIBUTING.md) for feature and bug-fix PR targets.
+Maintainers handle forward/back ports, and support-branch PRs require owner approval.

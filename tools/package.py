@@ -8,7 +8,7 @@ from release_pipeline import config
 ROOT=Path(__file__).resolve().parents[1]
 def digest(data):return hashlib.sha256(data).hexdigest()
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--jar',type=Path,required=True);ap.add_argument('--site',type=Path,default=ROOT/'site');ap.add_argument('--out',type=Path,default=ROOT/'build/packages');args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--jar',type=Path,required=True);ap.add_argument('--site',type=Path,required=True,help='Built site from the separate docs checkout');ap.add_argument('--out',type=Path,default=ROOT/'build/packages');args=ap.parse_args()
     target=json.loads((ROOT/'target.json').read_text());version=config(ROOT/'release.json')['version'];jar=args.jar.read_bytes()
     with ZipFile(args.jar) as z:
         manifest=json.loads(z.read('manifest.json'))
