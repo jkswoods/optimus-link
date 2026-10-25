@@ -6,9 +6,20 @@ title: "Support-line changes"
 
 Changes described here belong to the **Hytale 0.7 support line**. Download availability, numbered release history and the changes included in a particular file are recorded on [GitHub releases](https://github.com/jkswoods/optimus-link/releases).
 
+## Fleet Handset and robot appearance
+
+- Search a scrolling fleet by name and sort by nearest distance, farthest distance or name.
+- See each robot's actual appearance, availability and distance; unavailable robots remain visible with editing and control disabled.
+- Use the portrait pencil to edit a robot's name and choose from six colours in a bust preview.
+- Save name and colour together, or close the editor with its X to discard the draft.
+- Confirm before unlinking; the robot keeps its ownership, name, colour and possessions.
+- Retain saved appearances through normal reload without replacing the robot or its inventory.
+
+The handset has native checks on Hytale 0.7.4. See [Fleet controls](fleet.md) and the [current UI screenshots](gallery.md).
+
 ## Control return and interaction corrections {#023-dev-control-return-and-interaction-corrections}
 
-Development candidate for Hytale 0.7.3; the corrected build still needs an in-game retest.
+The control-return and hotbar interaction fixes have singleplayer confirmation. Remaining listening, animation and multiplayer limits are listed under [Compatibility and backups](compatibility.md).
 
 - Correct the crash when returning from a robot to your body.
 - Preserve native hotbar switching away from the virtual Release Control button.
@@ -25,7 +36,7 @@ Earlier test candidate: a return-to-body crash and blocked interaction after sel
 - Initialize robot crafting so native workbenches can open.
 - Allow creative blocks in ordinary robot slots while keeping Release Control protected.
 - Refresh local interaction bindings on control handoff and show an Assembly Dock placement preview.
-- Update Fleet pagination in place and disable navigation at its boundaries.
+- Keep Fleet updates on the same native page; the handset now uses a scrolling roster.
 - Require right-clicking Release Control after selecting slot 1, so scrolling onto it does not release by accident.
 
 ## Hytale 0.7.3 compatibility {#021-dev-hytale-073-compatibility}
@@ -48,7 +59,7 @@ Earlier test candidate: a return-to-body crash and blocked interaction after sel
 
 - Corrected Fleet Remote and Release Control inventory icons.
 - Stopped the parked operator body from mirroring Optimus walk/run animations.
-- Reserved robot hotbar slot 1 for **Release Control**. Select it to return; the button cannot be moved or dropped, including on death. Existing equipment moves to a free robot slot before control begins.
+- Reserved robot hotbar slot 1 for **Release Control**. Select it, then right-click to return; the button cannot be moved or dropped, including on death. Existing equipment moves to a free robot slot before control begins.
 - Corrected the held-tool grip, chest interactions and inventory selection when returning to the operator.
 - Preserved the normal operator Respawn screen and prevented destroyed robots from reviving.
 

@@ -10,19 +10,35 @@ A Fleet Remote holds links to several robots. Each robot can link to **one remot
 
 Use the remote's secondary action while aiming at one of your robots within 5 blocks. The remote binds to its first user and world. Trading it does not transfer ownership or allow another player to control your robots.
 
-The roster shows three robots per page; use **Previous** and **Next** to see the rest. Navigation is disabled at the first and last page. Choose **Assume control** beside a loaded robot within 128 blocks of your body. Release your current robot before selecting another.
+## Find a robot {#find-a-robot}
 
-Use **Unlink** on a parked robot to free it for another remote. Ownership, equipment and storage stay with the robot. If the old remote is lost, follow [nearby link recovery](inventory.md#replace-a-lost-remote).
+The handset shows a scrolling list of linked robots with appearance portraits, names, availability and distance from your body. Type part of a name into **Search robots by name** to filter the list; search ignores letter case. Clear the field to see the full fleet again.
 
-![Fleet Remote with two linked Optimus robots and separate control and unlink buttons](/assets/hytale0.7/native/fleet-two-robots.jpg)
+Use the sort menu to choose **Distance: nearest**, **Distance: farthest** or **Name: A–Z**. Unloaded robots have no known distance and stay at the end of distance-sorted lists. Search and sorting only change the list; they do not change links or robot ownership.
 
-*Earlier roster, before robot-name fields were added. Three visible rows are a page size, rather than a fleet limit.*
+Choose **Assume control** beside a ready robot within 128 blocks of your body. A faded entry marked **Out of range**, **Unloaded** or **In use** cannot be controlled or edited. The remote does not load distant chunks. Release your current robot before selecting another.
 
-[View the roster at full size](/assets/hytale0.7/native/fleet-two-robots.jpg).
+![Native scrolling fleet roster with distances and a disabled out-of-range robot](/assets/hytale0.7/native/fleet-handset-roster.png)
 
-## Name your robots {#name-your-robots}
+*Hytale 0.7.4: five visible rows from a six-robot fleet. Scroll to reach the rest; distances and availability follow the world state.*
 
-Enter a name beside a linked robot and choose **Save**. Names accept up to 24 letters, numbers, spaces, apostrophes, hyphens or underscores. A blank name restores its default short ID. Names stay with the robot after unlinking, relinking and reloading; they do not change ownership or inventory.
+## Edit a robot {#name-your-robots}
+
+Choose the pencil in the top-right corner of a robot's portrait to open **Edit robot**. The robot must be loaded, idle, linked to your held remote and within 128 blocks.
+
+- **Name:** enter up to 24 letters, numbers, spaces, apostrophes, hyphens or underscores. A blank name restores the robot's default short ID.
+- **Colour:** choose white, graphite, blue, ochre, green or red. The preview shows the selected appearance before saving.
+- **Save changes:** commits the name and colour together. The editor’s **X** discards unsaved changes.
+
+Saved names and colours stay with the robot after unlinking, relinking and normal save/reload. Existing robots keep their original white appearance until you choose another colour. Appearance changes keep the same robot, equipment and storage.
+
+![Native portrait editor docked beside the selected robot in the roster](/assets/hytale0.7/native/fleet-handset-editor.png)
+
+*Hytale 0.7.4: the selected row stays highlighted while you preview a name or colour change. Save changes to apply them, or close the editor with its X to discard the preview.*
+
+## Unlink a robot {#unlink-a-robot}
+
+Open the portrait editor, choose **Unlink robot**, then **Confirm unlink**. Choose **Cancel** to keep the link. Unlinking frees the robot for another remote and preserves its ownership, colour, equipment and stored items. If the old remote is lost, follow [nearby link recovery](inventory.md#replace-a-lost-remote).
 
 ## Control a robot {#control-a-robot}
 

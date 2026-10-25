@@ -16,6 +16,8 @@ Use the JAR for your game version. Save normally and retain the matching world/p
 
 The previous Hytale 0.7.2 build has native coverage for crafting, deployment, exclusive links, separate inventories, tool actions, chest transfers and normal save/reload. The 0.7.3 candidate retains those behaviors, corrected inventory icons and the protected slot 1 release control; its control-return corrections have been confirmed in singleplayer.
 
+The Fleet Handset has native checks on Hytale 0.7.4 for search, sorting, appearance editing, unavailable controls and normal name/colour reload. Robot appearances keep the same underlying entity and inventory.
+
 Some animation transitions, human sound listening and actual second-client play remain unverified. Multiplayer contention, recovery and sound audiences therefore remain outside confirmed support.
 
 Focused checks have exercised manual/range returns, disconnect, unload, world-change handling, operator respawn and robot destruction. These are development checks, not a guarantee against every crash or mod conflict. Release control before changing worlds. Robots and bound remotes stay in their original world; fleet migration is unavailable.
