@@ -1,0 +1,11 @@
+{
+  "latest": "hytale0.7",
+  "families": {
+    "hytale0.7": {
+      "sourceBranch": "hytale0.7",
+      "sourceCommit": "4f0d8b2fdfcb57a96f7d64d5b2b257d4917e4499",
+      "modVersion": "0.2.3-dev.1",
+      "serverVersion": ">=0.7.3 <0.8.0"
+    }
+  }
+}

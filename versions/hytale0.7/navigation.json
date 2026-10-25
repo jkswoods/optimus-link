@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Overview",
+    "path": "/",
+    "icon": "house"
+  },
+  {
+    "title": "Installation",
+    "path": "/installation",
+    "icon": "download"
+  },
+  {
+    "title": "First session",
+    "path": "/getting-started",
+    "icon": "rocket"
+  },
+  {
+    "title": "Crafting",
+    "path": "/recipes",
+    "icon": "book-open"
+  },
+  {
+    "title": "Fleet and controls",
+    "path": "/fleet",
+    "icon": "book-open"
+  },
+  {
+    "title": "Inventory and recovery",
+    "path": "/inventory",
+    "icon": "book-open"
+  },
+  {
+    "title": "Configuration",
+    "path": "/configuration",
+    "icon": "settings"
+  },
+  {
+    "title": "Compatibility and backups",
+    "path": "/compatibility",
+    "icon": "book-open"
+  },
+  {
+    "title": "Troubleshooting",
+    "path": "/troubleshooting",
+    "icon": "circle-help"
+  },
+  {
+    "title": "Screenshots",
+    "path": "/gallery",
+    "icon": "images"
+  },
+  {
+    "title": "Changelog",
+    "path": "/changelog",
+    "icon": "history"
+  },
+  {
+    "title": "Build and releases",
+    "path": "/build-and-release",
+    "icon": "workflow"
+  }
+]
