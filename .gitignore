@@ -19,3 +19,11 @@ __pycache__/
 *.hprof
 *.dump
 *.dmp
+
+build/
+.cache/
+candidate/
+cf-*.json
+cf-request.env
+candidate-run.json
+curseforge-upload.json

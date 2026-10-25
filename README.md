@@ -55,3 +55,7 @@ The guide helper uses the archive epoch in `target.json` for reproducible output
 Original models, animations and connected ElevenLabs audio are included. The operator's body remains exposed under normal world damage rules while controlling a robot.
 
 No redistribution license has been selected. This independent fan mod is not affiliated with Tesla or Hytale.
+
+## Compatibility and builds
+
+Current source targets Hytale `>=0.7.3 <0.8.0` and uses the `hytale0.7` support branch. See [build and release instructions](docs/build-and-release.md) for the SDK pin, candidate checks, versioned filenames and CurseForge workflow.

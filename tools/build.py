@@ -2,6 +2,7 @@
 """Pinned local build; never installs, launches or downloads Hytale."""
 from pathlib import Path
 import argparse,hashlib,json,os,shutil,subprocess
+from release_pipeline import config, filename
 
 ROOT=Path(__file__).resolve().parents[1]
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -23,7 +24,8 @@ def main():
         runtime_cp=os.pathsep.join(map(str,[classes,tests,args.server]))
         for suite in ('core.FleetRegistryTest','core.FleetStateCodecTest','core.ControlOutputScopeTest','core.LegacyPageReceiptsTest','FleetFeaturesTest','RobotCraftingTest','FleetPageTest','RobotPlayerStorageTest','NativeActorComponentsTest','ActorHandlerTest','ActorActionStateTest','NativeMusicLifecycleTest','RobotDeathTest','RobotReleaseControlTest','ModelGripTest'):
             subprocess.run([str(java),'-ea','-cp',runtime_cp,'dev.optimuslink.'+suite],check=True)
-    artifact=out/('OptimusLink-'+pin['version']+'.jar')
+    artifact=out/'libs'/filename(config(ROOT/'release.json'))
+    artifact.parent.mkdir(parents=True,exist_ok=True)
     subprocess.run([str(jar),'--create','--date='+pin['archive_date'],'--file',str(artifact),'-C',str(classes),'.'],check=True)
     (out/'SHA256SUMS.txt').write_text(digest(artifact)+'  '+artifact.name+'\n')
     print(artifact.name,digest(artifact))

@@ -1,0 +1,16 @@
+{
+  "modId": "OptimusLink",
+  "hytaleFamily": "0.7",
+  "manifest": "src/main/resources/manifest.json",
+  "sdkTarget": {
+    "path": "target.json",
+    "versionKey": "hytale"
+  },
+  "artifact": "build/libs/{modId}-hytale{hytaleFamily}-{version}.jar",
+  "curseforge": {
+    "projectId": 1760190,
+    "gameVersion": "0.7",
+    "releaseType": "alpha",
+    "manualRelease": false
+  }
+}
