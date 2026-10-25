@@ -58,6 +58,13 @@ final class RobotLifecycle extends RefSystem<EntityStore> {
         if(record!=null&&record.entity().equals(uuid.getUuid()))buffer.putComponent(ref,
             com.hypixel.hytale.server.core.entity.nameplate.Nameplate.getComponentType(),
             new com.hypixel.hytale.server.core.entity.nameplate.Nameplate(record.displayName()));
+        if(record!=null&&record.entity().equals(uuid.getUuid())&&!record.colour().equals("white")) {
+            var model=RobotAppearance.model(record.colour());
+            buffer.putComponent(ref,com.hypixel.hytale.server.core.modules.entity.component.ModelComponent.getComponentType(),
+                new com.hypixel.hytale.server.core.modules.entity.component.ModelComponent(model));
+            buffer.putComponent(ref,com.hypixel.hytale.server.core.modules.entity.component.PersistentModel.getComponentType(),
+                new com.hypixel.hytale.server.core.modules.entity.component.PersistentModel(model.toReference()));
+        }
     }
     @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer) {
         if(reason!=RemoveReason.REMOVE)return;

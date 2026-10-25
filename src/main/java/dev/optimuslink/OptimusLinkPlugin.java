@@ -24,6 +24,7 @@ public final class OptimusLinkPlugin extends JavaPlugin {
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent.class,event->NativeControl.disconnected(event.getPlayerRef()));
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent.class,event->NativeControl.worldLeaving(event.getWorld()));
         getEntityStoreRegistry().registerSystem(new NativeControl.Tick());
+        getEntityStoreRegistry().registerSystem(new FleetPage.Tick());
         getEntityStoreRegistry().registerSystem(new OperatorWorldTransfer());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle.Load());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle());
@@ -41,6 +42,7 @@ public final class OptimusLinkPlugin extends JavaPlugin {
         NativeControl.installOutputFilter();
     }
     @Override protected void shutdown() {
+        FleetPage.OPEN.clear();
         NativeControl.stopAll();NativeControl.removeOutputFilter();
         // Plugin shutdown precedes Universe shutdown. Retain the transparent storage decorator
         // through its final entity/player saves; the server process disposes it with Universe.

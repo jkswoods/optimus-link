@@ -1,0 +1,28 @@
+$H = "Handset.ui";
+$C = "../../Common.ui";
+Group {
+ Anchor: (Height: 124); LayoutMode: Top;
+ Group {
+  Anchor: (Height: 123); Padding: (Left: 12, Right: 24, Top: 8, Bottom: 7); LayoutMode: Left;
+  Group { Anchor: (Width: 156, Height: 108); Background: (TexturePath: "PortraitFrame.png", Border: 3); Padding: (Full: 3);
+   Group #Portrait { Background: (TexturePath: "Portraits/white-roster.png"); }
+   Button #Edit { Anchor: (Width: 44, Height: 44, Top: 0, Right: 0); Padding: (Full: 8); Style: $H.@PencilStyle; TooltipText: "Edit robot"; TextTooltipStyle: $C.@DefaultTextTooltipStyle;
+    Group { Background: (TexturePath: "Pencil.png"); HitTestVisible: false; }
+   }
+   Group #Dim { Visible: false; Background: #101b2b(0.62); HitTestVisible: false; }
+  }
+  Group { Anchor: (Width: 44); }
+  Group { FlexWeight: 1; LayoutMode: Top; Padding: (Top: 24);
+   Label #Name { Anchor: (Height: 38); Style: (FontSize: 30, TextColor: #edf2f7, RenderBold: true); }
+   Group { Anchor: (Height: 30); LayoutMode: Left;
+    Group #StatusDot { Anchor: (Width: 14, Height: 14, Top: 7); Background: #76dc65; }
+    Group { Anchor: (Width: 12); }
+    Label #Status { FlexWeight: 1; Style: (FontSize: 20, TextColor: #b5c7dc, VerticalAlignment: Center); }
+   }
+  }
+  Label #Distance { Anchor: (Width: 210); Style: (FontSize: 22, TextColor: #bbcce4, VerticalAlignment: Center); }
+  Group { Anchor: (Width: 24); }
+  TextButton #Assume { Anchor: (Width: 266, Height: 60, Top: 24); Text: "Assume control"; Style: $H.@ActionStyle; }
+ }
+
+}

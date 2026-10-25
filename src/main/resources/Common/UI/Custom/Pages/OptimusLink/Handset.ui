@@ -1,0 +1,54 @@
+$C = "../../Common.ui";
+@Header = PatchStyle(TexturePath: "Header.png", Border: 3);
+@PanelBody = PatchStyle(TexturePath: "PanelBody.png", Border: 8);
+@ActionLabel = LabelStyle(FontSize: 22, TextColor: #edf4ff, RenderUppercase: false, HorizontalAlignment: Center, VerticalAlignment: Center);
+@ActionDisabledLabel = LabelStyle(...@ActionLabel, TextColor: #91a0b5);
+@ActionStyle = TextButtonStyle(
+ Default: (Background: (TexturePath: "Action.png", Border: 3), LabelStyle: @ActionLabel),
+ Hovered: (Background: (TexturePath: "ActionHovered.png", Border: 3), LabelStyle: @ActionLabel),
+ Pressed: (Background: (TexturePath: "ActionPressed.png", Border: 3), LabelStyle: @ActionLabel),
+ Disabled: (Background: (TexturePath: "ActionDisabled.png", Border: 3), LabelStyle: @ActionDisabledLabel),
+ Sounds: $C.@ButtonSounds
+);
+@CloseStyle = ButtonStyle(
+ Default: (Background: (TexturePath: "Close.png", Border: 3)),
+ Hovered: (Background: (TexturePath: "CloseHovered.png", Border: 3)),
+ Pressed: (Background: (TexturePath: "ClosePressed.png", Border: 3)),
+ Sounds: $C.@ButtonsCancel
+);
+@PencilStyle = ButtonStyle(
+ Default: (Background: (TexturePath: "Field.png", Border: 3)),
+ Hovered: (Background: (TexturePath: "FieldHovered.png", Border: 3)),
+ Pressed: (Background: (TexturePath: "Field.png", Border: 3)),
+ Disabled: (Background: (TexturePath: "ActionDisabled.png", Border: 3)),
+ Sounds: $C.@ButtonSounds
+);
+@SwatchStyle = ButtonStyle(
+ Default: (Background: (TexturePath: "Swatch.png", Border: 3)),
+ Hovered: (Background: (TexturePath: "FieldHovered.png", Border: 3)),
+ Pressed: (Background: (TexturePath: "Swatch.png", Border: 3)),
+ Sounds: $C.@ButtonSounds
+);
+@UnlinkLabel = LabelStyle(FontSize: 22, TextColor: #f18181, HorizontalAlignment: Center, VerticalAlignment: Center);
+@UnlinkStyle = TextButtonStyle(
+ Default: (Background: (TexturePath: "UnlinkButton.png", Border: 3), LabelStyle: @UnlinkLabel),
+ Hovered: (Background: (TexturePath: "UnlinkHovered.png", Border: 3), LabelStyle: @UnlinkLabel),
+ Pressed: (Background: (TexturePath: "UnlinkButton.png", Border: 3), LabelStyle: @UnlinkLabel),
+ Disabled: (Background: (TexturePath: "ActionDisabled.png", Border: 3), LabelStyle: (...@UnlinkLabel, TextColor: #788493)),
+ Sounds: $C.@ButtonsCancel
+);
+@InputStyle = InputFieldStyle(FontSize: 22, TextColor: #edf2fa);
+@PlaceholderStyle = InputFieldStyle(FontSize: 22, TextColor: #8fa9c8);
+@SortStyle = DropdownBoxStyle(
+ ...$C.@DefaultDropdownBoxStyle,
+ DefaultBackground: (TexturePath: "Field.png", Border: 3),
+ HoveredBackground: (TexturePath: "FieldHovered.png", Border: 3),
+ PressedBackground: (TexturePath: "Field.png", Border: 3),
+ DefaultArrowTexturePath: "Chevron.png", HoveredArrowTexturePath: "Chevron.png", PressedArrowTexturePath: "ChevronUp.png",
+ ArrowWidth: 20, ArrowHeight: 12,
+ LabelStyle: (FontSize: 22, TextColor: #edf2fa, RenderUppercase: false, VerticalAlignment: Center),
+ EntryLabelStyle: (FontSize: 21, TextColor: #c4d3e8, RenderUppercase: false, VerticalAlignment: Center),
+ SelectedEntryLabelStyle: (FontSize: 21, TextColor: #edf2fa, RenderUppercase: false, RenderBold: true, VerticalAlignment: Center),
+ HorizontalPadding: 18, EntryHeight: 46, EntriesInViewport: 3
+);
+@Scrollbar = ScrollbarStyle(Spacing: 12, Size: 12, Background: (Color: #111d2b), Handle: (TexturePath: "ScrollHandle.png", Border: 3), HoveredHandle: (TexturePath: "ScrollHandle.png", Border: 3), DraggedHandle: (TexturePath: "ScrollHandle.png", Border: 3));

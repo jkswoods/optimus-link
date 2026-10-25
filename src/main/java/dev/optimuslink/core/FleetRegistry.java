@@ -34,13 +34,20 @@ public final class FleetRegistry {
     public record Remote(UUID id, UUID owner) {
         public Remote { Objects.requireNonNull(id); Objects.requireNonNull(owner); }
     }
-    public record Robot(UUID id, UUID owner, UUID world, UUID entity, UUID remote, String name) {
-        public Robot { Objects.requireNonNull(id); Objects.requireNonNull(owner); Objects.requireNonNull(world); Objects.requireNonNull(entity);name=validName(name); }
+    public record Robot(UUID id, UUID owner, UUID world, UUID entity, UUID remote, String name, String colour) {
+        public Robot { Objects.requireNonNull(id); Objects.requireNonNull(owner); Objects.requireNonNull(world); Objects.requireNonNull(entity);name=validName(name);colour=validColour(colour); }
+        public Robot(UUID id,UUID owner,UUID world,UUID entity,UUID remote,String name) { this(id,owner,world,entity,remote,name,"white"); }
         public Robot(UUID id,UUID owner,UUID world,UUID entity,UUID remote) { this(id,owner,world,entity,remote,""); }
-        Robot linkedTo(UUID next) { return new Robot(id,owner,world,entity,next,name); }
+        Robot linkedTo(UUID next) { return new Robot(id,owner,world,entity,next,name,colour); }
         public String displayName() { return name.isEmpty()?"OPTIMUS "+id.toString().substring(0,8).toUpperCase(java.util.Locale.ROOT):name; }
     }
     public static final int NAME_LIMIT=24;
+    public static final List<String> COLOURS=List.of("white","graphite","blue","ochre","green","red");
+    public static String validColour(String input) {
+        if(input==null)return "white";
+        if(!COLOURS.contains(input))throw new IllegalArgumentException("Choose one of the six robot colours.");
+        return input;
+    }
     private static String validName(String input) {
         var name=input==null?"":input.strip();
         if(name.codePointCount(0,name.length())>NAME_LIMIT||name.codePoints().anyMatch(c->!Character.isLetterOrDigit(c)&&c!=' '&&c!='-'&&c!='_'&&c!='\''))
@@ -82,11 +89,15 @@ public final class FleetRegistry {
     }
     /** Rename only a parked robot linked to the remote the operator is holding. */
     public synchronized boolean rename(UUID operator,UUID remoteId,UUID robotId,String name) {
+        return configure(operator,remoteId,robotId,name,ownedRobot(operator,robotId).colour());
+    }
+    /** Name and colour commit together; no intermediate partial edit is persisted. */
+    public synchronized boolean configure(UUID operator,UUID remoteId,UUID robotId,String name,String colour) {
         ownedRemote(operator,remoteId);var robot=ownedRobot(operator,robotId);
         if(!remoteId.equals(robot.remote()))throw new Denied(Refusal.NOT_LINKED);
         if(byRobot.containsKey(robotId))throw new Denied(Refusal.ROBOT_BUSY);
-        var next=validName(name);if(next.equals(robot.name()))return false;
-        robots.put(robotId,new Robot(robot.id(),robot.owner(),robot.world(),robot.entity(),robot.remote(),next));revision++;return true;
+        var next=validName(name);var paint=validColour(colour);if(next.equals(robot.name())&&paint.equals(robot.colour()))return false;
+        robots.put(robotId,new Robot(robot.id(),robot.owner(),robot.world(),robot.entity(),robot.remote(),next,paint));revision++;return true;
     }
     /** Explicit owner recovery for a lost remote; never changes ownership or inventory. */
     public synchronized boolean recover(UUID operator,UUID robotId) {

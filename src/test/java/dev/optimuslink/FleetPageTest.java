@@ -50,6 +50,11 @@ public final class FleetPageTest {
             store.getResource(OptimusLinkPlugin.stateType).fleet().createRemote(remote,owner);
             var page=new FleetPage(playerRef,remote,0,"");var manager=player.getPageManager();manager.openCustomPage(ref,store,page);
             check(wire.packets.removeFirst() instanceof CustomPage p&&p.isInitial,"one initial Fleet page opens");ack(manager);
+            var stale=new FleetPage.Action();stale.nonce=(String)field(FleetPage.class,"nonce").get(page);stale.action="Save";stale.editor="old-editor";stale.name="Wrong robot";
+            field(FleetPage.class,"editing").set(page,UUID.randomUUID());field(FleetPage.class,"editorNonce").set(page,"new-editor");
+            page.handleDataEvent(ref,store,stale);
+            check(wire.packets.isEmpty(),"a delayed Save from a closed editor is ignored before it can affect the newly selected robot");
+            field(FleetPage.class,"editing").set(page,null);
             var refresh=FleetPage.class.getDeclaredMethod("refresh",int.class,String.class);refresh.setAccessible(true);
             for(int i=0;i<5;i++) {
                 refresh.invoke(page,0,"");

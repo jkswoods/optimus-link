@@ -1,0 +1,15 @@
+{
+  "Layers": [
+    {
+      "Files": [
+        "Sounds/OptimusLink/handset_save_inventory.ogg"
+      ],
+      "Volume": 0,
+      "Looping": false
+    }
+  ],
+  "Volume": 0,
+  "MaxInstance": 2,
+  "SpatialBlend": 0,
+  "AudioCategory": "AudioCat_Inventory"
+}

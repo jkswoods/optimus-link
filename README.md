@@ -11,7 +11,8 @@ Craft humanoid robots, link them to a Fleet Remote and control them one at a tim
 *Build your first fleet: Workbench on the left, storage in the centre, Assembly Dock on the right and a deployed robot behind them.*
 
 - Craft the Assembly Dock, Fleet Remote and robot deployment units.
-- Link several robots to one remote and choose which to control.
+- Link several robots to one remote; search by name, sort by distance and choose which to control.
+- Name and recolour robots through their portrait editor, with saved individual appearances.
 - Walk, look, jump, mine, place and use equipment through your robot.
 - Keep separate tools, equipment and storage on every robot.
 - Return to your body with **Release Control in hotbar slot 1**, then right-click; the control cannot be moved or dropped on death.
@@ -20,9 +21,11 @@ Craft humanoid robots, link them to a Fleet Remote and control them one at a tim
 
 ## Choose your robot
 
-![Fleet Remote roster showing two linked robots with control and unlink buttons](docs/assets/native/fleet-two-robots.jpg)
+![Native Fleet Handset showing a scrolling roster, robot portraits, distances and disabled out-of-range controls](docs/assets/native/fleet-handset-roster.png)
 
-*The Fleet Remote lets you select a linked robot. This earlier roster predates the robot-name fields; three rows per page are a page size, not a fleet limit.*
+*The native handset in Hytale 0.7.4. Search and sort the roster, then use a portrait’s pencil to edit its name and colour. Out-of-range robots remain visible with control and editing disabled.*
+
+![Fleet Handset with the selected robot’s name and colour editor beside the roster](docs/assets/native/fleet-handset-editor.png)
 
 The [player guide](https://jkswoods.github.io/optimus-link/) covers [inventories and recovery](https://jkswoods.github.io/optimus-link/hytale0.7/inventory/) and [troubleshooting](https://jkswoods.github.io/optimus-link/hytale0.7/troubleshooting/). The Assembly Dock crafts equipment without fuel or power; charging and autonomous jobs are outside this version.
 
