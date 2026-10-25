@@ -20,6 +20,11 @@
     "icon": "book-open"
   },
   {
+    "title": "Optimium ore",
+    "path": "/optimium",
+    "icon": "gem"
+  },
+  {
     "title": "Fleet and controls",
     "path": "/fleet",
     "icon": "book-open"

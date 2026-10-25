@@ -26,3 +26,7 @@ For one dock, one remote and **two robots**, prepare **38 Iron Bars, 22 Copper B
 The robot's deployment unit and remote each stack to one. Their roles differ: the unit is consumed to deploy a robot, while the remote retains links and opens the fleet roster.
 
 The Assembly Dock is a crafting bench in this version. There are no tiers, modules, fuel requirements or charging upgrades. Build more robots when you need separate inventories or equipment loadouts.
+
+## Optimium processing {#optimium-processing}
+
+The development material addition defines **1 Raw Optimium → 1 Optimium Ingot** at the stock Furnace, with normal fuel and a base processing time of **14 seconds**. See [Optimium ore](optimium.md) for generation, mining and verification status. The robotics recipes above keep their current ingredients.

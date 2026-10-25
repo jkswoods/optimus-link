@@ -6,6 +6,10 @@ title: "Support-line changes"
 
 Changes described here belong to the **Hytale 0.7 support line**. Download availability, numbered release history and the changes included in a particular file are recorded on [GitHub releases](https://github.com/jkswoods/optimus-link/releases).
 
+## Optimium material development
+
+Added natural Optimium veins in newly generated ordinary stone, raw ore drops and a one-to-one Furnace recipe for Optimium Ingots. Existing explored chunks and current robotics ingredient costs are preserved. Native acceptance checks are pending.
+
 ## Fleet Handset and robot appearance
 
 - Search a scrolling fleet by name and sort by nearest distance, farthest distance or name.
