@@ -13,7 +13,7 @@ final class FleetRoster {
         Entry(FleetRegistry.Robot robot,double squaredDistance,boolean loaded,boolean busy) { this(robot,squaredDistance,loaded,busy,ControlRange.contains(squaredDistance),0); }
         boolean available() { return loaded&&!busy&&reachable; }
         String distance() { return Double.isFinite(squaredDistance)&&squaredDistance>=0 ? (long)Math.ceil(Math.sqrt(squaredDistance))+" blocks":"--"; }
-        String status() { return !loaded?(connecting?"Connecting...":"Unloaded"):busy?"In use":available()?(relays>0?"Ready · "+relays+" relay"+(relays==1?"":"s"):"Ready"):"Out of range"; }
+        String status() { return !loaded?(connecting?"Connecting...":"Out of range"):busy?"In use":available()?(relays>0?"Ready · "+relays+" relay"+(relays==1?"":"s"):"Ready"):"Out of range"; }
     }
     private FleetRoster() {}
     static List<Entry> select(List<Entry> entries,String search,String order) {

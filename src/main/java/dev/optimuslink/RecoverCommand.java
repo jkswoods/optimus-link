@@ -20,7 +20,7 @@ final class RecoverCommand extends AbstractPlayerCommand {
         try {
             var fleet=OptimusLinkPlugin.state(store).fleet();var record=fleet.ownedRobot(operator.getUuid(),robot.get(context));
             var target=store.getExternalData().getRefFromUUID(record.entity());
-            if(target==null||!target.isValid())throw new IllegalStateException("Move within 5 blocks of your loaded robot before recovery.");
+            if(target==null||!target.isValid())throw new IllegalStateException("Move within 5 blocks of your robot before recovery.");
             var identity=store.getComponent(target,OptimusLinkPlugin.robotType);
             var a=store.getComponent(ref,TransformComponent.getComponentType());var b=store.getComponent(target,TransformComponent.getComponentType());
             if(identity==null||!identity.id.equals(record.id())||a==null||b==null||a.getPosition().distanceSquared(b.getPosition())>25)throw new IllegalStateException("Move within 5 blocks of your robot before recovery.");

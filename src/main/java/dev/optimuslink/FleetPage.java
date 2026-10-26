@@ -82,7 +82,7 @@ final class FleetPage extends InteractiveCustomUIPage<FleetPage.Action> {
     private FleetRoster.Entry editable(Ref<EntityStore> ref,Store<EntityStore> store,UUID id) {
         var entry=entries(ref,store).stream().filter(r->r.robot().id().equals(id)).findFirst()
             .orElseThrow(()->new IllegalStateException("This robot is no longer linked to this remote."));
-        if(!entry.available())throw new IllegalStateException("Reach a loaded, idle robot directly or through your linked mast network to edit it.");
+        if(!entry.available())throw new IllegalStateException("Reach an idle robot directly or through your linked mast network to edit it.");
         return entry;
     }
     private void renderRoster(Ref<EntityStore> ref,Store<EntityStore> store,UICommandBuilder c,UIEventBuilder e,boolean rebuildRows) {

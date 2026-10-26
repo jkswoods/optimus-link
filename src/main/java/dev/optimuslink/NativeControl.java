@@ -191,7 +191,7 @@ final class NativeControl {
         install(operator);var body=operator.getReference();if(body==null||!body.isValid())throw new IllegalStateException("Operator body is unavailable.");
         var store=body.getStore();var fleet=OptimusLinkPlugin.state(store).fleet();var record=fleet.robot(robotId);
         var robot=store.getExternalData().getRefFromUUID(record.entity());
-        if(robot==null||!robot.isValid())throw new IllegalStateException("Optimus is not loaded. Move closer before assuming control.");
+        if(robot==null||!robot.isValid())throw new IllegalStateException("Optimus is out of range. Move into direct or linked-mast coverage.");
         var bodyTransform=store.getComponent(body,TransformComponent.getComponentType());var robotTransform=store.getComponent(robot,TransformComponent.getComponentType());
         if(bodyTransform==null||robotTransform==null||!RangeExtenders.route(store,operator.getUuid(),remote,bodyTransform.getPosition(),robotTransform.getPosition()).reachable())throw new IllegalStateException("Optimus needs direct range or a connected linked-mast route from your body.");
         var identity=store.getComponent(robot,OptimusLinkPlugin.robotType);

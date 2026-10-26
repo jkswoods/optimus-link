@@ -51,7 +51,7 @@ final class RangeNetworkLoading {
     private static void add(Set<Section> sections,MastNetwork.Point point) {
         sections.add(Section.at(point.x(),point.y()-1,point.z()));
         sections.add(Section.at(point.x(),point.y(),point.z()));
-        sections.add(Section.at(point.x(),point.y()+2,point.z()));
+        sections.add(Section.at(point.x(),point.y()+4,point.z()));
     }
     private static void refresh(Store<EntityStore> store,Scene scene) {
         if(scene.closed)return;

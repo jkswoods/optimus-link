@@ -72,6 +72,6 @@ The development source adds small Optimium veins to newly generated ordinary und
 
 ## Range Extender development
 
-Craft a 2.5-block signal mast at the Optimus Assembly Dock using 6 Optimium Ingots, 4 Iron Ingots and 4 Copper Ingots. Place your Fleet Remote in its linking slot for six seconds, then take the same item back. A mast can link several remotes.
+Craft a 3.5-block signal mast with a base computer at the Optimus Assembly Dock using 6 Optimium Ingots, 4 Iron Ingots and 4 Copper Ingots. Place your Fleet Remote in its linking slot for six seconds, then take the same item back. A mast can link several remotes.
 
-Each mast reaches 128 blocks and can relay through other masts linked to the same remote. High cyan arcs show connections. While you hold that remote within the network, the server activates covered original robots so they can become ready beyond normal loading range; putting it away or leaving coverage releases the temporary loading holds. This loading path is undergoing native verification in the local development build.
+Each mast reaches 128 blocks and can relay through other masts linked to the same remote. High cyan arcs show connections. While you hold that remote within the network, the server activates covered original robots so they can become ready beyond normal loading range; putting it away or leaving coverage releases the temporary loading holds. Native testing has confirmed control through two relays at 241 blocks and safe return when a required relay is removed. The current UI and glow revision still needs its native visual checks. Robots outside usable coverage show **Out of range**; covered robots may briefly show **Connecting...** before they are Ready.

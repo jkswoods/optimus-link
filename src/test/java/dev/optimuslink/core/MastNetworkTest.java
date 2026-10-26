@@ -74,10 +74,10 @@ public final class MastNetworkTest {
         check(visual.connections(m->true).isEmpty(),"same remote ID with different owner never creates an arc");
         var arc=SignalArc.points(va,vb);
         check(arc.size()==49&&SignalArc.SEGMENTS<=64,"native beam count bounded below per-entity cap");
-        check(arc.getFirst().equals(new MastNetwork.Point(.5,2.5,.5))&&arc.getLast().equals(new MastNetwork.Point(128.5,2.5,.5)),"arc meets both actual beacon positions");
-        check(arc.get(24).y()==50.5,"arc rises48 blocks into sky");
+        check(arc.getFirst().equals(new MastNetwork.Point(.5,3.5,.5))&&arc.getLast().equals(new MastNetwork.Point(128.5,3.5,.5)),"arc meets both actual beacon positions");
+        check(arc.get(24).y()==51.5,"arc rises48 blocks into sky");
         var high=new MastNetwork.Mast(UUID.randomUUID(),128,100,0,Set.of());
-        check(SignalArc.points(va,high).get(24).y()==150.5,"different elevations still reach48 above higher mast at midpoint");
+        check(SignalArc.points(va,high).get(24).y()==151.5,"different elevations still reach48 above higher mast at midpoint");
         for(var point:arc)check(point.finite(),"finite arc vertex");
         var receipts=new LegacyPageReceipts<String>();check(!receipts.pending(),"no initial page acknowledgement");
         receipts.customPage("mast",true);check(receipts.pending(),"outgoing update waits for actual native acknowledgement");

@@ -1,6 +1,6 @@
 $C = "../../Common.ui";
-@Panel = PatchStyle(TexturePath: "RangePanel.png", Border: 6);
-@Slot = PatchStyle(TexturePath: "RangeSlot.png", Border: 6);
+@Panel = PatchStyle(TexturePath: "RangePanel.png", Border: 8);
+@Slot = PatchStyle(TexturePath: "RangeSlot.png", Border: 8);
 @Selected = PatchStyle(TexturePath: "RangeSelected.png", Border: 4);
 @SignalOn = PatchStyle(Color: #2bd5b2);
 @SignalOff = PatchStyle(Color: #243349);
@@ -10,3 +10,7 @@ $C = "../../Common.ui";
  Pressed: (Background: (Color: #ffffff(0.10))),
  Sounds: $C.@ButtonSounds
 );
+
+@Header = PatchStyle(TexturePath: "RangeHeader.png", Border: 6);
+@Separator = PatchStyle(Color: #496279);
+@SectionTitle = LabelStyle(FontName: "Secondary", FontSize: 23, LetterSpacing: 1, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center);

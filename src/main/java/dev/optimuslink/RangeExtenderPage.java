@@ -34,7 +34,8 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
     private ItemStack expected;
     private boolean dismissed;
     private long nextPulse;
-    private String notice="Select a Fleet Remote below, then place it in Link Remote.";
+    private static final String INITIAL_NOTICE="Select a Fleet Remote below, then place it in Link Remote.";
+    private String notice=INITIAL_NOTICE;
     private final Map<Short,String> cells=new HashMap<>();
     private List<UUID> shown=List.of();
     private record View(long revision,List<ItemStack> inventory,ItemStack resident,int percent) {}
@@ -97,7 +98,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
         for(int i=0;i<20;i++)c.set("#Signal"+i+".Background",Value.ref("Pages/OptimusLink/RangeAppearance.ui",i<Math.floor(amount*20)?"SignalOn":"SignalOff"));
         c.set("#Progress.Text",(int)Math.floor(amount*100)+"%");
         c.set("#PairStatus.Text",linked?"Linked — take your remote":remote!=null?"Synchronising...":ItemStack.isEmpty(slot.getItemStack((short)0))?"Place your Fleet Remote":"Another operator's remote is in this slot");
-        c.set("#Notice.Text",notice);
+        c.set("#Notice.Text",notice.equals(INITIAL_NOTICE)&&remote!=null?(linked?"Remote linked. Take it out to use your extended network.":"Keep the remote in the slot until the signal bar is full."):notice);
         var item=slot.getItemStack((short)0);boolean occupied=!ItemStack.isEmpty(item);
         c.set("#RemoteIcon.Visible",occupied);c.set("#EmptyRemote.Visible",!occupied);if(occupied)c.set("#RemoteIcon.ItemId",item.getItemId());
         var inventory=RangeExtenders.inventory(ref);
@@ -109,7 +110,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
         }
         var ids=current.links().stream().filter(l->l.owner().equals(playerRef.getUuid())).map(MastNetwork.Link::remote).sorted().toList();
         c.set("#NetworkStatus.Text",current.links().isEmpty()?"Ready to pair":"Relay ready");
-        c.set("#LinkedCount.Text",ids.size()+" linked to your remotes");
+        c.set("#LinkedCount.Text",ids.size()+" linked remotes");
         if(!shown.equals(ids)) {
             shown=ids;c.clear("#LinkedList");
             for(int i=0;i<ids.size();i++) {
