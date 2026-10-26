@@ -30,6 +30,10 @@ public final class RangeSignalModelTest {
             check(frames.size()==2&&frames.get(0).getAsJsonObject().get("delta").equals(frames.get(1).getAsJsonObject().get("delta")),"attachment clip uses the same identity orientation throughout its loop");
             check(List.of("position","shapeStretch","shapeUvOffset","shapeVisible").stream().allMatch(k->node.getAsJsonArray(k).isEmpty()),"constant binding has no translation, stretch, texture animation or visibility pulsing");
         }
+        try(var input=RangeSignalModelTest.class.getResourceAsStream("/Server/Models/OptimusLink/OP_RangeSignal.json")) {
+            var asset=com.google.gson.JsonParser.parseString(new String(Objects.requireNonNull(input).readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            check("Characters/OptimusLink/RangeSignalHost.blockymodel".equals(asset.get("Model").getAsString())&&asset.getAsJsonObject("AnimationSets").has("Idle"),"the outgoing OP_RangeSignal assetId has a packaged native ModelAsset definition and binding");
+        }
         var nativeUpdate=new EntityTrackerSystems.EntityUpdate();
         var modelUpdate=new com.hypixel.hytale.protocol.ModelUpdate();var beamsUpdate=new BeamsUpdate();
         nativeUpdate.queueUpdate(modelUpdate);nativeUpdate.queueUpdate(beamsUpdate);
@@ -37,7 +41,10 @@ public final class RangeSignalModelTest {
         check(wire.length==2&&wire[0]==modelUpdate&&wire[1]==beamsUpdate,"actual native outgoing component list preserves model-before-beam append order");
         try(var input=RangeSignalModelTest.class.getResourceAsStream("/Common/Characters/OptimusLink/RangeSignalHost.blockymodel")) {
             var root=com.google.gson.JsonParser.parseString(new String(Objects.requireNonNull(input).readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
-            var node=root.getAsJsonArray("nodes").get(0).getAsJsonObject();var shape=node.getAsJsonObject("shape");
+            var origin=root.getAsJsonArray("nodes").get(0).getAsJsonObject();
+            check("character".equals(root.get("format").getAsString()),"host explicitly follows the native character-model format used by the working player control");
+            check("Origin".equals(origin.get("name").getAsString())&&"none".equals(origin.getAsJsonObject("shape").get("type").getAsString()),"attachment is a named child of a distinct origin, matching the working stock hand hierarchy");
+            var node=origin.getAsJsonArray("children").get(0).getAsJsonObject();var shape=node.getAsJsonObject("shape");
             check("ArcOrigin".equals(node.get("name").getAsString())&&"box".equals(shape.get("type").getAsString())&&shape.get("visible").getAsBoolean(),"attachment node has retained visible mesh geometry; empty host node was unknown to the actual client");
             var settings=shape.getAsJsonObject("settings");var size=settings.getAsJsonObject("size");
             check(!settings.get("isStaticBox").getAsBoolean()&&size.get("x").getAsFloat()>0&&size.get("y").getAsFloat()>0&&size.get("z").getAsFloat()>0,"a nonzero articulated anchor is retained inside the existing mast, without a gameplay hitbox");
