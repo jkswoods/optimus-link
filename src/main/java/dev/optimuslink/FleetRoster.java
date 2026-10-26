@@ -8,10 +8,12 @@ import java.util.UUID;
 
 /** Immutable view data. Unknown/unloaded distances never masquerade as zero or grant access. */
 final class FleetRoster {
-    record Entry(FleetRegistry.Robot robot,double squaredDistance,boolean loaded,boolean busy) {
-        boolean available() { return loaded&&!busy&&ControlRange.contains(squaredDistance); }
+    record Entry(FleetRegistry.Robot robot,double squaredDistance,boolean loaded,boolean busy,boolean reachable,int relays,boolean connecting) {
+        Entry(FleetRegistry.Robot robot,double squaredDistance,boolean loaded,boolean busy,boolean reachable,int relays) { this(robot,squaredDistance,loaded,busy,reachable,relays,false); }
+        Entry(FleetRegistry.Robot robot,double squaredDistance,boolean loaded,boolean busy) { this(robot,squaredDistance,loaded,busy,ControlRange.contains(squaredDistance),0); }
+        boolean available() { return loaded&&!busy&&reachable; }
         String distance() { return Double.isFinite(squaredDistance)&&squaredDistance>=0 ? (long)Math.ceil(Math.sqrt(squaredDistance))+" blocks":"--"; }
-        String status() { return !loaded?"Unloaded":busy?"In use":available()?"Ready":"Out of range"; }
+        String status() { return !loaded?(connecting?"Connecting...":"Unloaded"):busy?"In use":available()?(relays>0?"Ready · "+relays+" relay"+(relays==1?"":"s"):"Ready"):"Out of range"; }
     }
     private FleetRoster() {}
     static List<Entry> select(List<Entry> entries,String search,String order) {

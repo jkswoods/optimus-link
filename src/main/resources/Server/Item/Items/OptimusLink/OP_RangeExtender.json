@@ -1,0 +1,90 @@
+{
+  "MaxStack": 10,
+  "Quality": "Common",
+  "ItemSoundSetId": "OP_Equipment",
+  "PlayerAnimationsId": "Block",
+  "DropOnDeath": true,
+  "TranslationProperties": {
+    "Name": "server.items.OP_RangeExtender.name",
+    "Description": "server.items.OP_RangeExtender.description"
+  },
+  "Icon": "Icons/ItemsGenerated/OptimusLink_OP_RangeExtender.png",
+  "Categories": [
+    "Furniture.Benches"
+  ],
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "OP_OptimiumIngot",
+        "Quantity": 6
+      },
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 4
+      },
+      {
+        "ItemId": "Ingredient_Bar_Copper",
+        "Quantity": 4
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Id": "OP_AssemblyDock",
+        "Categories": [
+          "OP_Robotics"
+        ]
+      }
+    ],
+    "TimeSeconds": 4,
+    "OutputQuantity": 1
+  },
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/OptimusLink/OP_RangeExtender.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/OptimusLink/OP_RangeExtender.png",
+        "Weight": 1
+      }
+    ],
+    "HitboxType": "OP_RangeExtender",
+    "VariantRotation": "NESW",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "OP_RangeMast"
+          }
+        ]
+      }
+    },
+    "BlockEntity": {
+      "Components": {
+        "ItemContainerBlock": {
+          "Capacity": 1
+        },
+        "OP_RangeMastIdentity": {}
+      }
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Benches"
+      }
+    },
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "PhysicalMaterialId": "Metal",
+    "BlockSoundSetId": "Metal",
+    "PlacementSettings": {
+      "BlockPreviewVisibility": "AlwaysVisible"
+    }
+  }
+}

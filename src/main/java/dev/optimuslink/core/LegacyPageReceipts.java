@@ -16,6 +16,7 @@ public final class LegacyPageReceipts<T> {
         visible=null;
     }
     public synchronized T acknowledge() { return pending.pollFirst(); }
+    public synchronized boolean pending() { return !pending.isEmpty(); }
     public synchronized T visible() { return visible; }
     public synchronized void dismiss(T owner) { if(visible==owner)visible=null; }
     public synchronized void clear() { pending.clear();visible=null; }

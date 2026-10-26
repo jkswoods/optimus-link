@@ -68,4 +68,10 @@ The player guide follows the Hytale support line and is updated independently of
 
 ## Optimium development
 
-The development source adds small Optimium veins to newly generated ordinary underground stone, raw ore drops and a one-to-one Furnace recipe for Optimium Ingots. Existing explored chunks and robotics crafting costs are preserved. Normal terrain generation and saved-terrain reload checks pass; client appearance, icons, mining, furnace interaction and human listening checks are pending. This addition has not been published as a new release.
+The development source adds small Optimium veins to newly generated ordinary underground stone, raw ore drops and a one-to-one Furnace recipe for Optimium Ingots. Native mining, fuelled smelting and normal reload have been checked, and the revised ore and ingot appearance has been approved. Human sound listening and actual second-client checks remain open. Choose a compatible file and read its release notes for included features.
+
+## Range Extender development
+
+Craft a 2.5-block signal mast at the Optimus Assembly Dock using 6 Optimium Ingots, 4 Iron Ingots and 4 Copper Ingots. Place your Fleet Remote in its linking slot for six seconds, then take the same item back. A mast can link several remotes.
+
+Each mast reaches 128 blocks and can relay through other masts linked to the same remote. High cyan arcs show connections. While you hold that remote within the network, the server activates covered original robots so they can become ready beyond normal loading range; putting it away or leaving coverage releases the temporary loading holds. This loading path is undergoing native verification in the local development build.

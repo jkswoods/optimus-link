@@ -64,10 +64,12 @@ final class NativeFleet {
         } finally {
             if(!paid) { if(registered)fleet.remove(operator.getUuid(),robotId);npc.remove(); }
         }
+        RangeNetworkLoading.remember(store,robotId,store.getComponent(npc.getReference(),UUIDComponent.getComponentType()).getUuid(),position);
         AnimationUtils.playAnimation(npc.getReference(),AnimationSlot.ServerAction,"Deploy",true,store);
         soundWorld(npc.getReference(),"OP_Deploy_World");operator.sendMessage(Message.raw("Optimus deployed. Use your Fleet Remote while looking at it to link."));
     }
-    static void useRemote(Ref<EntityStore> operatorRef,PlayerRef operator,ItemContainer container,short slot,ItemStack held,Ref<EntityStore> target) {
+    static UUID ensureRemote(Ref<EntityStore> operatorRef,PlayerRef operator,ItemContainer container,short slot,ItemStack held) {
+        if(ItemStack.isEmpty(held)||!"OP_Remote".equals(held.getItemId())||held.getQuantity()!=1)throw new IllegalArgumentException("Select one Fleet Remote.");
         var store=operatorRef.getStore();var fleet=OptimusLinkPlugin.state(store).fleet();
         UUID remoteId=held.getFromMetadataOrNull(REMOTE),owner=held.getFromMetadataOrNull(OWNER);
         if(remoteId==null) {
@@ -79,7 +81,11 @@ final class NativeFleet {
             if(!store.getExternalData().getWorld().getWorldConfig().getUuid().equals(held.getFromMetadataOrNull(HOME_WORLD)))throw new IllegalStateException("Return to the world where this remote was first bound.");
             fleet.remote(operator.getUuid(),remoteId);
         }
-        verifySingleRemote(operatorRef,remoteId);
+        return remoteId;
+    }
+    static void useRemote(Ref<EntityStore> operatorRef,PlayerRef operator,ItemContainer container,short slot,ItemStack held,Ref<EntityStore> target) {
+        var store=operatorRef.getStore();var fleet=OptimusLinkPlugin.state(store).fleet();
+        UUID remoteId=ensureRemote(operatorRef,operator,container,slot,held);verifySingleRemote(operatorRef,remoteId);
         if(target!=null&&target.isValid()&&target.getStore()==store) {
             var identity=store.getComponent(target,OptimusLinkPlugin.robotType);
             if(identity!=null) {
@@ -106,7 +112,7 @@ final class NativeFleet {
         if(id!=null) { OptimusLinkPlugin.state(ref.getStore()).fleet().remote(operator.getUuid(),id);verifySingleRemote(ref,id); }
         return id;
     }
-    private static void verifySingleRemote(Ref<EntityStore> operator,UUID id) {
+    static void verifySingleRemote(Ref<EntityStore> operator,UUID id) {
         int copies=0;
         for(var type:InventoryComponent.EVERYTHING) {
             var component=operator.getStore().getComponent(operator,type);if(component==null)continue;

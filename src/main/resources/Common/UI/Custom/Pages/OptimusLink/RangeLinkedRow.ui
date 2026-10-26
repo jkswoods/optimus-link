@@ -1,0 +1,8 @@
+$C = "../../Common.ui";
+Group {
+ Anchor: (Height: 52); LayoutMode: Left; Padding: (Full: 4);
+ ItemIcon { Anchor: (Width: 40, Height: 40); ItemId: "OP_Remote"; ShowItemTooltip: true; }
+ Group { Anchor: (Width: 12); }
+ Label #Name { FlexWeight: 1; Style: (FontSize: 20, TextColor: #dce9f5, VerticalAlignment: Center); }
+ $C.@SmallSecondaryTextButton #Unlink { Anchor: (Width: 40, Height: 36, Top: 4); Text: "X"; }
+}

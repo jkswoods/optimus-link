@@ -1,0 +1,12 @@
+$C = "../../Common.ui";
+@Panel = PatchStyle(TexturePath: "RangePanel.png", Border: 6);
+@Slot = PatchStyle(TexturePath: "RangeSlot.png", Border: 6);
+@Selected = PatchStyle(TexturePath: "RangeSelected.png", Border: 4);
+@SignalOn = PatchStyle(Color: #2bd5b2);
+@SignalOff = PatchStyle(Color: #243349);
+@SlotNormal = ButtonStyle(
+ Default: (Background: (Color: #ffffff(0))),
+ Hovered: (Background: (Color: #ffffff(0.04))),
+ Pressed: (Background: (Color: #ffffff(0.10))),
+ Sounds: $C.@ButtonSounds
+);

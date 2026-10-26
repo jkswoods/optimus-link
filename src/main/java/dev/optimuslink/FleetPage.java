@@ -74,21 +74,22 @@ final class FleetPage extends InteractiveCustomUIPage<FleetPage.Action> {
             loaded=loaded&&identity!=null&&robot.id().equals(identity.id);
             var target=loaded?store.getComponent(nativeRef,TransformComponent.getComponentType()):null;
             double distance=origin==null||target==null?Double.POSITIVE_INFINITY:origin.getPosition().distanceSquared(target.getPosition());
-            result.add(new FleetRoster.Entry(robot,distance,loaded,fleet.controlling(robot.id()).isPresent()));
+            var route=loaded&&origin!=null&&target!=null?RangeExtenders.route(store,playerRef.getUuid(),remote,origin.getPosition(),target.getPosition()):dev.optimuslink.core.MastNetwork.Route.NONE;
+            result.add(new FleetRoster.Entry(robot,distance,loaded,fleet.controlling(robot.id()).isPresent(),route.reachable(),route.relays(),external!=null&&RangeNetworkLoading.connecting(store,robot.id())));
         }
         return result;
     }
     private FleetRoster.Entry editable(Ref<EntityStore> ref,Store<EntityStore> store,UUID id) {
         var entry=entries(ref,store).stream().filter(r->r.robot().id().equals(id)).findFirst()
             .orElseThrow(()->new IllegalStateException("This robot is no longer linked to this remote."));
-        if(!entry.available())throw new IllegalStateException("Move within "+ControlRange.BLOCKS+" blocks of a loaded, idle robot to edit it.");
+        if(!entry.available())throw new IllegalStateException("Reach a loaded, idle robot directly or through your linked mast network to edit it.");
         return entry;
     }
     private void renderRoster(Ref<EntityStore> ref,Store<EntityStore> store,UICommandBuilder c,UIEventBuilder e,boolean rebuildRows) {
         var all=entries(ref,store);lastRendered=List.copyOf(all);var visible=FleetRoster.select(all,query,sort);var ids=visible.stream().map(r->r.robot().id()).toList();
         boolean rebuild=rebuildRows||!shown.equals(ids);shown=ids;
         c.set("#Summary.Text",all.size()+" ROBOTS LINKED");
-        c.set("#Availability.Text",all.stream().filter(FleetRoster.Entry::available).count()+" IN RANGE  /  "+ControlRange.BLOCKS+" BLOCK LIMIT");
+        c.set("#Availability.Text",all.stream().filter(FleetRoster.Entry::available).count()+" IN RANGE  /  128 DIRECT + LINKED RELAYS");
         c.set("#Message.Text",message==null?"":message);c.set("#Message.Visible",message!=null&&!message.isEmpty());
         c.set("#Empty.Visible",visible.isEmpty());c.set("#Empty.Text",all.isEmpty()?"No robots linked. Aim at your robot and use this remote to link it.":"No robots match your search.");
         if(rebuild)c.clear("#RobotList");

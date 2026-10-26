@@ -141,6 +141,19 @@ final class NativeControl {
         });
         return true;
     }
+    static boolean pageUpdatePending(PlayerRef operator) {
+        var router=ROUTERS.get(operator.getUuid());
+        return router!=null&&router.operator()==operator&&router.pages().pending();
+    }
+    static List<RangeNetworkLoading.Demand> radioDemands(World world) {
+        var result=new ArrayList<RangeNetworkLoading.Demand>();
+        for(var control:ACTIVE.values())if(control.body().isValid()&&control.body().getStore().getExternalData().getWorld()==world) {
+            var transform=control.body().getStore().getComponent(control.body(),TransformComponent.getComponentType());
+            var robot=control.fleet().findRobot(control.token().robot()).orElse(null);
+            if(transform!=null&&robot!=null&&robot.remote()!=null)result.add(new RangeNetworkLoading.Demand(control.operator().getUuid(),robot.remote(),RangeExtenders.point(transform.getPosition())));
+        }
+        return result;
+    }
     private static void route(PlayerRef operator,GamePacketHandler real,ActorHandler fallback,ToServerPacket packet) {
         if(routePageEvent(operator,packet))return;
         var control=ACTIVE.get(operator.getUuid());
@@ -180,7 +193,7 @@ final class NativeControl {
         var robot=store.getExternalData().getRefFromUUID(record.entity());
         if(robot==null||!robot.isValid())throw new IllegalStateException("Optimus is not loaded. Move closer before assuming control.");
         var bodyTransform=store.getComponent(body,TransformComponent.getComponentType());var robotTransform=store.getComponent(robot,TransformComponent.getComponentType());
-        if(bodyTransform==null||robotTransform==null||!ControlRange.contains(bodyTransform.getPosition().distanceSquared(robotTransform.getPosition())))throw new IllegalStateException("Optimus must be within "+ControlRange.BLOCKS+" blocks of your body.");
+        if(bodyTransform==null||robotTransform==null||!RangeExtenders.route(store,operator.getUuid(),remote,bodyTransform.getPosition(),robotTransform.getPosition()).reachable())throw new IllegalStateException("Optimus needs direct range or a connected linked-mast route from your body.");
         var identity=store.getComponent(robot,OptimusLinkPlugin.robotType);
         if(identity==null||!robotId.equals(identity.id))throw new IllegalStateException("Robot identity no longer matches the roster.");
         if(store.getComponent(robot,Player.getComponentType())!=null)throw new IllegalStateException("Optimus is already controlled.");
@@ -261,7 +274,7 @@ final class NativeControl {
             if(bodyPage.getCustomPage() instanceof FleetPage)bodyPage.closePage(body,store);
             synchronizePose(actorRef,robot,viewer,body);
             RobotInventory.refreshClient(robot);
-            operator.sendMessage(Message.raw("Controlling "+record.displayName()+". Your body remains exposed. Select slot 1 and right-click to return, or use /optimus-release. Control range "+ControlRange.BLOCKS+" blocks."));
+            operator.sendMessage(Message.raw("Controlling "+record.displayName()+". Your body remains exposed. Select slot 1 and right-click to return, or use /optimus-release. Range: "+ControlRange.BLOCKS+" blocks direct, or through your linked masts."));
             NativeFleet.soundPrivate(operator,"OP_Remote_Link_Inventory");
         } catch(RuntimeException ex) {
             ACTIVE.put(operator.getUuid(),control);end(operator.getUuid(),FleetRegistry.Exit.INVALID_AUTHORITY);throw ex;
@@ -325,7 +338,8 @@ final class NativeControl {
         var store=c.robot().getStore();var a=store.getComponent(c.body(),TransformComponent.getComponentType());var b=store.getComponent(c.robot(),TransformComponent.getComponentType());
         if(!alive(store,c.body()))return FleetRegistry.Exit.OPERATOR_DEATH;
         if(!alive(store,c.robot()))return FleetRegistry.Exit.ROBOT_DEATH;
-        return a!=null&&b!=null&&ControlRange.contains(a.getPosition().distanceSquared(b.getPosition()))?null:FleetRegistry.Exit.INVALID_AUTHORITY;
+        var remote=c.fleet().robot(c.token().robot()).remote();
+        return a!=null&&b!=null&&RangeExtenders.route(store,c.operator().getUuid(),remote,a.getPosition(),b.getPosition()).reachable()?null:FleetRegistry.Exit.INVALID_AUTHORITY;
     }
     private static boolean alive(Store<EntityStore> store,Ref<EntityStore> ref) {
         var stats=store.getComponent(ref,EntityStatMap.getComponentType());if(stats==null)return false;

@@ -1,0 +1,9 @@
+$R = "RangeAppearance.ui";
+Group {
+ Anchor: (Width: 92, Height: 92);
+ Group { Anchor: (Full: 4); Background: $R.@Slot; HitTestVisible: false; }
+ ItemIcon #Icon { Anchor: (Full: 11); HitTestVisible: false; }
+ Label #Count { Anchor: (Right: 11, Bottom: 9, Width: 60, Height: 24); HitTestVisible: false; Style: (FontSize: 20, TextColor: #f2f5fb, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center); }
+ Button #Pick { Anchor: (Full: 4); Style: $R.@SlotNormal; }
+ Group #Selection { Anchor: (Full: 4); Background: $R.@Selected; Visible: false; HitTestVisible: false; }
+}

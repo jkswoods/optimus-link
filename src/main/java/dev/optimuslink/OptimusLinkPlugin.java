@@ -14,22 +14,28 @@ public final class OptimusLinkPlugin extends JavaPlugin {
     static ResourceType<EntityStore,FleetWorldState> stateType;
     static ComponentType<EntityStore,RobotIdentity> robotType;
     static ComponentType<ChunkStore,OptimiumStamp> optimiumStampType;
+    static ComponentType<ChunkStore,RangeMastIdentity> rangeMastType;
     public OptimusLinkPlugin(JavaPluginInit init) { super(init); }
     @Override protected void setup() {
         stateType=getEntityStoreRegistry().registerResource(FleetWorldState.class,"OptimusFleetV1",FleetWorldState.CODEC);
         robotType=getEntityStoreRegistry().registerComponent(RobotIdentity.class,"OptimusRobotV1",RobotIdentity.CODEC);
         optimiumStampType=getChunkStoreRegistry().registerComponent(OptimiumStamp.class,"OptimusOreGenerationV1",OptimiumStamp.CODEC);
+        rangeMastType=getChunkStoreRegistry().registerComponent(RangeMastIdentity.class,"OP_RangeMastIdentity",RangeMastIdentity.CODEC);
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.ChunkPreLoadProcessEvent.class,OptimiumGeneration::column);
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.ChunkSectionPreLoadProcessEvent.class,OptimiumGeneration::section);
         getCodecRegistry(Interaction.CODEC).register("OP_FleetItem",FleetItemInteraction.class,FleetItemInteraction.CODEC);
+        getCodecRegistry(Interaction.CODEC).register("OP_RangeMast",RangeMastInteraction.class,RangeMastInteraction.CODEC);
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent.class,event->{
             var ref=event.getPlayerRef();var operator=ref.getStore().getComponent(ref,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
             if(operator!=null)NativeControl.install(operator);
         });
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent.class,event->NativeControl.disconnected(event.getPlayerRef()));
-        getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent.class,event->NativeControl.worldLeaving(event.getWorld()));
+        getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent.class,event->{NativeControl.worldLeaving(event.getWorld());RangeNetworkLoading.leaving(event.getWorld());});
         getEntityStoreRegistry().registerSystem(new NativeControl.Tick());
         getEntityStoreRegistry().registerSystem(new FleetPage.Tick());
+        getEntityStoreRegistry().registerSystem(new RangeExtenderPage.Tick());
+        getEntityStoreRegistry().registerSystem(new RangeSignalBeams.Tick());
+        getEntityStoreRegistry().registerSystem(new RangeNetworkLoading.Tick());
         getEntityStoreRegistry().registerSystem(new OperatorWorldTransfer());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle.Load());
         getEntityStoreRegistry().registerSystem(new RobotLifecycle());
@@ -48,7 +54,8 @@ public final class OptimusLinkPlugin extends JavaPlugin {
     }
     @Override protected void shutdown() {
         FleetPage.OPEN.clear();
-        NativeControl.stopAll();NativeControl.removeOutputFilter();
+        RangeExtenderPage.OPEN.clear();
+        NativeControl.stopAll();RangeNetworkLoading.stopAll();NativeControl.removeOutputFilter();
         // Plugin shutdown precedes Universe shutdown. Retain the transparent storage decorator
         // through its final entity/player saves; the server process disposes it with Universe.
     }

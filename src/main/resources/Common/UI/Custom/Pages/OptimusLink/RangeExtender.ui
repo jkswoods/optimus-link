@@ -1,0 +1,65 @@
+$C = "../../Common.ui";
+$H = "Handset.ui";
+$R = "RangeAppearance.ui";
+SceneBlur {}
+$C.@PageOverlay {
+ $C.@DecoratedContainer #MastContainer {
+  @CloseButton = true; Anchor: (Width: 1280, Height: 1030);
+  #Title {
+   Anchor: (Height: 56, Top: 0); Padding: (Full: 0); Background: $H.@Header;
+   Label { Anchor: (Full: 0); Padding: (Left: 32); Text: "OPTIMUS / RANGE EXTENDER"; Style: (FontName: "Secondary", FontSize: 25, LetterSpacing: 1, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center); }
+  }
+  #CloseButton { Anchor: (Width: 48, Height: 48, Top: 4, Right: 6); Style: $H.@CloseStyle; }
+  #Content {
+   Anchor: (Top: 56); Padding: (Full: 28, Top: 12, Bottom: 12); LayoutMode: Top; Background: $H.@PanelBody;
+   Group { Anchor: (Height: 365); LayoutMode: Left;
+    Group { Anchor: (Width: 652); LayoutMode: Top; Padding: (Full: 12); Background: $R.@Panel;
+     Label { Anchor: (Height: 30); Text: "LINK REMOTE"; Style: (FontName: "Secondary", FontSize: 23, TextColor: #c6dff6, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
+     Group { Anchor: (Height: 180); LayoutMode: Center;
+      Group { Anchor: (Width: 172, Height: 172); Background: $R.@Slot;
+       ItemIcon #RemoteIcon { Anchor: (Full: 16); ItemId: "OP_Remote"; Visible: false; HitTestVisible: false; }
+       Label #EmptyRemote { Anchor: (Full: 10); Text: "PLACE REMOTE"; HitTestVisible: false; Style: (FontSize: 18, TextColor: #91a8c0, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
+       Button #RemoteSlot { Anchor: (Full: 0); Style: $R.@SlotNormal; }
+      }
+     }
+     Group { Anchor: (Height: 36); LayoutMode: Center;
+      Group #Signal { Anchor: (Width: 480, Height: 22); LayoutMode: Left; }
+      Label #Progress { Anchor: (Width: 60); Style: (FontSize: 18, TextColor: #e0f8f2, HorizontalAlignment: End, VerticalAlignment: Center); }
+     }
+     Label #PairStatus { Anchor: (Height: 36); Style: (FontSize: 21, TextColor: #dbe9f7, HorizontalAlignment: Center, VerticalAlignment: Center); }
+     Label #Notice { Anchor: (Height: 42); Style: (FontSize: 18, TextColor: #a7c0d8, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
+    }
+    Group { Anchor: (Width: 16); }
+    Group { FlexWeight: 1; LayoutMode: Top; Padding: (Full: 16); Background: $R.@Panel;
+     Label { Anchor: (Height: 30); Text: "SIGNAL NETWORK"; Style: (FontName: "Secondary", FontSize: 23, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center); }
+     Group { Anchor: (Height: 100); LayoutMode: Left; Padding: (Top: 14, Bottom: 14);
+      Group { Anchor: (Width: 64, Height: 64); Background: "RangeRadio.png"; }
+      Group { Anchor: (Width: 18); }
+      Group { FlexWeight: 1; LayoutMode: Top;
+       Label { Anchor: (Height: 32); Text: "128-block radius"; Style: (FontSize: 24, TextColor: #dbe9f7, VerticalAlignment: Center); }
+       Label #NetworkStatus { Anchor: (Height: 28); Style: (FontSize: 21, TextColor: #58d5b4, VerticalAlignment: Center); }
+      }
+     }
+     Group { Anchor: (Height: 12); }
+     Label { Anchor: (Height: 28); Text: "YOUR LINKED REMOTES"; Style: (FontSize: 20, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center); }
+     Label #LinkedCount { Anchor: (Height: 24); Style: (FontSize: 17, TextColor: #9eb6d0, VerticalAlignment: Center); }
+     Group #LinkedList { FlexWeight: 1; LayoutMode: TopScrolling; ScrollbarStyle: $H.@Scrollbar; }
+    }
+   }
+   Group { Anchor: (Height: 12); }
+   Label { Anchor: (Height: 30); Text: "PLAYER INVENTORY"; Style: (FontName: "Secondary", FontSize: 22, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center); }
+   Group { Anchor: (Height: 368); LayoutMode: Center;
+    Group #StorageRows { Anchor: (Width: 848, Height: 368); LayoutMode: TopScrolling; ScrollbarStyle: $H.@Scrollbar; }
+   }
+   Group { Anchor: (Height: 8); }
+   Group { Anchor: (Height: 92); LayoutMode: Center;
+    Group #HotbarRow { Anchor: (Width: 828, Height: 92); LayoutMode: Left; }
+   }
+   Group { FlexWeight: 1; }
+   Group { Anchor: (Height: 34); LayoutMode: Left;
+    Label { FlexWeight: 1; Text: "The remote is kept safely in this mast until you take it out."; Style: (FontSize: 18, TextColor: #a7c0d8, VerticalAlignment: Center); }
+    Group { Anchor: (Width: 138, Height: 32); LayoutMode: Left; BackButton {} }
+   }
+  }
+ }
+}

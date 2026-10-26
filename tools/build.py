@@ -23,7 +23,7 @@ def main():
         compile_cp=os.pathsep.join(map(str,[classes,args.server]))
         subprocess.run([str(javac),'--release',str(pin['java_release']),'-Xlint:all','-cp',compile_cp,'-d',str(tests),*map(str,sorted((ROOT/'src/test/java').rglob('*.java')))],check=True)
         runtime_cp=os.pathsep.join(map(str,[classes,tests,args.server]))
-        for suite in ('core.FleetRegistryTest','core.FleetStateCodecTest','core.ControlOutputScopeTest','core.LegacyPageReceiptsTest','core.OptimiumVeinsTest','FleetFeaturesTest','FleetHandsetTest','RobotCraftingTest','FleetPageTest','RobotPlayerStorageTest','NativeActorComponentsTest','ActorHandlerTest','ActorActionStateTest','NativeMusicLifecycleTest','RobotDeathTest','RobotReleaseControlTest','ModelGripTest'):
+        for suite in ('core.FleetRegistryTest','core.FleetStateCodecTest','core.ControlOutputScopeTest','core.LegacyPageReceiptsTest','core.OptimiumVeinsTest','core.MastNetworkTest','RangeCustodyTest','FleetFeaturesTest','FleetHandsetTest','RobotCraftingTest','FleetPageTest','RobotPlayerStorageTest','NativeActorComponentsTest','ActorHandlerTest','ActorActionStateTest','NativeMusicLifecycleTest','RobotDeathTest','RobotReleaseControlTest','ModelGripTest'):
             subprocess.run([str(java),'-ea','-cp',runtime_cp,'dev.optimuslink.'+suite],check=True)
     artifact=out/'libs'/filename(config(ROOT/'release.json'))
     artifact.parent.mkdir(parents=True,exist_ok=True)

@@ -55,6 +55,8 @@ final class RobotLifecycle extends RefSystem<EntityStore> {
         var identity=buffer.getComponent(ref,OptimusLinkPlugin.robotType);var uuid=buffer.getComponent(ref,UUIDComponent.getComponentType());
         if(identity==null||uuid==null)return;
         var record=OptimusLinkPlugin.state(store).fleet().findRobot(identity.id).orElse(null);
+        var pose=buffer.getComponent(ref,com.hypixel.hytale.server.core.modules.entity.component.TransformComponent.getComponentType());
+        if(record!=null&&record.entity().equals(uuid.getUuid())&&pose!=null)RangeNetworkLoading.remember(store,identity.id,uuid.getUuid(),pose.getPosition());
         if(record!=null&&record.entity().equals(uuid.getUuid()))buffer.putComponent(ref,
             com.hypixel.hytale.server.core.entity.nameplate.Nameplate.getComponentType(),
             new com.hypixel.hytale.server.core.entity.nameplate.Nameplate(record.displayName()));
@@ -67,15 +69,17 @@ final class RobotLifecycle extends RefSystem<EntityStore> {
         }
     }
     @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,CommandBuffer<EntityStore> buffer) {
-        if(reason!=RemoveReason.REMOVE)return;
         var identity=buffer.getComponent(ref,OptimusLinkPlugin.robotType);var uuid=buffer.getComponent(ref,UUIDComponent.getComponentType());
         if(identity==null||uuid==null)return;
         var fleet=OptimusLinkPlugin.state(store).fleet();var record=fleet.findRobot(identity.id).orElse(null);
         if(record==null||!record.entity().equals(uuid.getUuid()))return;
+        var pose=buffer.getComponent(ref,com.hypixel.hytale.server.core.modules.entity.component.TransformComponent.getComponentType());
+        if(pose!=null)RangeNetworkLoading.remember(store,identity.id,uuid.getUuid(),pose.getPosition());
+        if(reason!=RemoveReason.REMOVE)return;
         store.getExternalData().getWorld().execute(()-> {
             NativeControl.entityRemoved(ref);
             var current=fleet.findRobot(record.id()).orElse(null);
-            if(current!=null&&current.entity().equals(record.entity()))fleet.remove(current.owner(),current.id());
+            if(current!=null&&current.entity().equals(record.entity())) { fleet.remove(current.owner(),current.id());OptimusLinkPlugin.state(store).locations().remove(current.id()); }
         });
     }
 }

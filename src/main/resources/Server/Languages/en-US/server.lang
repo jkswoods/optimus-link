@@ -16,3 +16,6 @@ items.OP_RawOptimium.name = Raw Optimium
 items.OP_RawOptimium.description = Smelt in a Furnace to obtain an Optimium Ingot.
 items.OP_OptimiumIngot.name = Optimium Ingot
 items.OP_OptimiumIngot.description = Refined Optimium metal, ready for robotics crafting.
+
+items.OP_RangeExtender.name = Range Extender
+items.OP_RangeExtender.description = A compact signal mast. Insert your Fleet Remote and wait for synchronisation to link. Each loaded linked mast relays up to 128 blocks.
