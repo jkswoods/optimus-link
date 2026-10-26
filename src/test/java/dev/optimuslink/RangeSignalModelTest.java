@@ -4,6 +4,8 @@ import com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystem
 import com.hypixel.hytale.builtin.beam.AttachedBeam;
 import com.hypixel.hytale.builtin.beam.BeamComponent;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.dependency.Order;
+import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.protocol.BeamsUpdate;
 import dev.optimuslink.core.MastNetwork;
 import dev.optimuslink.core.SignalArc;
@@ -16,6 +18,14 @@ public final class RangeSignalModelTest {
     private static void check(boolean condition,String message) { assertions++;if(!condition)throw new AssertionError(message); }
     private static boolean near(double a,double b) { return Math.abs(a-b)<1e-4; }
     public static void main(String[] args) throws Exception {
+        var order=new RangeSignalBeams.Tick().getDependencies();
+        check(order.stream().anyMatch(d->d instanceof SystemDependency<?,?> s&&s.getSystemClass()==EntityTrackerSystems.EntityModel.class&&s.getOrder()==Order.AFTER),"model replication completes before the range tick in the native update group");
+        check(order.stream().anyMatch(d->d instanceof SystemDependency<?,?> s&&s.getSystemClass()==com.hypixel.hytale.builtin.beam.BeamSystems.Tracker.class&&s.getOrder()==Order.BEFORE),"native beam replication follows the range tick, including newly visible hosts");
+        var nativeUpdate=new EntityTrackerSystems.EntityUpdate();
+        var modelUpdate=new com.hypixel.hytale.protocol.ModelUpdate();var beamsUpdate=new BeamsUpdate();
+        nativeUpdate.queueUpdate(modelUpdate);nativeUpdate.queueUpdate(beamsUpdate);
+        var wire=nativeUpdate.toUpdatesArray();
+        check(wire.length==2&&wire[0]==modelUpdate&&wire[1]==beamsUpdate,"actual native outgoing component list preserves model-before-beam append order");
         try(var input=RangeSignalModelTest.class.getResourceAsStream("/Common/Characters/OptimusLink/RangeSignalHost.blockymodel")) {
             var root=com.google.gson.JsonParser.parseString(new String(Objects.requireNonNull(input).readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
             var node=root.getAsJsonArray("nodes").get(0).getAsJsonObject();var shape=node.getAsJsonObject("shape");

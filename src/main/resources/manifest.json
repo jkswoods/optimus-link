@@ -1,9 +1,12 @@
 {
   "Group": "OptimusLink",
   "Name": "OptimusLink",
-  "Version": "0.4.0-dev.21",
+  "Version": "0.4.0-dev.22",
   "Description": "Craftable Optimus robot fleets and remote control; development build.",
   "ServerVersion": ">=0.7.3 <0.8.0",
   "Main": "dev.optimuslink.OptimusLinkPlugin",
-  "IncludesAssetPack": true
+  "IncludesAssetPack": true,
+  "Dependencies": {
+    "Hytale:Beam": "*"
+  }
 }

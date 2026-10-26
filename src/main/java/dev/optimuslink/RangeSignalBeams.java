@@ -4,12 +4,17 @@ import com.hypixel.hytale.builtin.beam.AttachedBeam;
 import com.hypixel.hytale.builtin.beam.BeamComponent;
 import com.hypixel.hytale.builtin.beam.asset.Beam;
 import com.hypixel.hytale.component.*;
+import com.hypixel.hytale.component.dependency.Dependency;
+import com.hypixel.hytale.component.dependency.Order;
+import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
+import com.hypixel.hytale.builtin.beam.BeamSystems;
 import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
+import com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems;
 import com.hypixel.hytale.protocol.ColorLight;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.modules.entity.component.DynamicLight;
@@ -104,6 +109,16 @@ final class RangeSignalBeams {
         return beams;
     }
     static final class Tick extends TickingSystem<EntityStore> {
+        // Native EntityUpdate preserves append order. Both native trackers use
+        // QUEUE_UPDATE_GROUP without ordering against each other: a beam can be
+        // queued before its owner's model, so the client cannot resolve its node.
+        // This existing tick also orders model replication before beam replication,
+        // including when an existing arc first becomes visible to a new viewer.
+        @Override public SystemGroup<EntityStore> getGroup() { return EntityTrackerSystems.QUEUE_UPDATE_GROUP; }
+        @Override public Set<Dependency<EntityStore>> getDependencies() {
+            return Set.of(new SystemDependency<>(Order.AFTER,EntityTrackerSystems.EntityModel.class),
+                new SystemDependency<>(Order.BEFORE,BeamSystems.Tracker.class));
+        }
         @Override public void tick(float dt,int index,Store<EntityStore> store) {
             var scene=OptimusLinkPlugin.state(store).signals;long now=System.nanoTime();
             if(scene.queued||now<scene.nextCheck)return;scene.nextCheck=now+500_000_000L;scene.queued=true;
