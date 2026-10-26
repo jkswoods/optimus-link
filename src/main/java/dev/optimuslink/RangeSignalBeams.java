@@ -92,7 +92,7 @@ final class RangeSignalBeams {
         // was culled110blocks away before the client ever received the particle model.
         // This host has no gameplay Entity/Interactable and is explicitly intangible.
         return new Model("OP_RangeSignal",1f,Map.of(),null,bounds,
-            "Characters/OptimusLink/RangeSignalHost.blockymodel","Particles/OptimusLink/RangeGlow.png",null,null,0,0,0,0,Map.of(),null,null,particles,null,null,Map.of(),null,null);
+            "Characters/OptimusLink/RangeSignalHost.blockymodel","Characters/OptimusLink/OP_Optimus.png",null,null,0,0,0,0,Map.of(),null,null,particles,null,null,Map.of(),null,null);
     }
     static final class Tick extends TickingSystem<EntityStore> {
         @Override public void tick(float dt,int index,Store<EntityStore> store) {

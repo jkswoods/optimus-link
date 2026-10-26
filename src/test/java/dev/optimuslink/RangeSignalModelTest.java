@@ -17,6 +17,7 @@ public final class RangeSignalModelTest {
             var a=new MastNetwork.Mast(UUID.randomUUID(),c[0],c[1],c[2],Set.of());
             var b=new MastNetwork.Mast(UUID.randomUUID(),c[3],c[4],c[5],Set.of());
             var model=RangeSignalBeams.signalModel(a,b);var packet=model.toPacket();
+            check("Characters/OptimusLink/OP_Optimus.png".equals(packet.texture),"host uses the existing entity atlas; particle-only atlas was rejected by the native client");
             check(packet.particles.length==145,"native model packet retains the complete curve without a beam fan");
             check(Arrays.stream(packet.particles).allMatch(p->"ArcOrigin".equals(p.targetNodeName)&&p.clearParticlesOnRemove),"every native effect attaches to the real bone and clears with its host");
             var box=packet.hitbox;

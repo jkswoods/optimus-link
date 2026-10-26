@@ -1,11 +1,10 @@
-$H = "Handset.ui";
 $R = "RangeAppearance.ui";
 Group {
- Anchor: (Height: 78); Padding: (Bottom: 6);
- Group { Anchor: (Full: 0); LayoutMode: Left; Padding: (Full: 8); Background: $R.@Slot;
-  ItemIcon { Anchor: (Width: 64, Height: 52); ItemId: "OP_Remote"; HitTestVisible: false; }
-  Group { Anchor: (Width: 12); }
-  Label #Name { FlexWeight: 1; Style: (FontSize: 22, TextColor: #dce9f5, VerticalAlignment: Center); }
-  Button #Unlink { Anchor: (Width: 52, Height: 52); Style: $H.@CloseStyle; }
+ Anchor: (Height: 62); Padding: (Bottom: 4);
+ Group { Anchor: (Full: 0); LayoutMode: Left; Padding: (Full: 5); Background: #1a2330;
+  ItemIcon { Anchor: (Width: 48, Height: 48); ItemId: "OP_Remote"; HitTestVisible: false; }
+  Group { Anchor: (Width: 8); }
+  Label #Name { FlexWeight: 1; Style: (FontSize: 17, TextColor: #d3d6db, VerticalAlignment: Center); }
+  Button #Unlink { Anchor: (Width: 32, Height: 32); Style: $R.@CloseStyle; }
  }
 }

@@ -1,16 +1,15 @@
 $C = "../../Common.ui";
-@Panel = PatchStyle(TexturePath: "RangePanel.png", Border: 8);
-@Slot = PatchStyle(TexturePath: "RangeSlot.png", Border: 8);
-@Selected = PatchStyle(TexturePath: "RangeSelected.png", Border: 4);
-@SignalOn = PatchStyle(TexturePath: "RangeSignalOn.png", Border: 2);
-@SignalOff = PatchStyle(TexturePath: "RangeSignalOff.png", Border: 2);
+@Slot = PatchStyle(TexturePath: "../../../ItemQualities/Slots/SlotDefault.png", Border: 4);
 @SlotNormal = ButtonStyle(
  Default: (Background: (Color: #ffffff(0))),
  Hovered: (Background: (Color: #ffffff(0.04))),
  Pressed: (Background: (Color: #ffffff(0.10))),
  Sounds: $C.@ButtonSounds
 );
-
-@Header = PatchStyle(TexturePath: "RangeHeader.png", Border: 6);
-@Separator = PatchStyle(Color: #496279);
-@SectionTitle = LabelStyle(FontName: "Secondary", FontSize: 25, LetterSpacing: 1, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center);
+@CloseStyle = ButtonStyle(
+ Default: (Background: "../../Common/ContainerCloseButton.png"),
+ Hovered: (Background: "../../Common/ContainerCloseButtonHovered.png"),
+ Pressed: (Background: "../../Common/ContainerCloseButtonPressed.png"),
+ Sounds: $C.@ButtonsCancel
+);
+@SectionTitle = LabelStyle(FontSize: 15, TextColor: #b4c8c9, RenderBold: true, VerticalAlignment: Center);

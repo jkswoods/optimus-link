@@ -1,9 +1,12 @@
 $R = "RangeAppearance.ui";
 Group {
- Anchor: (Width: 100, Height: 100);
- Group { Anchor: (Full: 4); Background: $R.@Slot; HitTestVisible: false; }
- ItemIcon #Icon { Anchor: (Full: 16); HitTestVisible: false; }
- Label #Count { Anchor: (Right: 13, Bottom: 11, Width: 60, Height: 24); HitTestVisible: false; Style: (FontSize: 20, TextColor: #f2f5fb, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center); }
- Button #Pick { Anchor: (Full: 4); Style: $R.@SlotNormal; }
- Group #Selection { Anchor: (Full: 4); Background: $R.@Selected; Visible: false; HitTestVisible: false; }
+ Anchor: (Width: 80, Height: 80);
+ Group { Anchor: (Full: 2); Background: $R.@Slot; HitTestVisible: false; }
+ ItemIcon #Icon { Anchor: (Full: 9); HitTestVisible: false; }
+ Label #Count { Anchor: (Right: 7, Bottom: 5, Width: 48, Height: 20); HitTestVisible: false; Style: (FontSize: 16, TextColor: #f2f5fb, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center); }
+ Group #Key { Anchor: (Left: 5, Top: 5, Width: 17, Height: 17); Background: #0e131c; Visible: false; HitTestVisible: false;
+  Label #KeyText { Anchor: (Full: 0); HitTestVisible: false; Style: (FontSize: 13, TextColor: #b4c8c9, HorizontalAlignment: Center, VerticalAlignment: Center); }
+ }
+ Button #Pick { Anchor: (Full: 2); Style: $R.@SlotNormal; }
+ Group #Selection { Anchor: (Full: 2); Background: #e5bd63(0.18); Visible: false; HitTestVisible: false; }
 }

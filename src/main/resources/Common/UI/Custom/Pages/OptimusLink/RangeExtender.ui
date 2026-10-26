@@ -1,78 +1,82 @@
 $C = "../../Common.ui";
-$H = "Handset.ui";
 $R = "RangeAppearance.ui";
 SceneBlur {}
 $C.@PageOverlay {
- $C.@DecoratedContainer #MastContainer {
-  @CloseButton = true; Anchor: (Width: 1030, Height: 1060);
-  #Title {
-   Anchor: (Height: 74, Top: 0); Padding: (Full: 0);
-   Group { Anchor: (Full: 0); LayoutMode: Left; Padding: (Left: 32, Right: 76);
-    Label { Anchor: (Width: 180); Text: "OPTIMUS"; Style: (FontName: "Secondary", FontSize: 30, LetterSpacing: 1, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center); }
-    Label { FlexWeight: 1; Text: "RANGE EXTENDER"; Style: (FontName: "Secondary", FontSize: 23, LetterSpacing: 2, TextColor: #90adc8, VerticalAlignment: Center); }
-   }
-  }
-  #CloseButton { Anchor: (Width: 48, Height: 48, Top: 13, Right: 13); Style: $H.@CloseStyle; }
-  #Content {
-   Anchor: (Top: 74); Padding: (Full: 28, Top: 12, Bottom: 12); LayoutMode: Top;
-   Group { Anchor: (Height: 422); LayoutMode: Left;
-    Group { Anchor: (Width: 500); LayoutMode: Top; Padding: (Full: 8); Background: $R.@Panel;
-     Group { Anchor: (Height: 56); Background: $R.@Header;
-      Label { Anchor: (Full: 0); Padding: (Left: 20); Text: "LINK REMOTE"; Style: $R.@SectionTitle; }
-     }
-     Group { Anchor: (Height: 220); LayoutMode: Center;
-      Group { Anchor: (Width: 170, Height: 170); Background: $R.@Slot;
-       ItemIcon #RemoteIcon { Anchor: (Full: 12); ItemId: "OP_Remote"; Visible: false; HitTestVisible: false; }
-       Label #EmptyRemote { Anchor: (Full: 14); Text: "PLACE REMOTE"; HitTestVisible: false; Style: (FontSize: 18, TextColor: #91a8c0, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
-       Button #RemoteSlot { Anchor: (Full: 0); Style: $R.@SlotNormal; }
+ Group #RangeRoot {
+  Anchor: (Width: 780, Height: 972); LayoutMode: Left;
+  Group {
+   Anchor: (Width: 780); LayoutMode: Top;
+   $C.@Container #MastContainer {
+    @CloseButton = true; Anchor: (Height: 430);
+    #Title { $C.@Title { @Text = "RANGE EXTENDER"; @Alignment = Start; } }
+    #Content {
+     LayoutMode: Left;
+     Group {
+      Anchor: (Width: 356); Padding: (Full: 12); LayoutMode: Top; Background: #141b25;
+      Label { Anchor: (Height: 30); Text: "LINK REMOTE"; Style: $R.@SectionTitle; }
+      Group { Anchor: (Height: 176); LayoutMode: Center;
+       Group { Anchor: (Width: 140, Height: 140); Background: $R.@Slot;
+        ItemIcon #RemoteIcon { Anchor: (Full: 8); ItemId: "OP_Remote"; Visible: false; HitTestVisible: false; }
+        Label #EmptyRemote { Anchor: (Full: 10); Text: "PLACE REMOTE"; HitTestVisible: false; Style: (FontSize: 15, TextColor: #96a9be, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
+        Button #RemoteSlot { Anchor: (Full: 0); Style: $R.@SlotNormal; }
+       }
       }
-     }
-     Group { Anchor: (Height: 44); LayoutMode: Center;
-      Group { Anchor: (Width: 396, Height: 38); Padding: (Left: 8, Top: 4, Right: 8, Bottom: 4); Background: $R.@Slot;
-       Group #Signal { Anchor: (Full: 0); LayoutMode: Left; }
+      Group { Anchor: (Height: 30); LayoutMode: Center;
+       Group { Anchor: (Width: 240, Height: 10);
+        $C.@ProgressBar #Signal { Anchor: (Width: 240, Height: 10); }
+       }
+       Label #Progress { Anchor: (Width: 56); Style: (FontSize: 17, TextColor: #d3d6db, HorizontalAlignment: End, VerticalAlignment: Center); }
       }
-      Label #Progress { Anchor: (Width: 84); Style: (FontSize: 22, TextColor: #e0f8f2, HorizontalAlignment: End, VerticalAlignment: Center); }
+      Label #PairStatus { Anchor: (Height: 30); Style: (FontSize: 18, TextColor: #d3d6db, HorizontalAlignment: Center, VerticalAlignment: Center); }
+      Label #Notice { Anchor: (Height: 42); Style: (FontSize: 16, TextColor: #96a9be, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
      }
-     Label #PairStatus { Anchor: (Height: 38); Style: (FontSize: 23, TextColor: #dbe9f7, HorizontalAlignment: Center, VerticalAlignment: Center); }
-     Label #Notice { Anchor: (Height: 42); Style: (FontSize: 20, TextColor: #a7c0d8, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
-    }
-    Group { Anchor: (Width: 16); }
-    Group { FlexWeight: 1; LayoutMode: Top; Padding: (Full: 8); Background: $R.@Panel;
-     Group { Anchor: (Height: 56); Background: $R.@Header;
-      Label { Anchor: (Full: 0); Padding: (Left: 20); Text: "SIGNAL NETWORK"; Style: $R.@SectionTitle; }
-     }
-     Group { Anchor: (Height: 112); LayoutMode: Left; Padding: (Full: 18, Top: 16, Bottom: 16);
-      Group { Anchor: (Width: 64, Height: 64); Background: "RangeRadio.png"; }
-      Group { Anchor: (Width: 20); }
-      Group { FlexWeight: 1; LayoutMode: Top;
-       Label { Anchor: (Height: 32); Text: "128-block radius"; Style: (FontSize: 24, TextColor: #dbe9f7, VerticalAlignment: Center); }
-       Label #NetworkStatus { Anchor: (Height: 28); Style: (FontSize: 21, TextColor: #58d5b4, VerticalAlignment: Center); }
+     Group { Anchor: (Width: 10); }
+     Group {
+      FlexWeight: 1; Padding: (Full: 12); LayoutMode: Top; Background: #141b25;
+      Label { Anchor: (Height: 30); Text: "SIGNAL NETWORK"; Style: $R.@SectionTitle; }
+      Group { Anchor: (Height: 100); LayoutMode: Left; Padding: (Top: 18, Bottom: 18);
+       Group { Anchor: (Width: 44, Height: 44); Background: "RangeRadio.png"; }
+       Group { Anchor: (Width: 12); }
+       Group { FlexWeight: 1; LayoutMode: Top;
+        Label { Anchor: (Height: 26); Text: "128-block radius"; Style: (FontSize: 19, TextColor: #d3d6db, VerticalAlignment: Center); }
+        Label #NetworkStatus { Anchor: (Height: 24); Style: (FontSize: 17, TextColor: #55c889, VerticalAlignment: Center); }
+       }
       }
+      Group { Anchor: (Height: 1); Background: #313d4c; }
+      Label { Anchor: (Height: 28); Text: "LINKED REMOTES"; Style: $R.@SectionTitle; }
+      Label #LinkedCount { Anchor: (Height: 20); Style: (FontSize: 15, TextColor: #96a9be, VerticalAlignment: Center); }
+      Group #LinkedList { FlexWeight: 1; LayoutMode: TopScrolling; ScrollbarStyle: $C.@DefaultScrollbarStyle; }
      }
-     Group { Anchor: (Height: 2, Left: 18, Right: 18); Background: $R.@Separator; }
-     Label { Anchor: (Height: 34); Padding: (Left: 18); Text: "LINKED REMOTES"; Style: (FontName: "Secondary", FontSize: 22, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center); }
-     Label #LinkedCount { Anchor: (Height: 20); Padding: (Left: 18); Style: (FontSize: 17, TextColor: #9eb6d0, VerticalAlignment: Center); }
-     Group #LinkedList { FlexWeight: 1; Padding: (Left: 14, Right: 14); LayoutMode: TopScrolling; ScrollbarStyle: $H.@Scrollbar; }
     }
    }
-   Group { Anchor: (Height: 12); }
-   Group { Anchor: (Height: 472); LayoutMode: Top; Padding: (Full: 12, Top: 0, Bottom: 8); Background: $R.@Panel;
-    Group { Anchor: (Height: 56); Background: $R.@Header;
-     Label { Anchor: (Full: 0); Padding: (Left: 18); Text: "PLAYER INVENTORY"; Style: $R.@SectionTitle; }
-    }
-    Group { Anchor: (Height: 4); }
-    Group { Anchor: (Height: 300); LayoutMode: Center;
-     Group #StorageRows { Anchor: (Width: 916, Height: 300); LayoutMode: TopScrolling; ScrollbarStyle: $H.@Scrollbar; }
-    }
-    Group { Anchor: (Height: 4); }
-    Group { Anchor: (Height: 100); LayoutMode: Center;
-     Group #HotbarRow { Anchor: (Width: 916, Height: 100); LayoutMode: Left; }
+   Group { Anchor: (Height: 10); }
+   $C.@Container #InventoryContainer {
+    Anchor: (Height: 488);
+    #Title { $C.@Title { @Text = "INVENTORY"; @Alignment = Start; } }
+    #Content {
+     LayoutMode: Top;
+     Group { Anchor: (Height: 320); LayoutMode: Center;
+      Group #StorageRows { Anchor: (Width: 720, Height: 320); LayoutMode: Top; }
+     }
+     Group { Anchor: (Height: 8); }
+     Group { Anchor: (Height: 80); LayoutMode: Center;
+      Group #HotbarRow { Anchor: (Width: 720, Height: 80); LayoutMode: Left; }
+     }
     }
    }
    Group { FlexWeight: 1; }
-   Group { Anchor: (Height: 34); LayoutMode: Left;
-    Label { FlexWeight: 1; Text: "Scroll the inventory for more storage slots."; Style: (FontSize: 18, TextColor: #a7c0d8, VerticalAlignment: Center); }
-    Group { Anchor: (Width: 138, Height: 32); LayoutMode: Left; BackButton {} }
+   Group { Anchor: (Height: 34); LayoutMode: Left; Group { FlexWeight: 1; } BackButton {} }
+  }
+  Group #BackpackPane {
+   Anchor: (Width: 0); Visible: false; Padding: (Left: 16, Top: 440); LayoutMode: Top;
+   $C.@Container #BackpackContainer {
+    Anchor: (Height: 392);
+    #Title { $C.@Title { @Text = "BACKPACK"; @Alignment = Start; } }
+    #Content {
+     Group { Anchor: (Height: 320); LayoutMode: Center;
+      Group #BackpackRows { Anchor: (Width: 720, Height: 320); LayoutMode: Top; }
+     }
+    }
    }
   }
  }

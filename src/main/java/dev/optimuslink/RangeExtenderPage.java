@@ -9,7 +9,6 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.container.SimpleItemContainer;
-import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.*;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -34,7 +33,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
     private ItemStack expected;
     private boolean dismissed;
     private long nextPulse;
-    private static final String INITIAL_NOTICE="Select a remote below, then place it here.";
+    private static final String INITIAL_NOTICE="Select your remote, then place it here.";
     private String notice=INITIAL_NOTICE;
     private final Map<Short,String> cells=new HashMap<>();
     private List<UUID> shown=List.of();
@@ -55,19 +54,29 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
     @Override public void build(Ref<EntityStore> ref,UICommandBuilder c,UIEventBuilder e,Store<EntityStore> store) {
         c.append("Pages/OptimusLink/RangeExtender.ui");
         bind(e,"#MastContainer #CloseButton","Close");bind(e,"#RemoteSlot","Slot");
-        for(int i=0;i<20;i++)c.appendInline("#Signal","Group { Anchor: (Width: 19, Height: 30); Padding: (Right: 2); Group #Signal"+i+" { Anchor: (Full: 0); Background: #15283b; } }");
-        var inventory=RangeExtenders.inventory(ref);int rows=(Math.max(0,inventory.getCapacity()-9)+8)/9;
-        for(int row=0;row<rows;row++) {
-            c.append("#StorageRows","Pages/OptimusLink/RangeInventoryRow.ui");
-            for(int col=0;col<9;col++) {
-                short index=(short)(9+row*9+col);if(index>=inventory.getCapacity())break;
-                String path="#StorageRows["+row+"]["+col+"]";c.append("#StorageRows["+row+"]","Pages/OptimusLink/RangeInventorySlot.ui");cells.put(index,path);bind(e,path+" #Pick","Pick:"+index);
-            }
+        var inventory=RangeExtenders.inventory(ref);int capacity=inventory.getCapacity();
+        appendInventory(c,e,"#StorageRows",9,Math.min(45,capacity));
+        if(capacity>45) {
+            // Stock backpack upgrades add up to four extra rows in a separate
+            // native panel. The normal four storage rows never scroll.
+            c.set("#RangeRoot.Anchor.Width",1576);c.set("#BackpackPane.Anchor.Width",796);c.set("#BackpackPane.Visible",true);
+            appendInventory(c,e,"#BackpackRows",45,capacity);
         }
         for(short i=0;i<Math.min(9,inventory.getCapacity());i++) {
             String path="#HotbarRow["+i+"]";c.append("#HotbarRow","Pages/OptimusLink/RangeInventorySlot.ui");cells.put(i,path);bind(e,path+" #Pick","Pick:"+i);
+            c.set(path+" #Key.Visible",true);c.set(path+" #KeyText.Text",Short.toString((short)(i+1)));
         }
         render(ref,store,c,e);OPEN.add(this);
+    }
+    private void appendInventory(UICommandBuilder c,UIEventBuilder e,String target,int first,int limit) {
+        for(int row=0;first+row*9<limit;row++) {
+            c.append(target,"Pages/OptimusLink/RangeInventoryRow.ui");
+            for(int col=0;col<9;col++) {
+                short index=(short)(first+row*9+col);if(index>=limit)break;
+                String parent=target+"["+row+"]",path=parent+"["+col+"]";
+                c.append(parent,"Pages/OptimusLink/RangeInventorySlot.ui");cells.put(index,path);bind(e,path+" #Pick","Pick:"+index);
+            }
+        }
     }
     private boolean current(Ref<EntityStore> ref,Store<EntityStore> store) {
         if(dismissed||ref==null||!ref.isValid()||ref!=playerRef.getReference())return false;
@@ -95,7 +104,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
             }
         }
         double amount=linked?1:progress.fraction(now);
-        for(int i=0;i<20;i++)c.set("#Signal"+i+".Background",Value.ref("Pages/OptimusLink/RangeAppearance.ui",i<Math.floor(amount*20)?"SignalOn":"SignalOff"));
+        c.set("#Signal.Value",(float)amount);
         c.set("#Progress.Text",(int)Math.floor(amount*100)+"%");
         c.set("#PairStatus.Text",linked?"Linked — take your remote":remote!=null?"Synchronising...":ItemStack.isEmpty(slot.getItemStack((short)0))?"Place your Fleet Remote":"Another operator's remote is in this slot");
         c.set("#Notice.Text",notice.equals(INITIAL_NOTICE)&&remote!=null?(linked?"Take your remote to use the extended network.":"Leave your remote in the slot until linked."):notice);
