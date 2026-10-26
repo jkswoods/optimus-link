@@ -29,7 +29,7 @@ A mast can link several remotes. Repeat the process for each one. The list shows
 
 ![Native Range Extender panel with a linked Fleet Remote and all player inventory slots visible](/assets/hytale0.7/screenshots/range-extender-ui.png)
 
-*The native panel in Hytale 0.7.4 shows all four storage rows and the hotbar, with quiet slot edges and standard Hytale panels. The linked remote remains available in the player's inventory after retrieval.*
+*The native panel in Hytale 0.7.4 shows all four storage rows and the hotbar, with quiet slot edges and standard Hytale panels. After six seconds, the same remote is ready to retrieve from the linking slot.*
 
 ## Build a relay route
 
