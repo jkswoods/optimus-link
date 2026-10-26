@@ -27,9 +27,9 @@ Removing a remote before completion cancels that attempt. Closing the panel keep
 
 A mast can link several remotes. Repeat the process for each one. The list shows your own linked remote identities; its **X** removes that remote's link from this mast. A remote still belongs to its original operator and world.
 
-![Native Range Extender panel with two linked Fleet Remotes and real player inventory](/assets/hytale0.7/screenshots/range-extender-ui.png)
+![Native Range Extender panel with a linked Fleet Remote and all player inventory slots visible](/assets/hytale0.7/screenshots/range-extender-ui.png)
 
-*Earlier native panel in Hytale 0.7.4. The revised layout uses native panels and shows the full inventory; its replacement screenshot is pending. The remote stays in the mast until you retrieve it.*
+*The native panel in Hytale 0.7.4 shows all four storage rows and the hotbar. A final slot-edge refinement is being checked. The remote stays in the mast until you retrieve it.*
 
 ## Build a relay route
 
