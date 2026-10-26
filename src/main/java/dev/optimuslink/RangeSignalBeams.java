@@ -17,9 +17,13 @@ import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems;
 import com.hypixel.hytale.protocol.ColorLight;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.modules.entity.component.DynamicLight;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.ActiveAnimationComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
+import com.hypixel.hytale.server.core.modules.entity.system.ModelSystems;
+import com.hypixel.hytale.protocol.AnimationSlot;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.optimuslink.core.SignalArc;
 import dev.optimuslink.core.MastNetwork;
@@ -67,6 +71,7 @@ final class RangeSignalBeams {
             holder.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
             holder.addComponent(TransformComponent.getComponentType(),new TransformComponent(anchor,new Rotation3f()));
             holder.addComponent(ModelComponent.getComponentType(),new ModelComponent(glow));
+            holder.addComponent(ActiveAnimationComponent.getComponentType(),signalAnimations());
             holder.addComponent(BeamComponent.getComponentType(),new BeamComponent(signalBeams(edge.first(),edge.second(),beamIndex)));
             holder.addComponent(Intangible.getComponentType(),Intangible.INSTANCE);
             holder.ensureComponent(UUIDComponent.getComponentType());holder.ensureComponent(store.getRegistry().getNonSerializedComponentType());
@@ -95,8 +100,15 @@ final class RangeSignalBeams {
         // Native LOD uses ModelSpawned's bounding box. The former0.2-block box
         // was culled110blocks away before the client ever received the particle model.
         // This host has no gameplay Entity/Interactable and is explicitly intangible.
+        // Keep the attachment in the native animated-node palette. The clip is
+        // constant: it binds ArcOrigin without moving, blinking or pulsing it.
+        var still=new ModelAsset.Animation("Idle","Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim",1f,0f,true,1f,new int[0],null);
+        var animations=Map.of("Idle",new ModelAsset.AnimationSet(new ModelAsset.Animation[]{still},null));
         return new Model("OP_RangeSignal",1f,Map.of(),null,bounds,
-            "Characters/OptimusLink/RangeSignalHost.blockymodel","Characters/OptimusLink/OP_Optimus.png",null,null,0,0,0,0,Map.of(),null,null,null,null,null,Map.of(),null,null);
+            "Characters/OptimusLink/RangeSignalHost.blockymodel","Characters/OptimusLink/OP_Optimus.png",null,null,0,0,0,0,animations,null,null,null,null,null,Map.of(),null,null);
+    }
+    static ActiveAnimationComponent signalAnimations() {
+        var active=new ActiveAnimationComponent();active.setPlayingAnimation(AnimationSlot.Movement,"Idle");return active;
     }
     static AttachedBeam[] signalBeams(MastNetwork.Mast first,MastNetwork.Mast second,int beamIndex) {
         var points=SignalArc.points(first,second);var beams=new AttachedBeam[SignalArc.SEGMENTS];
@@ -117,6 +129,7 @@ final class RangeSignalBeams {
         @Override public SystemGroup<EntityStore> getGroup() { return EntityTrackerSystems.QUEUE_UPDATE_GROUP; }
         @Override public Set<Dependency<EntityStore>> getDependencies() {
             return Set.of(new SystemDependency<>(Order.AFTER,EntityTrackerSystems.EntityModel.class),
+                new SystemDependency<>(Order.AFTER,ModelSystems.AnimationEntityTrackerUpdate.class),
                 new SystemDependency<>(Order.BEFORE,BeamSystems.Tracker.class));
         }
         @Override public void tick(float dt,int index,Store<EntityStore> store) {

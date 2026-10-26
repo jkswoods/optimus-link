@@ -21,6 +21,15 @@ public final class RangeSignalModelTest {
         var order=new RangeSignalBeams.Tick().getDependencies();
         check(order.stream().anyMatch(d->d instanceof SystemDependency<?,?> s&&s.getSystemClass()==EntityTrackerSystems.EntityModel.class&&s.getOrder()==Order.AFTER),"model replication completes before the range tick in the native update group");
         check(order.stream().anyMatch(d->d instanceof SystemDependency<?,?> s&&s.getSystemClass()==com.hypixel.hytale.builtin.beam.BeamSystems.Tracker.class&&s.getOrder()==Order.BEFORE),"native beam replication follows the range tick, including newly visible hosts");
+        check(order.stream().anyMatch(d->d instanceof SystemDependency<?,?> s&&s.getSystemClass()==com.hypixel.hytale.server.core.modules.entity.system.ModelSystems.AnimationEntityTrackerUpdate.class&&s.getOrder()==Order.AFTER),"native active-node binding is replicated before beam attachment");
+        var active=RangeSignalBeams.signalAnimations().getActiveAnimations();
+        check("Idle".equals(active[com.hypixel.hytale.protocol.AnimationSlot.Movement.getValue()])&&Arrays.stream(active).filter(Objects::nonNull).count()==1,"exactly one native constant binding remains active for new viewers");
+        try(var input=RangeSignalModelTest.class.getResourceAsStream("/Common/Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim")) {
+            var root=com.google.gson.JsonParser.parseString(new String(Objects.requireNonNull(input).readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            var node=root.getAsJsonObject("nodeAnimations").getAsJsonObject("ArcOrigin");var frames=node.getAsJsonArray("orientation");
+            check(frames.size()==2&&frames.get(0).getAsJsonObject().get("delta").equals(frames.get(1).getAsJsonObject().get("delta")),"attachment clip uses the same identity orientation throughout its loop");
+            check(List.of("position","shapeStretch","shapeUvOffset","shapeVisible").stream().allMatch(k->node.getAsJsonArray(k).isEmpty()),"constant binding has no translation, stretch, texture animation or visibility pulsing");
+        }
         var nativeUpdate=new EntityTrackerSystems.EntityUpdate();
         var modelUpdate=new com.hypixel.hytale.protocol.ModelUpdate();var beamsUpdate=new BeamsUpdate();
         nativeUpdate.queueUpdate(modelUpdate);nativeUpdate.queueUpdate(beamsUpdate);
@@ -49,6 +58,7 @@ public final class RangeSignalModelTest {
             var model=RangeSignalBeams.signalModel(a,b);var packet=model.toPacket();
             check(packet.particles==null||packet.particles.length==0,"the model mounts no orb particles or pulsing sprite layer");
             check("Characters/OptimusLink/OP_Optimus.png".equals(packet.texture),"host retains the valid original entity atlas");
+            check(packet.animationSets.containsKey("Idle")&&packet.animationSets.get("Idle").animations.length==1&&"Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim".equals(packet.animationSets.get("Idle").animations[0].name),"actual native model packet binds the constant ArcOrigin clip");
             AttachedBeam[] beams=RangeSignalBeams.signalBeams(a,b,7);
             check(beams.length==SignalArc.SEGMENTS&&beams.length<=BeamComponent.MAX_BEAMS,"a continuous curve fits the native per-host beam limit");
             var component=new BeamComponent(beams);
