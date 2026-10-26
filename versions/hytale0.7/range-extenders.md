@@ -29,7 +29,7 @@ A mast can link several remotes. Repeat the process for each one. The list shows
 
 ![Native Range Extender panel with two linked Fleet Remotes and real player inventory](/assets/hytale0.7/screenshots/range-extender-ui.png)
 
-*Earlier native panel in Hytale 0.7.4; a closer comparison with the concept is being completed for the current revision. The remote stays in the mast until you retrieve it.*
+*The native mast panel in Hytale 0.7.4, before the final blue-frame and turquoise-signal refinements. The remote stays in the mast until you retrieve it.*
 
 ## Build a relay route
 
