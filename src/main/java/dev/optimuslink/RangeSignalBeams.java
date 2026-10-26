@@ -65,7 +65,7 @@ final class RangeSignalBeams {
             var anchor=new Vector3d(edge.first().x()+.5,edge.first().y()+.5,edge.first().z()+.5);
             var glow=signalModel(edge.first(),edge.second());
             // Both components exist before tracking starts. Unlike the old beam
-            // experiment, every source explicitly attaches to the real ArcOrigin
+            // experiment, every source explicitly attaches to the real R-Attachment
             // bone. No pulsing billboard particles or bright orb layer is mounted.
             var holder=store.getRegistry().newHolder();
             holder.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
@@ -100,8 +100,11 @@ final class RangeSignalBeams {
         // Native LOD uses ModelSpawned's bounding box. The former0.2-block box
         // was culled110blocks away before the client ever received the particle model.
         // This host has no gameplay Entity/Interactable and is explicitly intangible.
-        // Keep the attachment in the native animated-node palette. The clip is
-        // constant: it binds ArcOrigin without moving, blinking or pulsing it.
+        // The identical minimal entity renders stock Player/R-Attachment in native
+        // 0.7.4, while custom ArcOrigin does not resolve. Follow that demonstrated
+        // native attachment convention; keep geometry and all offsets unchanged.
+        // This name-only comparison still requires native validation. The clip is
+        // constant: it binds R-Attachment without moving, blinking or pulsing it.
         var still=new ModelAsset.Animation("Idle","Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim",1f,0f,true,1f,new int[0],null);
         var animations=Map.of("Idle",new ModelAsset.AnimationSet(new ModelAsset.Animation[]{still},null));
         return new Model("OP_RangeSignal",1f,Map.of(),null,bounds,
@@ -116,7 +119,7 @@ final class RangeSignalBeams {
         for(int i=0;i<beams.length;i++) {
             var from=points.get(i);var to=points.get(i+1);
             var offset=new Vector3f((float)(from.x()-origin.x()),(float)(from.y()-origin.y()),(float)(from.z()-origin.z()));
-            beams[i]=AttachedBeam.toPosition(beamIndex,LINE_WIDTH,LINE_WIDTH,"ArcOrigin",offset,new Vector3d(to.x(),to.y(),to.z()));
+            beams[i]=AttachedBeam.toPosition(beamIndex,LINE_WIDTH,LINE_WIDTH,"R-Attachment",offset,new Vector3d(to.x(),to.y(),to.z()));
         }
         return beams;
     }
