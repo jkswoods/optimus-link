@@ -34,6 +34,9 @@ import org.joml.Vector3f;
 /** Non-persistent continuous native beam arcs with restrained endpoint lighting. */
 final class RangeSignalBeams {
     static final float LINE_WIDTH=.12f;
+    // Named beam offsets use the character model frame (64 units per block),
+    // while the next endpoint is an absolute world position in blocks.
+    static final float MODEL_UNITS_PER_BLOCK=64f;
     static final class Scene {
         final Map<String,Ref<EntityStore>> arcs=new HashMap<>();
         final Map<UUID,Ref<EntityStore>> lights=new HashMap<>();
@@ -118,7 +121,7 @@ final class RangeSignalBeams {
         var origin=new Vector3d(first.x()+.5,first.y()+.5,first.z()+.5);
         for(int i=0;i<beams.length;i++) {
             var from=points.get(i);var to=points.get(i+1);
-            var offset=new Vector3f((float)(from.x()-origin.x()),(float)(from.y()-origin.y()),(float)(from.z()-origin.z()));
+            var offset=new Vector3f((float)(from.x()-origin.x()),(float)(from.y()-origin.y()),(float)(from.z()-origin.z())).mul(MODEL_UNITS_PER_BLOCK);
             beams[i]=AttachedBeam.toPosition(beamIndex,LINE_WIDTH,LINE_WIDTH,"R-Attachment",offset,new Vector3d(to.x(),to.y(),to.z()));
         }
         return beams;
