@@ -55,7 +55,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
     @Override public void build(Ref<EntityStore> ref,UICommandBuilder c,UIEventBuilder e,Store<EntityStore> store) {
         c.append("Pages/OptimusLink/RangeExtender.ui");
         bind(e,"#MastContainer #CloseButton","Close");bind(e,"#RemoteSlot","Slot");
-        for(int i=0;i<20;i++)c.appendInline("#Signal","Group #Signal"+i+" { Anchor: (Width: 22, Height: 22); Background: #223242; } Group { Anchor: (Width: 2); }");
+        for(int i=0;i<20;i++)c.appendInline("#Signal","Group #Signal"+i+" { Anchor: (Width: 17, Height: 30); Background: #223242; } Group { Anchor: (Width: 2); }");
         var inventory=RangeExtenders.inventory(ref);int rows=(Math.max(0,inventory.getCapacity()-9)+8)/9;
         for(int row=0;row<rows;row++) {
             c.append("#StorageRows","Pages/OptimusLink/RangeInventoryRow.ui");

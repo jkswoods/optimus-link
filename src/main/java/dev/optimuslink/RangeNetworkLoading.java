@@ -189,7 +189,11 @@ final class RangeNetworkLoading {
     }
     static void leaving(World world) {
         var scene=SCENES.remove(world);if(scene==null)return;scene.closed=true;
-        world.execute(()-> {for(var hold:scene.holds.values())hold.release();scene.holds.clear();scene.wanted=Set.of();scene.connecting.clear();});
+        // RemoveWorldEvent can arrive after the world has disposed its chunks and stopped
+        // accepting tasks. Those counters are already gone; only discard our references.
+        if(!world.isAlive()) { scene.holds.clear();scene.wanted=Set.of();scene.connecting.clear();return; }
+        Runnable release=()-> {for(var hold:scene.holds.values())hold.release();scene.holds.clear();scene.wanted=Set.of();scene.connecting.clear();};
+        if(world.isInThread())release.run();else world.execute(release);
     }
     static void stopAll() { for(var world:List.copyOf(SCENES.keySet()))leaving(world); }
     static final class Tick extends TickingSystem<EntityStore> {

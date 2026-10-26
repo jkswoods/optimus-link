@@ -13,4 +13,4 @@ $C = "../../Common.ui";
 
 @Header = PatchStyle(TexturePath: "RangeHeader.png", Border: 6);
 @Separator = PatchStyle(Color: #496279);
-@SectionTitle = LabelStyle(FontName: "Secondary", FontSize: 23, LetterSpacing: 1, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center);
+@SectionTitle = LabelStyle(FontName: "Secondary", FontSize: 25, LetterSpacing: 1, TextColor: #c6dff6, RenderBold: true, VerticalAlignment: Center);

@@ -1,6 +1,6 @@
 $R = "RangeAppearance.ui";
 Group {
- Anchor: (Width: 120, Height: 120);
+ Anchor: (Width: 100, Height: 100);
  Group { Anchor: (Full: 4); Background: $R.@Slot; HitTestVisible: false; }
  ItemIcon #Icon { Anchor: (Full: 16); HitTestVisible: false; }
  Label #Count { Anchor: (Right: 13, Bottom: 11, Width: 60, Height: 24); HitTestVisible: false; Style: (FontSize: 20, TextColor: #f2f5fb, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center); }

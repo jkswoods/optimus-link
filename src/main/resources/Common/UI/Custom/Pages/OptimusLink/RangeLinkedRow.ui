@@ -3,7 +3,7 @@ $R = "RangeAppearance.ui";
 Group {
  Anchor: (Height: 78); Padding: (Bottom: 6);
  Group { Anchor: (Full: 0); LayoutMode: Left; Padding: (Full: 8); Background: $R.@Slot;
-  ItemIcon { Anchor: (Width: 52, Height: 52); ItemId: "OP_Remote"; HitTestVisible: false; }
+  ItemIcon { Anchor: (Width: 64, Height: 52); ItemId: "OP_Remote"; HitTestVisible: false; }
   Group { Anchor: (Width: 12); }
   Label #Name { FlexWeight: 1; Style: (FontSize: 22, TextColor: #dce9f5, VerticalAlignment: Center); }
   Button #Unlink { Anchor: (Width: 52, Height: 52); Style: $H.@CloseStyle; }
