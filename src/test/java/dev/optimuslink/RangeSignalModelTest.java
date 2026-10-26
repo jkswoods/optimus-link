@@ -16,6 +16,14 @@ public final class RangeSignalModelTest {
     private static void check(boolean condition,String message) { assertions++;if(!condition)throw new AssertionError(message); }
     private static boolean near(double a,double b) { return Math.abs(a-b)<1e-4; }
     public static void main(String[] args) throws Exception {
+        try(var input=RangeSignalModelTest.class.getResourceAsStream("/Common/Characters/OptimusLink/RangeSignalHost.blockymodel")) {
+            var root=com.google.gson.JsonParser.parseString(new String(Objects.requireNonNull(input).readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            var node=root.getAsJsonArray("nodes").get(0).getAsJsonObject();var shape=node.getAsJsonObject("shape");
+            check("ArcOrigin".equals(node.get("name").getAsString())&&"box".equals(shape.get("type").getAsString())&&shape.get("visible").getAsBoolean(),"attachment node has retained visible mesh geometry; empty host node was unknown to the actual client");
+            var settings=shape.getAsJsonObject("settings");var size=settings.getAsJsonObject("size");
+            check(!settings.get("isStaticBox").getAsBoolean()&&size.get("x").getAsFloat()>0&&size.get("y").getAsFloat()>0&&size.get("z").getAsFloat()>0,"a nonzero articulated anchor is retained inside the existing mast, without a gameplay hitbox");
+            check(shape.getAsJsonObject("textureLayout").keySet().containsAll(Set.of("front","back","left","right","top","bottom")),"retained anchor has complete valid face mappings on the existing entity atlas");
+        }
         var field=EntityTrackerSystems.LODCull.class.getDeclaredField("ENTITY_LOD_RATIO");field.setAccessible(true);
         double nativeRatio=field.getDouble(null);
         check(.2<nativeRatio*110*110,"the former tiny host is excluded at the actual110-block fixture distance by native LOD");

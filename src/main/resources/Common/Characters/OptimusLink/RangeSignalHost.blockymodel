@@ -16,7 +16,7 @@
         "w": 1
       },
       "shape": {
-        "type": "none",
+        "type": "box",
         "offset": {
           "x": 0,
           "y": 0,
@@ -28,13 +28,85 @@
           "z": 1
         },
         "settings": {
-          "isPiece": false
+          "size": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "isStaticBox": false
         },
         "visible": true,
         "doubleSided": false,
-        "shadingMode": "flat",
+        "shadingMode": "standard",
         "unwrapMode": "custom",
-        "textureLayout": {}
+        "textureLayout": {
+          "front": {
+            "offset": {
+              "x": 0,
+              "y": 32
+            },
+            "mirror": {
+              "x": false,
+              "y": false
+            },
+            "angle": 0
+          },
+          "back": {
+            "offset": {
+              "x": 0,
+              "y": 32
+            },
+            "mirror": {
+              "x": false,
+              "y": false
+            },
+            "angle": 0
+          },
+          "left": {
+            "offset": {
+              "x": 0,
+              "y": 32
+            },
+            "mirror": {
+              "x": false,
+              "y": false
+            },
+            "angle": 0
+          },
+          "right": {
+            "offset": {
+              "x": 0,
+              "y": 32
+            },
+            "mirror": {
+              "x": false,
+              "y": false
+            },
+            "angle": 0
+          },
+          "top": {
+            "offset": {
+              "x": 0,
+              "y": 32
+            },
+            "mirror": {
+              "x": false,
+              "y": false
+            },
+            "angle": 0
+          },
+          "bottom": {
+            "offset": {
+              "x": 0,
+              "y": 32
+            },
+            "mirror": {
+              "x": false,
+              "y": false
+            },
+            "angle": 0
+          }
+        }
       }
     }
   ],
