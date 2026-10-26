@@ -21,13 +21,15 @@ Place the mast on solid support with enough headroom for its **3.5-block height*
 3. Leave it there while the signal bar fills over **six seconds**.
 4. When the panel says **Linked**, click the box to take the same remote back. It is not consumed.
 
+The panel shows three storage rows and your hotbar. Scroll inside the storage grid to reach the remaining storage and any backpack slots. All displayed items are your actual inventory.
+
 Removing a remote before completion cancels that attempt. Closing the panel keeps the physical item inside the mast; unfinished synchronisation restarts when you reopen it. Completed links and stored items persist across normal save/reload. Keep an empty inventory slot when retrieving your remote.
 
 A mast can link several remotes. Repeat the process for each one. The list shows your own linked remote identities; its **X** removes that remote's link from this mast. A remote still belongs to its original operator and world.
 
 ![Native Range Extender panel with two linked Fleet Remotes and real player inventory](/assets/hytale0.7/screenshots/range-extender-ui.png)
 
-*The native panel in Hytale 0.7.4. The remote stays in the mast until you retrieve it.*
+*Earlier native panel in Hytale 0.7.4; a closer comparison with the concept is being completed for the current revision. The remote stays in the mast until you retrieve it.*
 
 ## Build a relay route
 
