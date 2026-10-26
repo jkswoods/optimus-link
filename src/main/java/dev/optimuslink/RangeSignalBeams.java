@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.hypixel.hytale.server.core.modules.entity.component.DynamicLight;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.optimuslink.core.SignalArc;
 import dev.optimuslink.core.MastNetwork;
@@ -47,21 +48,10 @@ final class RangeSignalBeams {
             }
         }
         for(var edge:connections)if(!scene.arcs.containsKey(edge.key())) {
-            var points=SignalArc.points(edge.first(),edge.second());
-            // Anchor in the validated mast section; native spawn refuses inactive sky sections.
-            var origin=new MastNetwork.Point(edge.first().x()+.5,edge.first().y()+.5,edge.first().z()+.5);
-            var anchor=new Vector3d(origin.x(),origin.y(),origin.z());
-            var ribbons=new ModelParticle[SignalArc.SEGMENTS*3+1];
-            // Fixed-size camera-facing glows overlap along the curve; no stretched particle planes.
-            for(int i=0;i<ribbons.length;i++) {
-                double along=(double)i/3;int segment=Math.min((int)along,SignalArc.SEGMENTS-1);double t=along-segment;
-                var from=points.get(segment);var to=points.get(segment+1);
-                var offset=new Vector3f((float)(from.x()+(to.x()-from.x())*t-origin.x()),(float)(from.y()+(to.y()-from.y())*t-origin.y()),(float)(from.z()+(to.z()-from.z())*t-origin.z()));
-                ribbons[i]=new ModelParticle("OP_RangeGlow",EntityPart.Self,null,null,2f,offset,null,false,true);
-            }
-            // The stock empty model is just a host; all visible signal art is original.
-            var glow=new Model("OP_RangeSignal",1f,Map.of(),null,new Box(-.1,-.1,-.1,.1,.1,.1),
-                "NPC/MISC/Empty.blockymodel",null,null,null,0,0,0,0,Map.of(),null,null,ribbons,null,null,Map.of(),null,null);
+            // Keep the host in a validated physical section, with rendering bounds
+            // covering the whole curve rather than a tiny, LOD-culled empty object.
+            var anchor=new Vector3d(edge.first().x()+.5,edge.first().y()+.5,edge.first().z()+.5);
+            var glow=signalModel(edge.first(),edge.second());
             // AttachedBeam's client-side source offsets did not trace the sampled curve:
             // native screenshots showed an overlapping fan. The visible arc uses only
             // fixed, unlit billboards at the actual curve points, on one native host.
@@ -69,6 +59,7 @@ final class RangeSignalBeams {
             holder.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
             holder.addComponent(TransformComponent.getComponentType(),new TransformComponent(anchor,new Rotation3f()));
             holder.addComponent(ModelComponent.getComponentType(),new ModelComponent(glow));
+            holder.addComponent(Intangible.getComponentType(),Intangible.INSTANCE);
             holder.ensureComponent(UUIDComponent.getComponentType());holder.ensureComponent(store.getRegistry().getNonSerializedComponentType());
             var ref=store.addEntity(holder,AddReason.SPAWN);
             if(ref!=null&&ref.isValid())scene.arcs.put(edge.key(),ref);
@@ -82,6 +73,26 @@ final class RangeSignalBeams {
             holder.addComponent(DynamicLight.getComponentType(),new DynamicLight(new ColorLight((byte)10,(byte)4,(byte)13,(byte)15)));
             var ref=store.addEntity(holder,AddReason.SPAWN);if(ref!=null&&ref.isValid())scene.lights.put(mast.id(),ref);
         }
+    }
+    static Model signalModel(MastNetwork.Mast first,MastNetwork.Mast second) {
+        var points=SignalArc.points(first,second);
+        var origin=new Vector3d(first.x()+.5,first.y()+.5,first.z()+.5);
+        var particles=new ModelParticle[SignalArc.SEGMENTS*3+1];
+        var bounds=new Box(-2,1,-2,2,5,2);
+        for(int i=0;i<particles.length;i++) {
+            double along=(double)i/3;int segment=Math.min((int)along,SignalArc.SEGMENTS-1);double t=along-segment;
+            var from=points.get(segment);var to=points.get(segment+1);
+            var offset=new Vector3f((float)(from.x()+(to.x()-from.x())*t-origin.x()),
+                (float)(from.y()+(to.y()-from.y())*t-origin.y()),(float)(from.z()+(to.z()-from.z())*t-origin.z()));
+            particles[i]=new ModelParticle("OP_RangeGlow",EntityPart.Self,"ArcOrigin",null,2f,offset,null,false,true);
+            bounds.min.min(new Vector3d(offset.x-2,offset.y-2,offset.z-2));
+            bounds.max.max(new Vector3d(offset.x+2,offset.y+2,offset.z+2));
+        }
+        // Native LOD uses ModelSpawned's bounding box. The former0.2-block box
+        // was culled110blocks away before the client ever received the particle model.
+        // This host has no gameplay Entity/Interactable and is explicitly intangible.
+        return new Model("OP_RangeSignal",1f,Map.of(),null,bounds,
+            "Characters/OptimusLink/RangeSignalHost.blockymodel",null,null,null,0,0,0,0,Map.of(),null,null,particles,null,null,Map.of(),null,null);
     }
     static final class Tick extends TickingSystem<EntityStore> {
         @Override public void tick(float dt,int index,Store<EntityStore> store) {

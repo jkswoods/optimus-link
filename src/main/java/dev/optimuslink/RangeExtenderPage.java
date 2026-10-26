@@ -34,7 +34,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
     private ItemStack expected;
     private boolean dismissed;
     private long nextPulse;
-    private static final String INITIAL_NOTICE="Select a Fleet Remote below, then place it in Link Remote.";
+    private static final String INITIAL_NOTICE="Select a remote below, then place it here.";
     private String notice=INITIAL_NOTICE;
     private final Map<Short,String> cells=new HashMap<>();
     private List<UUID> shown=List.of();
@@ -55,7 +55,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
     @Override public void build(Ref<EntityStore> ref,UICommandBuilder c,UIEventBuilder e,Store<EntityStore> store) {
         c.append("Pages/OptimusLink/RangeExtender.ui");
         bind(e,"#MastContainer #CloseButton","Close");bind(e,"#RemoteSlot","Slot");
-        for(int i=0;i<20;i++)c.appendInline("#Signal","Group #Signal"+i+" { Anchor: (Width: 17, Height: 30); Background: #223242; } Group { Anchor: (Width: 2); }");
+        for(int i=0;i<20;i++)c.appendInline("#Signal","Group { Anchor: (Width: 19, Height: 30); Padding: (Right: 2); Group #Signal"+i+" { Anchor: (Full: 0); Background: #15283b; } }");
         var inventory=RangeExtenders.inventory(ref);int rows=(Math.max(0,inventory.getCapacity()-9)+8)/9;
         for(int row=0;row<rows;row++) {
             c.append("#StorageRows","Pages/OptimusLink/RangeInventoryRow.ui");
@@ -90,7 +90,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
             // Recheck live physical custody and authority immediately before the one committed membership mutation.
             if(RangeExtenders.valid(ref,mast,slot)&&remote.equals(resident(ref))) {
                 if(network.link(mast.id(),mast.x(),mast.y(),mast.z(),playerRef.getUuid(),remote))NativeFleet.soundPrivate(playerRef,"OP_Range_Linked_Inventory");
-                linked=true;progress.reset();notice="Remote linked. Take it out to use your extended network.";
+                linked=true;progress.reset();notice="Take your remote to use the extended network.";
                 current=network.find(mast.id(),mast.x(),mast.y(),mast.z());
             }
         }
@@ -98,7 +98,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
         for(int i=0;i<20;i++)c.set("#Signal"+i+".Background",Value.ref("Pages/OptimusLink/RangeAppearance.ui",i<Math.floor(amount*20)?"SignalOn":"SignalOff"));
         c.set("#Progress.Text",(int)Math.floor(amount*100)+"%");
         c.set("#PairStatus.Text",linked?"Linked — take your remote":remote!=null?"Synchronising...":ItemStack.isEmpty(slot.getItemStack((short)0))?"Place your Fleet Remote":"Another operator's remote is in this slot");
-        c.set("#Notice.Text",notice.equals(INITIAL_NOTICE)&&remote!=null?(linked?"Remote linked. Take it out to use your extended network.":"Keep the remote in the slot until the signal bar is full."):notice);
+        c.set("#Notice.Text",notice.equals(INITIAL_NOTICE)&&remote!=null?(linked?"Take your remote to use the extended network.":"Leave your remote in the slot until linked."):notice);
         var item=slot.getItemStack((short)0);boolean occupied=!ItemStack.isEmpty(item);
         c.set("#RemoteIcon.Visible",occupied);c.set("#EmptyRemote.Visible",!occupied);if(occupied)c.set("#RemoteIcon.ItemId",item.getItemId());
         var inventory=RangeExtenders.inventory(ref);
@@ -110,12 +110,12 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
         }
         var ids=current.links().stream().filter(l->l.owner().equals(playerRef.getUuid())).map(MastNetwork.Link::remote).sorted().toList();
         c.set("#NetworkStatus.Text",current.links().isEmpty()?"Ready to pair":"Relay ready");
-        c.set("#LinkedCount.Text",ids.size()+" linked remotes");
+        c.set("#LinkedCount.Text",ids.size()+(ids.size()==1?" linked remote":" linked remotes"));
         if(!shown.equals(ids)) {
             shown=ids;c.clear("#LinkedList");
             for(int i=0;i<ids.size();i++) {
                 String row="#LinkedList["+i+"]";c.append("#LinkedList","Pages/OptimusLink/RangeLinkedRow.ui");
-                c.set(row+" #Name.Text","Fleet Remote · "+ids.get(i).toString().substring(0,8).toUpperCase(Locale.ROOT));
+                c.set(row+" #Name.Text","Remote · "+ids.get(i).toString().substring(0,8).toUpperCase(Locale.ROOT));
                 bind(e,row+" #Unlink","Unlink:"+ids.get(i));
             }
         }
@@ -135,7 +135,7 @@ final class RangeExtenderPage extends InteractiveCustomUIPage<RangeExtenderPage.
                     RangeExtenders.withdraw(ref,playerRef,mast,slot);progress.reset();notice="Remote returned to your inventory.";
                 } else {
                     if(selected<0||expected==null)throw new IllegalArgumentException("Select your Fleet Remote below first.");
-                    RangeExtenders.insert(ref,playerRef,mast,slot,selected,expected);selected=-1;expected=null;progress.reset();notice="Keep the remote in the slot until the signal bar is full.";
+                    RangeExtenders.insert(ref,playerRef,mast,slot,selected,expected);selected=-1;expected=null;progress.reset();notice="Leave your remote in the slot until linked.";
                 }
                 NativeFleet.soundPrivate(playerRef,"OP_Equipment_Handle_Inventory");
             } else if(action.action.startsWith("Unlink:")) {

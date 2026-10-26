@@ -31,7 +31,7 @@ $C.@PageOverlay {
       Group { Anchor: (Width: 396, Height: 38); Padding: (Left: 8, Top: 4, Right: 8, Bottom: 4); Background: $R.@Slot;
        Group #Signal { Anchor: (Full: 0); LayoutMode: Left; }
       }
-      Label #Progress { Anchor: (Width: 64); Padding: (Left: 8); Style: (FontSize: 22, TextColor: #e0f8f2, HorizontalAlignment: End, VerticalAlignment: Center); }
+      Label #Progress { Anchor: (Width: 84); Style: (FontSize: 22, TextColor: #e0f8f2, HorizontalAlignment: End, VerticalAlignment: Center); }
      }
      Label #PairStatus { Anchor: (Height: 38); Style: (FontSize: 23, TextColor: #dbe9f7, HorizontalAlignment: Center, VerticalAlignment: Center); }
      Label #Notice { Anchor: (Height: 42); Style: (FontSize: 20, TextColor: #a7c0d8, Wrap: true, HorizontalAlignment: Center, VerticalAlignment: Center); }
