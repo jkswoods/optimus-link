@@ -1,5 +1,5 @@
 $C = "../../Common.ui";
-@Slot = PatchStyle(TexturePath: "../../../ItemQualities/Slots/SlotDefault.png", Border: 4);
+@Slot = PatchStyle(TexturePath: "../../Common/BlockSelectorSlotBackground.png", Border: 4);
 @SlotNormal = ButtonStyle(
  Default: (Background: (Color: #ffffff(0))),
  Hovered: (Background: (Color: #ffffff(0.04))),
