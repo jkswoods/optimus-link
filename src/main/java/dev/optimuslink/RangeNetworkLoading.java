@@ -81,7 +81,17 @@ final class RangeNetworkLoading {
                 var key=Section.at(mast.x(),mast.y(),mast.z());var held=scene.holds.get(key);
                 if(held!=null&&held.ref().isValid()&&System.nanoTime()-held.acquired()>1_000_000_000L) {
                     var physical=BlockModule.getComponent(OptimusLinkPlugin.rangeMastType,world,mast.x(),mast.y(),mast.z());
-                    if(physical==null||!mast.id().equals(physical.id)) { state.masts().remove(mast.id(),mast.x(),mast.y(),mast.z());continue; }
+                    var blocks=held.ref().getStore().getComponent(held.ref(),BlockSection.getComponentType());
+                    String blockId=null;
+                    if(blocks!=null&&blocks.loaded) {
+                        var type=com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.getAssetMap().getAsset(blocks.get(mast.x()&31,mast.y()&31,mast.z()&31));
+                        if(type!=null)blockId=type.getId();
+                    }
+                    // A section can be resident before its saved block components have
+                    // reappeared. Missing identity alone is not evidence of replacement.
+                    if(replaced(mast.id(),physical==null?null:physical.id,blocks!=null&&blocks.loaded,blockId)) {
+                        state.masts().remove(mast.id(),mast.x(),mast.y(),mast.z());continue;
+                    }
                 }
                 add(wanted,new MastNetwork.Point(mast.x()+.5,mast.y(),mast.z()+.5));
             }
@@ -186,6 +196,10 @@ final class RangeNetworkLoading {
         }
         var legacy=holder.getComponent(EntityChunk.getComponentType());
         if(legacy!=null) { var entities=((EntityChunk)legacy.clone()).takeEntityHolders();if(entities!=null)for(var entity:entities)index(store,entity); }
+    }
+    static boolean replaced(UUID savedId,UUID physicalId,boolean blocksReady,String blockId) {
+        if(physicalId!=null)return !savedId.equals(physicalId);
+        return blocksReady&&blockId!=null&&!RangeExtenders.ITEM.equals(blockId);
     }
     static void leaving(World world) {
         var scene=SCENES.remove(world);if(scene==null)return;scene.closed=true;

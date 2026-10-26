@@ -59,6 +59,15 @@ public final class RangeCustodyTest {
         check(point.equals(poseState.locations().find(robot,entity)),"native world resource preserves original robot pose index");
         var snapshot=legacyState.clone();snapshot.locations().remove(robot);
         check(point.equals(legacyState.locations().find(robot,entity)),"saving a cloned location index cannot mutate live authority");
+        var savedMast=UUID.randomUUID();
+        check(!RangeNetworkLoading.replaced(savedMast,null,false,null),"an unopened section cannot erase saved mast pairings");
+        check(!RangeNetworkLoading.replaced(savedMast,null,false,"Empty"),"a provisional empty palette cannot erase a saved mast");
+        check(!RangeNetworkLoading.replaced(savedMast,null,true,"OP_RangeExtender"),"loaded mast block waits for its delayed native identity component");
+        check(!RangeNetworkLoading.replaced(savedMast,null,true,null),"an unresolved native asset is not proof of replacement");
+        check(!RangeNetworkLoading.replaced(savedMast,savedMast,true,"OP_RangeExtender"),"same physical mast retains its saved links");
+        check(RangeNetworkLoading.replaced(savedMast,UUID.randomUUID(),true,"OP_RangeExtender"),"a genuinely different physical mast cannot inherit old pairings");
+        check(RangeNetworkLoading.replaced(savedMast,null,true,"Empty"),"confirmed removed mast can release obsolete loading records");
+        check(RangeNetworkLoading.replaced(savedMast,null,true,"Rock_Stone"),"confirmed different block removes obsolete pairings");
         var section=new com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection(null,0,0,0,false);
         check(!section.shouldKeepLoaded(),"native section has no implicit permanent hold");
         section.addKeepLoaded();section.addKeepLoaded();section.removeKeepLoaded();
