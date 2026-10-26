@@ -10,6 +10,7 @@ Each recipe produces **one** item. Start with an Assembly Dock, then craft remot
 | --- | --- | --- | --- |
 | Optimus Assembly Dock | Workbench, Crafting category | 4 Iron Bars, 2 Copper Bars, 6 Wood Trunks | 3 seconds |
 | Fleet Remote | Optimus Assembly Dock, Robotics | 2 Iron Bars, 4 Copper Bars | 3 seconds |
+| Range Extender | Optimus Assembly Dock, Robotics | 6 Optimium Ingots, 4 Iron Bars, 4 Copper Bars | 4 seconds |
 | Optimus Deployment Unit | Optimus Assembly Dock, Robotics | 16 Iron Bars, 8 Copper Bars, 4 Light Leather | 6 seconds |
 
 For one dock, one remote and **two robots**, prepare **38 Iron Bars, 22 Copper Bars, 6 Wood Trunks and 8 Light Leather**. These totals exclude the base game's stations and tools.
@@ -30,3 +31,7 @@ The Assembly Dock is a crafting bench in this version. There are no tiers, modul
 ## Optimium processing {#optimium-processing}
 
 The development material addition defines **1 Raw Optimium → 1 Optimium Ingot** at the stock Furnace, with normal fuel and a base processing time of **14 seconds**. See [Optimium ore](optimium.md) for generation, mining and verification status. The robotics recipes above keep their current ingredients.
+
+## Extend your range
+
+Use smelted Optimium to craft [Range Extenders](range-extenders.md). Link the same Fleet Remote to each mast in a route; every hop has a 128-block maximum.

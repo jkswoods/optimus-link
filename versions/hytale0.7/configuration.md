@@ -10,7 +10,7 @@ The Hytale 0.7 support branch has no player configuration file or configurable p
 | --- | --- |
 | Deployment and linking reach | 5 blocks |
 | Lost-link recovery reach | 5 blocks |
-| Control range | 128 blocks from the operator body |
+| Control range | 128 blocks directly, or a route through linked Range Extenders with 128 blocks per hop |
 | Active control | One robot per operator |
 | Roster page | Three robots; additional robots use pagination |
 | Ownership | Deploying player; no ownership-transfer feature |

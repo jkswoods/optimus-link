@@ -22,6 +22,6 @@ The ore, raw material and refined ingot have separate inventory icons. Raw Optim
 
 ## Current scope
 
-This development addition introduces the material and its natural acquisition route. Existing Assembly Dock, Fleet Remote and Deployment Unit crafting costs are unchanged. Further robotics recipes can use the ingot in later updates.
+This development addition introduces the material and its natural acquisition route. Existing Assembly Dock, Fleet Remote and Deployment Unit crafting costs are unchanged. The ingot now supplies the [Range Extender](range-extenders.md) recipe: 6 Optimium Ingots plus 4 Iron and 4 Copper make one mast.
 
 Native gameplay checks cover mining, Furnace processing, inventory icons and saved ingots across reload. The revised ore and ingot appearance has been reviewed in game beside native Hytale materials. Sound listening, the revised Furnace icon view and broader walking/clearance checks remain open. This page describes the local development addition.

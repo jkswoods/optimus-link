@@ -25,6 +25,11 @@
     "icon": "gem"
   },
   {
+    "title": "Range Extenders",
+    "path": "/range-extenders",
+    "icon": "radio-tower"
+  },
+  {
     "title": "Fleet and controls",
     "path": "/fleet",
     "icon": "book-open"

@@ -14,9 +14,9 @@ Use the remote's secondary action while aiming at one of your robots within 5 bl
 
 The handset shows a scrolling list of linked robots with appearance portraits, names, availability and distance from your body. Type part of a name into **Search robots by name** to filter the list; search ignores letter case. Clear the field to see the full fleet again.
 
-Use the sort menu to choose **Distance: nearest**, **Distance: farthest** or **Name: A–Z**. Unloaded robots have no known distance and stay at the end of distance-sorted lists. Search and sorting only change the list; they do not change links or robot ownership.
+Use the sort menu to choose **Distance: nearest**, **Distance: farthest** or **Name: A–Z**. Robots outside currently usable range can have no known distance and stay at the end of distance-sorted lists. Search and sorting only change the list; they do not change links or robot ownership.
 
-Choose **Assume control** beside a ready robot within 128 blocks of your body. A faded entry marked **Out of range**, **Unloaded** or **In use** cannot be controlled or edited. The remote does not load distant chunks. Release your current robot before selecting another.
+Choose **Assume control** beside a ready robot within 128 blocks of your body or reachable through your [linked Range Extenders](range-extenders.md). A faded entry marked **Out of range** or **In use** cannot be controlled or edited. Linked Range Extenders activate covered robots while your body can reach their connected network. Release your current robot before selecting another.
 
 ![Native scrolling fleet roster with distances and a disabled out-of-range robot](/assets/hytale0.7/native/fleet-handset-roster.png)
 
@@ -24,7 +24,7 @@ Choose **Assume control** beside a ready robot within 128 blocks of your body. A
 
 ## Edit a robot {#name-your-robots}
 
-Choose the pencil in the top-right corner of a robot's portrait to open **Edit robot**. The robot must be loaded, idle, linked to your held remote and within 128 blocks.
+Choose the pencil in the top-right corner of a robot's portrait to open **Edit robot**. The robot must be loaded, idle, linked to your held remote and reachable directly or through your linked mast network.
 
 - **Name:** enter up to 24 letters, numbers, spaces, apostrophes, hyphens or underscores. A blank name restores the robot's default short ID.
 - **Colour:** choose white, graphite, blue, ochre, green or red. The preview shows the selected appearance before saving.
@@ -53,7 +53,7 @@ Your body stays in the world under normal damage rules. The robot uses your exis
 | List your robots in this world | `/optimus-list` |
 | Revoke a lost remote link | `/optimus-recover ROBOT_ID` beside your parked robot |
 
-Equip tools and blocks in **slots 2–9**. Open chests and transfer items using the usual inventory controls. Keep within 128 blocks of your body. A robot must already be loaded to assume it; the remote does not load distant chunks.
+Equip tools and blocks in **slots 2–9**. Open chests and transfer items using the usual inventory controls. Keep within 128 blocks of your body or maintain a connected route through linked masts. A covered robot may show **Connecting...** while the network loads and validates it; choose **Assume control** once it is Ready.
 
 ![Earlier robot view after mining and collecting dirt](/assets/hytale0.7/native/robot-mining-pickup.png)
 
