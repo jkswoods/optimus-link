@@ -1,0 +1,50 @@
+{
+  "RenderMode": "BlendAdd",
+  "LightInfluence": 0,
+  "ParticleRotationInfluence": "None",
+  "ParticleRotateWithSpawner": true,
+  "LinearFiltering": true,
+  "MaxConcurrentParticles": 3,
+  "ParticleLifeSpan": {
+    "Min": 2,
+    "Max": 2
+  },
+  "SpawnRate": {
+    "Min": 1,
+    "Max": 1
+  },
+  "SpawnBurst": false,
+  "LifeSpan": 0,
+  "TrailSpawnerPositionMultiplier": 0,
+  "TrailSpawnerRotationMultiplier": 0,
+  "Particle": {
+    "Texture": "Particles/OptimusLink/RangeSignalStrip.png",
+    "ScaleRatioConstraint": "None",
+    "SoftParticles": "Disable",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 1.02,
+          "Max": 1.02
+        },
+        "Y": {
+          "Min": 0.035,
+          "Max": 0.035
+        }
+      },
+      "Color": "#ffffff",
+      "Opacity": 0
+    },
+    "Animation": {
+      "0": {
+        "Opacity": 0
+      },
+      "50": {
+        "Opacity": 0.75
+      },
+      "100": {
+        "Opacity": 0
+      }
+    }
+  }
+}

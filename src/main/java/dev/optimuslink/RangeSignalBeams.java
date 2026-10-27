@@ -16,6 +16,9 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems;
 import com.hypixel.hytale.protocol.ColorLight;
+import com.hypixel.hytale.protocol.Direction;
+import com.hypixel.hytale.protocol.EntityPart;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.modules.entity.component.DynamicLight;
@@ -66,7 +69,7 @@ final class RangeSignalBeams {
             var glow=signalModel(edge.first(),edge.second());
             // Both components exist before tracking starts. Unlike the old beam
             // experiment, every source explicitly attaches to the real R-Attachment
-            // bone. No pulsing billboard particles or bright orb layer is mounted.
+            // bone. No camera-facing orb layer is mounted; fixed strips supply night glow.
             var holder=store.getRegistry().newHolder();
             holder.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
             holder.addComponent(TransformComponent.getComponentType(),new TransformComponent(anchor,signalRotation(edge.first(),edge.second())));
@@ -110,7 +113,27 @@ final class RangeSignalBeams {
         var still=new ModelAsset.Animation("Idle","Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim",1f,0f,true,1f,new int[0],null);
         var animations=Map.of("Idle",new ModelAsset.AnimationSet(new ModelAsset.Animation[]{still},null));
         return new Model("OP_RangeSignal",1f,Map.of(),null,bounds,
-            "Characters/OptimusLink/RangeSignalHost.blockymodel","Characters/OptimusLink/OP_Optimus.png",null,null,0,0,0,0,animations,null,null,null,null,null,Map.of(),null,null);
+            "Characters/OptimusLink/RangeSignalHost.blockymodel","Characters/OptimusLink/OP_Optimus.png",null,null,0,0,0,0,animations,null,null,signalGlow(first,second),null,null,Map.of(),null,null);
+    }
+    // An additive fixed strip follows each straight beam section. Two crossed
+    // planes keep it visible from either side without camera-facing round sprites.
+    // Native particles expose LightInfluence; native BeamConfig does not.
+    static ModelParticle[] signalGlow(MastNetwork.Mast first,MastNetwork.Mast second) {
+        var points=SignalArc.points(first,second);
+        var strips=new ModelParticle[SignalArc.SEGMENTS*2];
+        double ox=first.x()+.5,oy=first.y()+.5,oz=first.z()+.5;
+        for(int i=0;i<SignalArc.SEGMENTS;i++) {
+            var a=points.get(i);var b=points.get(i+1);
+            double start=Math.hypot(a.x()-ox,a.z()-oz),end=Math.hypot(b.x()-ox,b.z()-oz);
+            double dx=end-start,dy=b.y()-a.y();
+            float length=(float)Math.hypot(dx,dy);
+            var midpoint=new Vector3f((float)((start+end)/2),(float)((a.y()+b.y())/2-oy),0);
+            float roll=(float)Math.toDegrees(Math.atan2(dy,dx));
+            for(int plane=0;plane<2;plane++)
+                strips[i*2+plane]=new ModelParticle("OP_RangeStrip",EntityPart.Self,null,null,length,
+                    new Vector3f(midpoint),new Direction(0,plane*90,roll),false,true);
+        }
+        return strips;
     }
     static Rotation3f signalRotation(MastNetwork.Mast first,MastNetwork.Mast second) {
         var rotation=new Rotation3f();

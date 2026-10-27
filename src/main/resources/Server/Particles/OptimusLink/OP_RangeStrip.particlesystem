@@ -1,0 +1,10 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "OP_RangeStrip_Face"
+    }
+  ],
+  "CullDistance": 256,
+  "BoundingRadius": 160,
+  "IsImportant": true
+}

@@ -64,7 +64,7 @@ public final class RangeSignalModelTest {
             var points=SignalArc.points(a,b);
             var model=RangeSignalBeams.signalModel(a,b);var packet=model.toPacket();
             var rotation=RangeSignalBeams.signalRotation(a,b);
-            check(packet.particles==null||packet.particles.length==0,"the model mounts no orb particles or pulsing sprite layer");
+            check(packet.particles.length==SignalArc.SEGMENTS*2&&Arrays.stream(packet.particles).allMatch(p->"OP_RangeStrip".equals(p.systemId)&&p.clearParticlesOnRemove&&!p.detachedFromModel),"fixed unlit strips clear with their host and contain no old orb system");
             check("Characters/OptimusLink/OP_Optimus.png".equals(packet.texture),"host retains the valid original entity atlas");
             check(packet.animationSets.containsKey("Idle")&&packet.animationSets.get("Idle").animations.length==1&&"Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim".equals(packet.animationSets.get("Idle").animations[0].name),"actual native model packet binds the constant R-Attachment clip");
             AttachedBeam[] beams=RangeSignalBeams.signalBeams(a,b,7);
