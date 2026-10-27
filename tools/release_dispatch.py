@@ -291,7 +291,9 @@ def publish():
         # support branch is never updated or given an Actions review bypass.
         run(['git', '-c', 'credential.helper=', '-c', 'credential.helper=!gh auth git-credential', 'push', 'origin', 'refs/tags/' + plan['tag']])
         notes = f"{title(config)}\n\nHytale support: `{config['serverVersion']}`. Channel: {plan['channel']}.\n\n"
-        if plan['previous']:
+        if Path('RELEASE_NOTES.md').is_file():
+            notes += Path('RELEASE_NOTES.md').read_text().strip() + '\n\n'
+        elif plan['previous']:
             generated = gh(api_root() + '/releases/generate-notes', 'POST', {'tag_name': plan['tag'], 'target_commitish': plan['commit'], 'previous_tag_name': plan['previous']})
             notes += generated['body'] + '\n\n'
         else:

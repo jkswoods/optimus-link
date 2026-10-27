@@ -2,7 +2,7 @@
   "Group": "OptimusLink",
   "Name": "OptimusLink",
   "Version": "0.4.0-dev.34",
-  "Description": "Craftable Optimus robot fleets and remote control; development build.",
+  "Description": "Craftable Optimus robot fleets, Optimium ore and linked range extenders.",
   "ServerVersion": ">=0.7.3 <0.8.0",
   "Main": "dev.optimuslink.OptimusLinkPlugin",
   "IncludesAssetPack": true,

@@ -1,6 +1,6 @@
 # Optimus Link
 
-[Player guide](https://jkswoods.github.io/optimus-link/) · [Development releases](https://github.com/jkswoods/optimus-link/releases)
+[Player guide](https://jkswoods.github.io/optimus-link/) · [Releases](https://github.com/jkswoods/optimus-link/releases)
 
 ![Optimus Link — Your fleet. Your control.](docs/assets/brand/banner.png)
 
@@ -66,12 +66,22 @@ Maintainers handle forward/back ports, and support-branch PRs require owner appr
 
 The player guide follows the Hytale support line and is updated independently of mod releases. Select downloads by their game compatibility and read the selected file’s release notes for included changes and artifact checksums.
 
-## Optimium development
+## Mine and smelt Optimium
 
-The development source adds small Optimium veins to newly generated ordinary underground stone, raw ore drops and a one-to-one Furnace recipe for Optimium Ingots. Native mining, fuelled smelting and normal reload have been checked, and the revised ore and ingot appearance has been approved. Human sound listening and actual second-client checks remain open. Choose a compatible file and read its release notes for included features.
+Find small Optimium veins in newly generated underground stone. Mine Raw Optimium and smelt it one-to-one into ingots in a normal Furnace. Native mining, fuelled smelting and normal reload have been checked, and the revised ore and ingot appearance has been approved. Human sound listening and actual second-client checks remain open. Choose a compatible file and read its release notes for included features.
 
-## Range Extender development
+![Native Optimium ore beside iron ore](docs/assets/native/optimium-ore.png)
+
+![An Optimium Ingot held in Hytale](docs/assets/native/optimium-ingot.png)
+
+[Finding and smelting Optimium](https://jkswoods.github.io/optimus-link/hytale0.7/optimium/)
+
+## Extend your fleet’s reach
 
 Craft a 3.5-block signal mast with a base computer at the Optimus Assembly Dock using 6 Optimium Ingots, 4 Iron Ingots and 4 Copper Ingots. Place your Fleet Remote in its linking slot for six seconds, then take the same item back. A mast can link several remotes.
 
 Each mast reaches 128 blocks and can relay through other masts linked to the same remote. High cyan arcs show connections. While you hold that remote within the network, the server activates covered original robots so they can become ready beyond normal loading range; putting it away or leaving coverage releases the temporary loading holds. Native testing has confirmed control through two relays at 241 blocks and safe return when a required relay is removed. The mast UI and steady cyan night glow have been checked in Hytale, including an angled connection and normal save/reload. Curve height scales with the distance between its masts. Robots outside usable coverage show **Out of range**; covered robots may briefly show **Connecting...** before they are Ready.
+
+![Steady cyan Range Extender arcs at night](docs/assets/native/range-extender-night.png)
+
+[Crafting, linking and relay routes](https://jkswoods.github.io/optimus-link/hytale0.7/range-extenders/)
