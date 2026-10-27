@@ -6,7 +6,7 @@ title: Range Extenders
 
 Range Extenders are compact signal masts crafted with smelted Optimium. A mast extends a Fleet Remote's network with a **128-block radius**. Linked masts can relay through one another.
 
-This page describes the local development build. Native verification and screenshots are being completed before publication.
+Range Extenders are in development. Check the selected download’s release notes to see whether it includes this feature.
 
 ## Craft a mast
 
@@ -35,7 +35,11 @@ A mast can link several remotes. Repeat the process for each one. The list shows
 
 Your body can reach a linked mast within **128 blocks**. Each subsequent mast must be within **128 blocks of the previous mast**, and the final mast must be within **128 blocks of the robot**. Link every mast on that route to the same Fleet Remote. Distance is measured in three dimensions.
 
-Thin, steady cyan curves show direct connections between nearby loaded masts that share a linked remote. Each curve rises into the sky and returns to the other mast. Several shared remotes produce one curve for that pair. Connected masts light the nearby ground.
+Thin, steady cyan curves show direct connections between nearby loaded masts that share a linked remote. Each curve rises into the sky and returns to the other mast, with its height scaling to the distance between them. The cyan glow stays visible at night without flashing particles. Several shared remotes produce one curve for that pair. Connected masts light the nearby ground.
+
+![Steady cyan signal arcs connecting three Range Extenders at night](/assets/hytale0.7/screenshots/range-extender-night.png)
+
+*Hytale 0.7.4: luminous connections remain visible at night, with light around the linked masts. Unlinking a required relay removes its curves and lighting.*
 
 The handset uses this live route for availability, editing and control. A robot within 128 blocks of your body still works directly.
 
