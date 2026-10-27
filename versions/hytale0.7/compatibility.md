@@ -18,6 +18,8 @@ The previous Hytale 0.7.2 build has native coverage for crafting, deployment, ex
 
 The Fleet Handset has native checks on Hytale 0.7.4 for search, sorting, appearance editing, unavailable controls and normal name/colour reload. Robot appearances keep the same underlying entity and inventory.
 
+Optimium mining, Furnace processing and normal material reload have native Hytale 0.7.4 checks. Range Extender checks cover crafting, remote custody and pairing, multiple remotes, relay control beyond normal loading distance, safe return on route loss, the inventory panel and normal reload. Human visual playtesting has approved the revised ore, ingot, mast and steady night glow.
+
 Some animation transitions, human sound listening and actual second-client play remain unverified. Multiplayer contention, recovery and sound audiences therefore remain outside confirmed support.
 
 Focused checks have exercised manual/range returns, disconnect, unload, world-change handling, operator respawn and robot destruction. These are development checks, not a guarantee against every crash or mod conflict. Release control before changing worlds. Robots and bound remotes stay in their original world; fleet migration is unavailable.

@@ -4,6 +4,28 @@ title: "In-game screenshots"
 
 # In-game screenshots {#in-game-screenshots}
 
+## Optimium and Range Extenders
+
+![Burgundy Optimium ore beside native iron ore](/assets/hytale0.7/screenshots/optimium-ore.png)
+
+*Hytale 0.7.4: Optimium on the right, native iron on the left.*
+
+![Refined Optimium Ingot held in game](/assets/hytale0.7/screenshots/optimium-ingot.png)
+
+*Mine Raw Optimium, then smelt it in a Furnace to make the ingots used by Range Extenders.*
+
+![Tall signal mast with an angled computer and lit base](/assets/hytale0.7/screenshots/range-extender-lit-mast.png)
+
+*Hytale 0.7.4: the Range Extender provides a physical terminal for pairing your remotes.*
+
+![Range Extender linking panel and full player inventory](/assets/hytale0.7/screenshots/range-extender-ui.png)
+
+*Place a Fleet Remote in the linking slot, wait six seconds and retrieve it.*
+
+![Steady cyan mast connections at night](/assets/hytale0.7/screenshots/range-extender-night.png)
+
+*Linked masts relay coverage over 128-block hops. The arcs stay luminous without flashing sky particles.*
+
 ## Fleet Handset
 
 ![Scrolling Fleet Handset with portraits, measured distances and disabled out-of-range controls](/assets/hytale0.7/native/fleet-handset-roster.png)

@@ -6,13 +6,17 @@ title: Range Extenders
 
 Range Extenders are compact signal masts crafted with smelted Optimium. A mast extends a Fleet Remote's network with a **128-block radius**. Linked masts can relay through one another.
 
-Range Extenders are in development. Check the selected download’s release notes to see whether it includes this feature.
+Choose a compatible download whose release notes include Range Extenders.
 
 ## Craft a mast
 
 At the **Optimus Assembly Dock**, choose **Robotics → Range Extender**. One mast costs **6 Optimium Ingots, 4 Iron Ingots and 4 Copper Ingots** and takes **4 seconds** to craft. Mine [Optimium ore](optimium.md) and process its raw material in a Furnace first.
 
 Place the mast on solid support with enough headroom for its **3.5-block height**. Its footprint stays within one block. A small angled computer near the base provides the interaction point.
+
+![A linked Range Extender and its angled computer lighting nearby ground at night](/assets/hytale0.7/screenshots/range-extender-lit-mast.png)
+
+*Native Hytale 0.7.4: a taller mast, accessible terminal and soft light at its base.*
 
 ## Link a Fleet Remote
 

@@ -6,6 +6,10 @@ title: Optimium ore
 
 Optimium is a metal found in small underground veins. Mine its burgundy deposits for **Raw Optimium**, then smelt the raw material in an ordinary **Furnace** to make **Optimium Ingots**.
 
+![Burgundy Optimium ore beside native iron ore in Hytale](/assets/hytale0.7/screenshots/optimium-ore.png)
+
+*Native Hytale 0.7.4: raised burgundy deposits distinguish Optimium from the iron ore on the left.*
+
 ## Finding a vein
 
 Explore newly generated underground stone in the normal overworld. Veins contain three to six connected ore blocks and appear 24–112 blocks below the local surface. Existing explored terrain is preserved; travel into unexplored chunks to find deposits after adding this feature.
@@ -20,8 +24,12 @@ Put Raw Optimium in a Furnace with its usual fuel. **One Raw Optimium makes one 
 
 The ore, raw material and refined ingot have separate inventory icons. Raw Optimium stacks to 25; ingots stack to 100.
 
-## Current scope
+![An Optimium Ingot held beside the ore blocks](/assets/hytale0.7/screenshots/optimium-ingot.png)
 
-This development addition introduces the material and its natural acquisition route. Existing Assembly Dock, Fleet Remote and Deployment Unit crafting costs are unchanged. The ingot now supplies the [Range Extender](range-extenders.md) recipe: 6 Optimium Ingots plus 4 Iron and 4 Copper make one mast.
+*Native Hytale 0.7.4: the refined ingot has its own painted model and inventory icon.*
 
-Native gameplay checks cover mining, Furnace processing, inventory icons and saved ingots across reload. The revised ore and ingot appearance has been reviewed in game beside native Hytale materials. Sound listening, the revised Furnace icon view and broader walking/clearance checks remain open. This page describes the local development addition.
+## Uses
+
+Optimium has a natural mining and smelting route. Existing Assembly Dock, Fleet Remote and Deployment Unit crafting costs are unchanged. The ingot now supplies the [Range Extender](range-extenders.md) recipe: 6 Optimium Ingots plus 4 Iron and 4 Copper make one mast.
+
+Native gameplay checks cover mining, Furnace processing, inventory icons and saved ingots across reload. The revised ore and ingot appearance has been reviewed in game beside native Hytale materials. The ore and ingot art has human approval. Some sound listening and actual second-client checks remain open; see [Compatibility and backups](compatibility.md).

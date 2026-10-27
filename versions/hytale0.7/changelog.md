@@ -6,9 +6,13 @@ title: "Support-line changes"
 
 Changes described here belong to the **Hytale 0.7 support line**. Download availability, numbered release history and the changes included in a particular file are recorded on [GitHub releases](https://github.com/jkswoods/optimus-link/releases).
 
-## Optimium material development
+## Optimium and Range Extenders
 
-Added natural Optimium veins in newly generated ordinary stone, raw ore drops and a one-to-one Furnace recipe for Optimium Ingots. Existing explored chunks and current robotics ingredient costs are preserved. Native acceptance checks are pending.
+Mine [Optimium](optimium.md) in newly generated underground stone and smelt Raw Optimium into ingots in a normal Furnace. Existing explored chunks and robotics ingredient costs are preserved.
+
+Craft [Range Extenders](range-extenders.md) with Optimium, Iron and Copper. Link actual Fleet Remotes through the six-second linking slot. Masts add a 128-block radius and relay through one another; covered original robots can become ready beyond normal loading distance. The handset shows **Connecting...** during loading and **Out of range** when there is no usable route.
+
+The tall mast has an angled computer and native-style inventory panel. All 36 storage slots and the hotbar are visible together. Steady cyan arcs connect linked masts at night, with light around each connected mast and no flashing sky particles. Native singleplayer checks and human visual review cover these additions; remaining limits are listed under [Compatibility and backups](compatibility.md).
 
 ## Fleet Handset and robot appearance
 
@@ -67,7 +71,7 @@ Earlier test candidate: a return-to-body crash and blocked interaction after sel
 - Corrected the held-tool grip, chest interactions and inventory selection when returning to the operator.
 - Preserved the normal operator Respawn screen and prevented destroyed robots from reviving.
 
-This is an experimental development prerelease. See [Compatibility and backups](compatibility.md) for remaining animation, listening and multiplayer limits.
+This remains a pre-1.0 project, with downloads offered in the Release channel. See [Compatibility and backups](compatibility.md) for remaining animation, listening and multiplayer limits.
 
 ## Model-authoring background {#01x-authoring-stage}
 
