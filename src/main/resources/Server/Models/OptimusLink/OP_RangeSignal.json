@@ -1,22 +1,18 @@
 {
-  "Model": "Characters/OptimusLink/RangeSignalHost.blockymodel",
-  "Texture": "Characters/OptimusLink/OP_Optimus.png",
+  "Model": "Characters/OptimusLink/RangeSignalCurve.blockymodel",
+  "Texture": "Characters/OptimusLink/RangeSignalGlow.png",
   "MinScale": 1,
   "MaxScale": 1,
   "HitBox": {
-    "Min": { "X": -128, "Y": -128, "Z": -128 },
-    "Max": { "X": 128, "Y": 192, "Z": 128 }
-  },
-  "AnimationSets": {
-    "Idle": {
-      "Animations": [
-        {
-          "Animation": "Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim",
-          "Looping": true,
-          "Speed": 1,
-          "BlendingDuration": 0
-        }
-      ]
+    "Min": {
+      "X": -1.05,
+      "Y": -0.05,
+      "Z": -0.05
+    },
+    "Max": {
+      "X": 0.05,
+      "Y": 0.55,
+      "Z": 0.05
     }
   }
 }
