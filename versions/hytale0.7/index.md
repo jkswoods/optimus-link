@@ -18,13 +18,19 @@ Craft humanoid robots, link them to a Fleet Remote and control them one at a tim
 
 Each robot belongs to its deploying player and links to one remote. Search the scrolling roster by name, sort by distance and choose which robot to control. A portrait pencil opens its saved name and six-colour appearance editor. Your body stays behind, exposed to normal damage while you control a robot. Select <strong>Release Control in hotbar slot 1</strong>, then right-click to return.
 
+## Optimium and relay coverage
+
+Find [Optimium ore](optimium.md) in newly generated underground stone and smelt its raw material in a normal Furnace. Use the ingots to craft [Range Extenders](range-extenders.md): 3.5-block signal masts with a remote-linking computer, a 128-block radius and connections that relay through nearby masts. Steady cyan arcs mark linked masts at night.
+
+[See the ore, ingot and mast in game](gallery.md).
+
 ## Start a fleet {#start-a-fleet}
 
-1. [Install the supplied development package](installation.md).
+1. [Install a compatible release](installation.md).
 2. [Craft an Assembly Dock, a remote and deployment units](recipes.md).
 3. [Deploy and link your first two robots](getting-started.md).
 4. [Choose a robot, equip it and take control](fleet.md).
 
 The Assembly Dock crafts equipment without fuel or power. Robots retain their own inventories when parked. This version has no charging, autonomous jobs or ownership-transfer system.
 
-[Download the development prerelease](https://github.com/jkswoods/optimus-link/releases) or browse the [source repository](https://github.com/jkswoods/optimus-link). This independent fan mod is not affiliated with Tesla or Hytale.
+[Choose a compatible release](https://github.com/jkswoods/optimus-link/releases) or browse the [source repository](https://github.com/jkswoods/optimus-link). This independent fan mod is not affiliated with Tesla or Hytale.
