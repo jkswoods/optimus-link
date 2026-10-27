@@ -24,8 +24,8 @@
     "InitialAnimationFrame": {
       "Scale": {
         "X": {
-          "Min": 1.02,
-          "Max": 1.02
+          "Min": 0.255,
+          "Max": 0.255
         },
         "Y": {
           "Min": 0.035,
