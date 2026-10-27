@@ -57,12 +57,13 @@ public final class RangeSignalModelTest {
         var trackerType=Class.forName("com.hypixel.hytale.builtin.beam.BeamSystems$Tracker");
         var tracker=unsafe.getClass().getMethod("allocateInstance",Class.class).invoke(unsafe,trackerType);
         var encode=trackerType.getDeclaredMethod("toPacket",Store.class,BeamComponent.class);encode.setAccessible(true);
-        int[][] cases={{113,43,78,223,38,78},{223,38,78,340,7,78},{-120,5,-48,-13,40,-19}};
+        int[][] cases={{113,43,78,223,38,78},{223,38,78,340,7,78},{-120,5,-48,-13,40,-19},{20,20,-60,10,52,50},{10,52,50,20,20,-60},{5,5,5,5,30,5}};
         for(var c:cases) {
             var a=new MastNetwork.Mast(UUID.randomUUID(),c[0],c[1],c[2],Set.of());
             var b=new MastNetwork.Mast(UUID.randomUUID(),c[3],c[4],c[5],Set.of());
             var points=SignalArc.points(a,b);
             var model=RangeSignalBeams.signalModel(a,b);var packet=model.toPacket();
+            var rotation=RangeSignalBeams.signalRotation(a,b);
             check(packet.particles==null||packet.particles.length==0,"the model mounts no orb particles or pulsing sprite layer");
             check("Characters/OptimusLink/OP_Optimus.png".equals(packet.texture),"host retains the valid original entity atlas");
             check(packet.animationSets.containsKey("Idle")&&packet.animationSets.get("Idle").animations.length==1&&"Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim".equals(packet.animationSets.get("Idle").animations[0].name),"actual native model packet binds the constant R-Attachment clip");
@@ -73,14 +74,14 @@ public final class RangeSignalModelTest {
             check(update.beams.length==SignalArc.SEGMENTS,"actual native tracker emits every curve segment");
             check(Arrays.stream(update.beams).allMatch(v->v.beamIndex==7&&"R-Attachment".equals(v.sourceNodeName)&&v.targetNetworkId==0&&v.sourceScale==.12f&&v.targetScale==.12f),"native line sources bind a real bone and use restrained fixed widths without a target actor");
             double ox=a.x()+.5,oy=a.y()+.5,oz=a.z()+.5;
-            check(IntStream.range(0,beams.length).allMatch(i->{var p=points.get(i);var v=update.beams[i].sourceOffset;return near(ox+v.x()/64,p.x())&&near(oy+v.y()/64,p.y())&&near(oz+v.z()/64,p.z());}),"native model-unit source offsets map back to each sampled world point instead of the compressed fan");
+            check(IntStream.range(0,beams.length).allMatch(i->{var p=points.get(i);var v=update.beams[i].sourceOffset;var world=rotation.transform(new org.joml.Vector3d(-v.x(),v.y(),0));return v.z()==0&&near(ox+world.x(),p.x())&&near(oy+world.y(),p.y())&&near(oz+world.z(),p.z());}),"actual native yaw maps calibrated X/Y source starts onto each world point, with no depth offset");
             check(IntStream.range(0,beams.length).allMatch(i->{var p=points.get(i+1);var v=update.beams[i].targetPosition;return near(v.x(),p.x())&&near(v.y(),p.y())&&near(v.z(),p.z());}),"native packet target positions preserve the actual next world-space point");
-            check(IntStream.range(1,beams.length).allMatch(i->{var end=update.beams[i-1].targetPosition;var start=update.beams[i].sourceOffset;return near(end.x(),ox+start.x()/64)&&near(end.y(),oy+start.y()/64)&&near(end.z(),oz+start.z()/64);}),"model-unit source starts and block-unit target ends meet exactly without gaps");
+            check(IntStream.range(1,beams.length).allMatch(i->{var end=update.beams[i-1].targetPosition;var start=update.beams[i].sourceOffset;var world=rotation.transform(new org.joml.Vector3d(-start.x(),start.y(),0));return near(end.x(),ox+world.x())&&near(end.y(),oy+world.y())&&near(end.z(),oz+world.z());}),"rotated source starts and absolute target ends meet exactly in reversed, diagonal and vertical mast planes");
             var box=packet.hitbox;
             check(points.stream().allMatch(p->p.x()-ox-2>=box.minX-1e-4&&p.x()-ox+2<=box.maxX+1e-4&&p.y()-oy-2>=box.minY-1e-4&&p.y()-oy+2<=box.maxY+1e-4&&p.z()-oz-2>=box.minZ-1e-4&&p.z()-oz+2<=box.maxZ+1e-4),"native bounds retain the entire line and clearance margin");
             check(model.getBoundingBox().getMaximumThickness()>=nativeRatio*256*256,"native host extent retains the curve throughout neighbouring coverage");
-            var end=update.beams[beams.length-1].targetPosition;var start=update.beams[0].sourceOffset;
-            check(near(ox+start.x()/64,a.x()+.5)&&near(oy+start.y()/64,a.y()+3.5)&&near(end.x(),b.x()+.5)&&near(end.y(),b.y()+3.5)&&near(end.z(),b.z()+.5),"native curve ends at the two actual mast beacons");
+            var end=update.beams[beams.length-1].targetPosition;var localStart=update.beams[0].sourceOffset;var start=rotation.transform(new org.joml.Vector3d(-localStart.x(),localStart.y(),0));
+            check(near(ox+start.x(),a.x()+.5)&&near(oy+start.y(),a.y()+3.5)&&near(end.x(),b.x()+.5)&&near(end.y(),b.y()+3.5)&&near(end.z(),b.z()+.5),"native curve ends at the two actual mast beacons");
             component.clear();var cleared=(BeamsUpdate)encode.invoke(tracker,null,component);
             check(cleared.beams.length==0,"native clear update removes the continuous line without leaving a particle tail");
         }

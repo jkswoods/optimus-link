@@ -34,9 +34,6 @@ import org.joml.Vector3f;
 /** Non-persistent continuous native beam arcs with restrained endpoint lighting. */
 final class RangeSignalBeams {
     static final float LINE_WIDTH=.12f;
-    // Named beam offsets use the character model frame (64 units per block),
-    // while the next endpoint is an absolute world position in blocks.
-    static final float MODEL_UNITS_PER_BLOCK=64f;
     static final class Scene {
         final Map<String,Ref<EntityStore>> arcs=new HashMap<>();
         final Map<UUID,Ref<EntityStore>> lights=new HashMap<>();
@@ -72,7 +69,7 @@ final class RangeSignalBeams {
             // bone. No pulsing billboard particles or bright orb layer is mounted.
             var holder=store.getRegistry().newHolder();
             holder.addComponent(NetworkId.getComponentType(),new NetworkId(store.getExternalData().takeNextNetworkId()));
-            holder.addComponent(TransformComponent.getComponentType(),new TransformComponent(anchor,new Rotation3f()));
+            holder.addComponent(TransformComponent.getComponentType(),new TransformComponent(anchor,signalRotation(edge.first(),edge.second())));
             holder.addComponent(ModelComponent.getComponentType(),new ModelComponent(glow));
             holder.addComponent(ActiveAnimationComponent.getComponentType(),signalAnimations());
             holder.addComponent(BeamComponent.getComponentType(),new BeamComponent(signalBeams(edge.first(),edge.second(),beamIndex)));
@@ -94,7 +91,9 @@ final class RangeSignalBeams {
     static Model signalModel(MastNetwork.Mast first,MastNetwork.Mast second) {
         var points=SignalArc.points(first,second);
         var origin=new Vector3d(first.x()+.5,first.y()+.5,first.z()+.5);
-        var bounds=new Box(-2,1,-2,2,5,2);
+        double horizontal=Math.hypot(second.x()-first.x(),second.z()-first.z());
+        // Symmetric horizontal bounds retain the whole arc for every host yaw.
+        var bounds=new Box(-horizontal-2,1,-horizontal-2,horizontal+2,5,horizontal+2);
         for(var point:points) {
             var offset=new Vector3d(point.x()-origin.x(),point.y()-origin.y(),point.z()-origin.z());
             bounds.min.min(new Vector3d(offset).sub(2,2,2));
@@ -103,15 +102,20 @@ final class RangeSignalBeams {
         // Native LOD uses ModelSpawned's bounding box. The former0.2-block box
         // was culled110blocks away before the client ever received the particle model.
         // This host has no gameplay Entity/Interactable and is explicitly intangible.
-        // The identical minimal entity renders stock Player/R-Attachment in native
-        // 0.7.4, while custom ArcOrigin does not resolve. Follow that demonstrated
-        // native attachment convention; keep geometry and all offsets unchanged.
-        // This name-only comparison still requires native validation. The clip is
-        // constant: it binds R-Attachment without moving, blinking or pulsing it.
+        // Native0.7.4 resolves R-Attachment on this minimal holder;
+        // the former ArcOrigin name failed. The attachment remains stationary.
+        // Actual calibration maps local+X to world-X, and local+Y to world+Y.
+        // Each host rotates into its arc plane, keeping source Z zero.
+        // The constant Idle clip adds no motion, blinking or pulsing.
         var still=new ModelAsset.Animation("Idle","Characters/OptimusLink/Animations/RangeSignal_Still.blockyanim",1f,0f,true,1f,new int[0],null);
         var animations=Map.of("Idle",new ModelAsset.AnimationSet(new ModelAsset.Animation[]{still},null));
         return new Model("OP_RangeSignal",1f,Map.of(),null,bounds,
             "Characters/OptimusLink/RangeSignalHost.blockymodel","Characters/OptimusLink/OP_Optimus.png",null,null,0,0,0,0,animations,null,null,null,null,null,Map.of(),null,null);
+    }
+    static Rotation3f signalRotation(MastNetwork.Mast first,MastNetwork.Mast second) {
+        var rotation=new Rotation3f();
+        rotation.setYaw((float)Math.atan2(-(second.z()-first.z()),second.x()-first.x()));
+        return rotation;
     }
     static ActiveAnimationComponent signalAnimations() {
         var active=new ActiveAnimationComponent();active.setPlayingAnimation(AnimationSlot.Movement,"Idle");return active;
@@ -121,7 +125,11 @@ final class RangeSignalBeams {
         var origin=new Vector3d(first.x()+.5,first.y()+.5,first.z()+.5);
         for(int i=0;i<beams.length;i++) {
             var from=points.get(i);var to=points.get(i+1);
-            var offset=new Vector3f((float)(from.x()-origin.x()),(float)(from.y()-origin.y()),(float)(from.z()-origin.z())).mul(MODEL_UNITS_PER_BLOCK);
+            // Actual unit-axis calibration: local+X is world-X, local+Y
+            // is world+Y, in blocks. Rotate the host toward this vertical
+            // arc plane so every source uses only these measured axes.
+            // Source Z remains zero; destinations remain absolute world points.
+            var offset=new Vector3f((float)-Math.hypot(from.x()-origin.x(),from.z()-origin.z()),(float)(from.y()-origin.y()),0f);
             beams[i]=AttachedBeam.toPosition(beamIndex,LINE_WIDTH,LINE_WIDTH,"R-Attachment",offset,new Vector3d(to.x(),to.y(),to.z()));
         }
         return beams;
