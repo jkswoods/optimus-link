@@ -35,7 +35,7 @@ A mast can link several remotes. Repeat the process for each one. The list shows
 
 Your body can reach a linked mast within **128 blocks**. Each subsequent mast must be within **128 blocks of the previous mast**, and the final mast must be within **128 blocks of the robot**. Link every mast on that route to the same Fleet Remote. Distance is measured in three dimensions.
 
-High cyan signal arcs show direct connections between nearby loaded masts that share a linked remote. The arc rises into the sky and returns to the other mast. Several shared remotes produce one arc for that pair.
+Thin, steady cyan curves show direct connections between nearby loaded masts that share a linked remote. Each curve rises into the sky and returns to the other mast. Several shared remotes produce one curve for that pair. Connected masts light the nearby ground.
 
 The handset uses this live route for availability, editing and control. A robot within 128 blocks of your body still works directly.
 
