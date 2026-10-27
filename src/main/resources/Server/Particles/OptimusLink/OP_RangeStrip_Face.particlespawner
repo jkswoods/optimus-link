@@ -33,7 +33,7 @@
         }
       },
       "Color": "#ffffff",
-      "Opacity": 0
+      "Opacity": 1
     },
     "Animation": {
       "0": {
