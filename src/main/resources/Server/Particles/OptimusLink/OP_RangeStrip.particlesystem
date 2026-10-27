@@ -2,6 +2,9 @@
   "Spawners": [
     {
       "SpawnerId": "OP_RangeStrip_Face"
+    },
+    {
+      "SpawnerId": "OP_RangeStrip_Edge"
     }
   ],
   "CullDistance": 256,

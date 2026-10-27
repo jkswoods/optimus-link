@@ -120,18 +120,17 @@ final class RangeSignalBeams {
     // Native particles expose LightInfluence; native BeamConfig does not.
     static ModelParticle[] signalGlow(MastNetwork.Mast first,MastNetwork.Mast second) {
         var points=SignalArc.points(first,second);
-        var strips=new ModelParticle[SignalArc.SEGMENTS*2];
+        var strips=new ModelParticle[SignalArc.SEGMENTS];
         double ox=first.x()+.5,oy=first.y()+.5,oz=first.z()+.5;
         for(int i=0;i<SignalArc.SEGMENTS;i++) {
             var a=points.get(i);var b=points.get(i+1);
             double start=Math.hypot(a.x()-ox,a.z()-oz),end=Math.hypot(b.x()-ox,b.z()-oz);
             double dx=end-start,dy=b.y()-a.y();
             float length=(float)Math.hypot(dx,dy);
-            var midpoint=new Vector3f((float)((start+end)/2),(float)((a.y()+b.y())/2-oy),0);
-            float roll=(float)Math.toDegrees(Math.atan2(dy,dx));
-            for(int plane=0;plane<2;plane++)
-                strips[i*2+plane]=new ModelParticle("OP_RangeStrip",EntityPart.Self,null,null,length,
-                    new Vector3f(midpoint),new Direction(0,plane*90,roll),false,true);
+            var midpoint=new Vector3f((float)(-(start+end)/2),(float)((a.y()+b.y())/2-oy),0);
+            float roll=(float)-Math.toDegrees(Math.atan2(dy,dx));
+            strips[i]=new ModelParticle("OP_RangeStrip",EntityPart.Self,null,null,length,
+                midpoint,new Direction(0,0,roll),false,true);
         }
         return strips;
     }
